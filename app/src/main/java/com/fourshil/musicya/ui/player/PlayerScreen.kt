@@ -47,7 +47,8 @@ import androidx.compose.runtime.collectAsState
 @Composable
 fun PlayerScreen(
     viewModel: PlayerViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-    onDspClick: () -> Unit // New callback
+    onDspClick: () -> Unit,
+    onLibraryClick: () -> Unit
 ) {
     val isPlaying by viewModel.isPlaying.collectAsState()
     val infiniteTransition = rememberInfiniteTransition(label = "spin")
@@ -100,7 +101,8 @@ fun PlayerScreen(
             Spacer(modifier = Modifier.height(20.dp))
             Header(
                 spinAngle = if (isPlaying) angle else 0f,
-                onDspClick = onDspClick
+                onDspClick = onDspClick,
+                onLibraryClick = onLibraryClick
             )
             
             Spacer(modifier = Modifier.weight(1f))
@@ -126,8 +128,16 @@ fun PlayerScreen(
 }
 
 @Composable
-fun Header(spinAngle: Float, onDspClick: () -> Unit) {
+fun Header(spinAngle: Float, onDspClick: () -> Unit, onLibraryClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxWidth()) {
+        // Library Button (Top Left)
+        IconButton(
+            onClick = onLibraryClick,
+            modifier = Modifier.align(Alignment.TopStart)
+        ) {
+            Icon(Icons.Rounded.QueueMusic, contentDescription = "Library", tint = MaterialTheme.colorScheme.onPrimary)
+        }
+
         Column(modifier = Modifier.align(Alignment.Center)) {
             Text(
                 text = "Zara\nLarsson",
