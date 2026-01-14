@@ -2,3 +2,5 @@ app/src/main/java/com/fourshil/musicya/di/AudioModule.kt
 .gradle/9.2.0/checksums/checksums.lock
 .gradle/9.2.0/fileHashes/fileHashes.lock
 .gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/9.0-milestone-1/checksums/checksums.lock
+.gradle/9.0-milestone-1/fileHashes/fileHashes.lock
