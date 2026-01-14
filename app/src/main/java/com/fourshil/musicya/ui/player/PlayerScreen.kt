@@ -46,7 +46,8 @@ import androidx.compose.runtime.collectAsState
 
 @Composable
 fun PlayerScreen(
-    viewModel: PlayerViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: PlayerViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    onDspClick: () -> Unit // New callback
 ) {
     val isPlaying by viewModel.isPlaying.collectAsState()
     val infiniteTransition = rememberInfiniteTransition(label = "spin")
@@ -97,7 +98,10 @@ fun PlayerScreen(
         ) {
             // Header
             Spacer(modifier = Modifier.height(20.dp))
-            Header(if (isPlaying) angle else 0f)
+            Header(
+                spinAngle = if (isPlaying) angle else 0f,
+                onDspClick = onDspClick
+            )
             
             Spacer(modifier = Modifier.weight(1f))
             
@@ -122,7 +126,7 @@ fun PlayerScreen(
 }
 
 @Composable
-fun Header(spinAngle: Float) {
+fun Header(spinAngle: Float, onDspClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.align(Alignment.Center)) {
             Text(
@@ -168,10 +172,10 @@ fun Header(spinAngle: Float) {
         }
         
         IconButton(
-            onClick = { /* TODO */ },
+            onClick = onDspClick,
             modifier = Modifier.align(Alignment.TopEnd)
         ) {
-            Icon(Icons.Rounded.MoreHoriz, contentDescription = "More")
+            Icon(Icons.Rounded.MoreHoriz, contentDescription = "DSP Settings")
         }
     }
 }

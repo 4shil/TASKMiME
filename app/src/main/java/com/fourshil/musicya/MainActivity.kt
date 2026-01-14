@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PlayerScreen()
+                    com.fourshil.musicya.ui.navigation.MusicyaNavGraph()
                 }
             }
         }
