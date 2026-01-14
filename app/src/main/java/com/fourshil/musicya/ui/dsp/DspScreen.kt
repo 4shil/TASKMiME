@@ -195,6 +195,4 @@ fun EqBandSlider(band: EqualizerBand, onLevelChange: (Short) -> Unit) {
     }
 }
 
-// Helper for graphicsLayer
-fun Modifier.graphicsLayer(block: androidx.compose.ui.graphics.GraphicsLayerScope.() -> Unit): Modifier =
-    this.then(androidx.compose.ui.graphics.graphicsLayer(block))
+

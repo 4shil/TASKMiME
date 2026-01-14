@@ -17,6 +17,7 @@ materialIconsExtended = "1.6.1"
 navigationCompose = "2.7.7"
 hiltNavigationCompose = "1.1.0"
 accompanist = "0.34.0"
+kotlinxCoroutines = "1.7.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -57,7 +58,11 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 # Accompanist (Permissions etc)
+# Accompanist (Permissions etc)
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
+
+# Coroutines Guava (for MediaLibraryService futures)
+kotlinx-coroutines-guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-guava", version.ref = "kotlinxCoroutines" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

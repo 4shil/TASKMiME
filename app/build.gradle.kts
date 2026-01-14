@@ -83,6 +83,9 @@ dependencies {
 
     // Accompanist
     implementation(libs.accompanist.permissions)
+    
+    // Coroutines Guava
+    implementation(libs.kotlinx.coroutines.guava)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

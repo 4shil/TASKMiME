@@ -4,14 +4,10 @@ import android.content.Intent
 import androidx.media3.common.C
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.session.MediaLibraryService
-import androidx.media3.session.MediaSession
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
-import android.content.Intent
 import com.fourshil.musicya.ui.widget.MusicWidgetProvider
 import dagger.hilt.android.AndroidEntryPoint
-
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
 import androidx.media3.session.LibraryResult
@@ -174,11 +170,13 @@ class AudioService : MediaLibraryService() {
                     else -> {
                         // Assume ID is a folder path
                         val folderSongs = songs.filter { it.folderPath == parentId }
-                        folderSongs.forEach { song -> items.add(toMediaItem(song)) }
+                        for (song in folderSongs) {
+                            items.add(toMediaItem(song))
+                        }
                     }
                 }
                 
-                LibraryResult.ofItemList(ImmutableList.copyOf(items), params)
+                LibraryResult.ofItemList(items, params)
             }
         }
     }
@@ -215,9 +213,12 @@ class AudioService : MediaLibraryService() {
 
     // Task removed confirmation helps preventing service not being killed
     override fun onTaskRemoved(rootIntent: Intent?) {
-        val player = mediaSession?.player
-        if (player?.playWhenReady == false || player?.mediaItemCount == 0) {
-            stopSelf()
+        super.onTaskRemoved(rootIntent)
+        mediaLibrarySession?.run {
+            player.release()
+            release()
+            mediaLibrarySession = null
         }
+        stopSelf()
     }
 }

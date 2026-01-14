@@ -1,12 +1,11 @@
 package com.fourshil.musicya.ui.player
 
-import android.graphics.Path
-import android.graphics.Typeface
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,8 +28,11 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -116,7 +118,7 @@ fun PlayerScreen(
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-        ) {
+
             // Header
             Spacer(modifier = Modifier.height(20.dp))
             Header(
@@ -339,7 +341,7 @@ fun AlbumArtSection(imageUrl: String, isPlaying: Boolean, onPlayPause: () -> Uni
                     .height(150.dp)
                     .align(Alignment.TopCenter)
                 ) {
-                    val textPath = Path()
+                    val textPath = android.graphics.Path()
                     // M 50,80 Q 150,20 250,80
                     // Scale to fit canvas
                     val w = size.width
@@ -351,7 +353,7 @@ fun AlbumArtSection(imageUrl: String, isPlaying: Boolean, onPlayPause: () -> Uni
                             color = android.graphics.Color.WHITE
                             textSize = 60f // Adjust as needed
                             textAlign = android.graphics.Paint.Align.CENTER
-                            typeface = Typeface.create(Typeface.SERIF, Typeface.ITALIC)
+                            typeface = android.graphics.Typeface.create(android.graphics.Typeface.SERIF, android.graphics.Typeface.ITALIC)
                             isAntiAlias = true
                             style = android.graphics.Paint.Style.FILL
                         }

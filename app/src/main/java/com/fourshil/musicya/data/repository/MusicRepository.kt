@@ -4,6 +4,7 @@ import android.content.ContentUris
 import android.content.Context
 import android.provider.MediaStore
 import com.fourshil.musicya.data.local.MusicDao
+import com.fourshil.musicya.data.model.Song
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
