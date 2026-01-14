@@ -63,6 +63,7 @@ fun PlayerScreen(
     val songTitle by viewModel.songTitle.collectAsState()
     val songArtist by viewModel.songArtist.collectAsState()
     val currentSongPath by viewModel.currentSongPath.collectAsState()
+    val albumArtUri by viewModel.albumArtUri.collectAsState()
     
     // Lyrics State
     val lyrics by lyricsViewModel.lyrics.collectAsState()
@@ -134,8 +135,9 @@ fun PlayerScreen(
             // Album Art & Progress OR Lyrics
             Box(contentAlignment = Alignment.Center) {
                 if (!showLyrics) {
+
                      AlbumArtSection(
-                        imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuBYCjzUgIFJqFjVlj4TnXS_gOWIKRc81l8dpjLROTYr3y90inPv45I9Ma9RNIHASetaIXYYwM3ZNQ7_FMICWCfDuqe5JONiWxk-udGCVqtNuCfwq1lFsbH4BALVeuZmAtXC_iZL8_zAwEzq6N-nebFLHNa_zfe3LBaKxKUnu0oCNt_lXuLR9Oc7JouD-UHd1XzznjZO1zpBpVARM1A9FZalf6XeFY8qX-2g8t-wWKJQy0THQtP8Oh7carDEeLjQ1s_lY_mmEKNaDJj2",
+                        imageUrl = albumArtUri,
                         isPlaying = isPlaying,
                         onPlayPause = { viewModel.togglePlayPause() },
                         onArtClick = { showLyrics = true }
@@ -227,7 +229,7 @@ fun Header(title: String, artist: String, spinAngle: Float, onDspClick: () -> Un
 }
 
 @Composable
-fun AlbumArtSection(imageUrl: String, isPlaying: Boolean, onPlayPause: () -> Unit, onArtClick: () -> Unit) {
+fun AlbumArtSection(imageUrl: Any?, isPlaying: Boolean, onPlayPause: () -> Unit, onArtClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -319,10 +321,12 @@ fun AlbumArtSection(imageUrl: String, isPlaying: Boolean, onPlayPause: () -> Uni
                 .border(4.dp, Color.White.copy(alpha = 0.3f), RoundedCornerShape(100.dp))
         ) {
             Box {
+
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(imageUrl)
                         .crossfade(true)
+                        .error(android.R.drawable.sym_def_app_icon) // Fallback
                         .build(),
                     contentDescription = "Album Art",
                     contentScale = ContentScale.Crop,

@@ -35,6 +35,9 @@ class PlayerViewModel @Inject constructor(
     private val _songArtist = MutableStateFlow("Unknown Artist")
     val songArtist = _songArtist.asStateFlow()
 
+    private val _albumArtUri = MutableStateFlow<Any?>(null)
+    val albumArtUri = _albumArtUri.asStateFlow()
+
     init {
         viewModelScope.launch {
             // Wait for connection
@@ -75,6 +78,7 @@ class PlayerViewModel @Inject constructor(
                     _songTitle.value = meta.title?.toString() ?: "Unknown"
                     _songArtist.value = meta.artist?.toString() ?: "Unknown Artist"
                     _currentSongPath.value = meta.extras?.getString("path")
+                    _albumArtUri.value = meta.artworkUri
                 }
             }
             override fun onPlaybackStateChanged(playbackState: Int) {
@@ -89,6 +93,7 @@ class PlayerViewModel @Inject constructor(
              _songTitle.value = meta.title?.toString() ?: "Unknown"
              _songArtist.value = meta.artist?.toString() ?: "Unknown Artist"
              _currentSongPath.value = meta.extras?.getString("path")
+             _albumArtUri.value = meta.artworkUri
         }
     }
 

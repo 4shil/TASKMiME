@@ -1,0 +1,86 @@
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:checkKotlinGradlePluginConfigurationErrors
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+
+> Task :app:kspDebugKotlin FAILED
+e: [ksp] D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt: (91, 53): Function declaration must have a name
+e: Error occurred in KSP, check log for detail
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:76:17 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:76:26 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:76:28 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:76:41 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:76:43 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:76:47 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:76:54 Unexpected tokens (use ';' to separate expressions on the same line)
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:87:14 Expecting ')'
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:88:10 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:89:9 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:89:19 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:89:26 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:89:28 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:89:34 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:89:35 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:90:9 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:90:18 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:90:25 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:90:27 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:90:33 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:90:34 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:91:9 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:91:15 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:91:16 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:91:32 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:91:34 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:91:47 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:91:49 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:91:53 Expecting member declaration
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:91:60 Unexpected tokens (use ';' to separate expressions on the same line)
+e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerViewModel.kt:117:1 Expecting a top level declaration
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:kspDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 2s
+29 actionable tasks: 2 executed, 27 up-to-date
