@@ -44,13 +44,32 @@ import kotlin.math.sin
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.collectAsState
 
+import com.fourshil.musicya.lyrics.LyricsViewModel
+import com.fourshil.musicya.lyrics.LyricsLine
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+
 @Composable
 fun PlayerScreen(
     viewModel: PlayerViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    lyricsViewModel: LyricsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     onDspClick: () -> Unit,
     onLibraryClick: () -> Unit
 ) {
     val isPlaying by viewModel.isPlaying.collectAsState()
+    val songTitle by viewModel.songTitle.collectAsState()
+    val songArtist by viewModel.songArtist.collectAsState()
+    val currentSongPath by viewModel.currentSongPath.collectAsState()
+    
+    // Lyrics State
+    val lyrics by lyricsViewModel.lyrics.collectAsState()
+    val activeLineIndex by lyricsViewModel.activeLineIndex.collectAsState()
+    var showLyrics by remember { mutableStateOf(false) }
+
+    LaunchedEffect(currentSongPath) {
+        currentSongPath?.let { lyricsViewModel.loadLyrics(it) }
+    }
     val infiniteTransition = rememberInfiniteTransition(label = "spin")
     // Only spin if playing
     val angle by infiniteTransition.animateFloat(
@@ -97,9 +116,12 @@ fun PlayerScreen(
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+        ) {
             // Header
             Spacer(modifier = Modifier.height(20.dp))
             Header(
+                title = songTitle,
+                artist = songArtist,
                 spinAngle = if (isPlaying) angle else 0f,
                 onDspClick = onDspClick,
                 onLibraryClick = onLibraryClick
@@ -107,12 +129,23 @@ fun PlayerScreen(
             
             Spacer(modifier = Modifier.weight(1f))
             
-            // Album Art & Progress
-            AlbumArtSection(
-                imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuBYCjzUgIFJqFjVlj4TnXS_gOWIKRc81l8dpjLROTYr3y90inPv45I9Ma9RNIHASetaIXYYwM3ZNQ7_FMICWCfDuqe5JONiWxk-udGCVqtNuCfwq1lFsbH4BALVeuZmAtXC_iZL8_zAwEzq6N-nebFLHNa_zfe3LBaKxKUnu0oCNt_lXuLR9Oc7JouD-UHd1XzznjZO1zpBpVARM1A9FZalf6XeFY8qX-2g8t-wWKJQy0THQtP8Oh7carDEeLjQ1s_lY_mmEKNaDJj2",
-                isPlaying = isPlaying,
-                onPlayPause = { viewModel.togglePlayPause() }
-            )
+            // Album Art & Progress OR Lyrics
+            Box(contentAlignment = Alignment.Center) {
+                if (!showLyrics) {
+                     AlbumArtSection(
+                        imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuBYCjzUgIFJqFjVlj4TnXS_gOWIKRc81l8dpjLROTYr3y90inPv45I9Ma9RNIHASetaIXYYwM3ZNQ7_FMICWCfDuqe5JONiWxk-udGCVqtNuCfwq1lFsbH4BALVeuZmAtXC_iZL8_zAwEzq6N-nebFLHNa_zfe3LBaKxKUnu0oCNt_lXuLR9Oc7JouD-UHd1XzznjZO1zpBpVARM1A9FZalf6XeFY8qX-2g8t-wWKJQy0THQtP8Oh7carDEeLjQ1s_lY_mmEKNaDJj2",
+                        isPlaying = isPlaying,
+                        onPlayPause = { viewModel.togglePlayPause() },
+                        onArtClick = { showLyrics = true }
+                    )
+                } else {
+                    LyricsView(
+                        lyrics = lyrics,
+                        activeLineIndex = activeLineIndex,
+                        onDismiss = { showLyrics = false }
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.height(50.dp))
 
@@ -128,7 +161,7 @@ fun PlayerScreen(
 }
 
 @Composable
-fun Header(spinAngle: Float, onDspClick: () -> Unit, onLibraryClick: () -> Unit) {
+fun Header(title: String, artist: String, spinAngle: Float, onDspClick: () -> Unit, onLibraryClick: () -> Unit) {
     Box(modifier = Modifier.fillMaxWidth()) {
         // Library Button (Top Left)
         IconButton(
@@ -140,16 +173,17 @@ fun Header(spinAngle: Float, onDspClick: () -> Unit, onLibraryClick: () -> Unit)
 
         Column(modifier = Modifier.align(Alignment.Center)) {
             Text(
-                text = "Zara\nLarsson",
+                text = title,
                 style = MaterialTheme.typography.displayLarge,
                 color = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                maxLines = 2
             )
             
             Spacer(modifier = Modifier.height(8.dp))
             
-            // Poster Girl Pill
+            // Poster Girl Pill (Reusing for Album or Artist)
             Surface(
                 color = Color.White.copy(alpha = 0.5f),
                 shape = CircleShape,
@@ -173,7 +207,7 @@ fun Header(spinAngle: Float, onDspClick: () -> Unit, onLibraryClick: () -> Unit)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Poster Girl",
+                        text = artist,
                         style = MaterialTheme.typography.labelSmall,
                         color = Color(0xFF374151)
                     )
@@ -191,10 +225,12 @@ fun Header(spinAngle: Float, onDspClick: () -> Unit, onLibraryClick: () -> Unit)
 }
 
 @Composable
-fun AlbumArtSection(imageUrl: String, isPlaying: Boolean, onPlayPause: () -> Unit) {
+fun AlbumArtSection(imageUrl: String, isPlaying: Boolean, onPlayPause: () -> Unit, onArtClick: () -> Unit) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.size(width = 320.dp, height = 450.dp) // Adjust based on visual
+        modifier = Modifier
+            .size(width = 320.dp, height = 450.dp) // Adjust based on visual
+            .clickable { onArtClick() }
     ) {
         // Progress Arc Background (Gray)
         // SVG Data: M 53,109 A 155,155 0 0,0 307,109 (approx coordinates need scaling)
@@ -433,5 +469,65 @@ fun BottomActions() {
 fun Path.asComposePath(): androidx.compose.ui.graphics.Path {
     return androidx.compose.ui.graphics.Path().apply {
         addPath(this@asComposePath)
+    }
+}
+
+@Composable
+fun LyricsView(
+    lyrics: List<LyricsLine>,
+    activeLineIndex: Int,
+    onDismiss: () -> Unit
+) {
+    val listState = rememberLazyListState()
+
+    // Scroll to active line
+    LaunchedEffect(activeLineIndex) {
+        if (activeLineIndex >= 0) {
+            // center the line
+             listState.animateScrollToItem((activeLineIndex - 2).coerceAtLeast(0))
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .size(width = 320.dp, height = 450.dp)
+            .background(Color.Black.copy(alpha = 0.3f), RoundedCornerShape(40.dp))
+            .border(2.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(40.dp))
+            .clickable { onDismiss() } // Tap to go back to art
+            .padding(16.dp)
+    ) {
+        if (lyrics.isEmpty()) {
+            Text(
+                "No lyrics found",
+                color = Color.White.copy(alpha = 0.5f),
+                modifier = Modifier.align(Alignment.Center)
+            )
+        } else {
+            LazyColumn(
+                state = listState,
+                contentPadding = PaddingValues(vertical = 100.dp), // add padding to allow scrolling top/bottom
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                itemsIndexed(lyrics) { index, line ->
+                    val isActive = index == activeLineIndex
+                    val alpha = if (isActive) 1f else 0.5f
+                    val scale = if (isActive) 1.2f else 1f
+                    
+                    Text(
+                        text = line.content,
+                        color = Color.White.copy(alpha = alpha),
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontSize = 20.sp,
+                            fontWeight = if (isActive) androidx.compose.ui.text.font.FontWeight.Bold else androidx.compose.ui.text.font.FontWeight.Normal
+                        ),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .scale(scale)
+                    )
+                }
+            }
+        }
     }
 }
