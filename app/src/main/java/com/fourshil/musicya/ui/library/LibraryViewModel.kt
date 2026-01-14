@@ -40,7 +40,19 @@ class LibraryViewModel @Inject constructor(
 
     fun playSong(song: Song) {
         serviceConnection.player?.let { player ->
-            player.setMediaItem(MediaItem.fromUri(song.uri))
+            val mediaItem = MediaItem.Builder()
+                .setUri(song.uri)
+                .setMediaMetadata(
+                    androidx.media3.common.MediaMetadata.Builder()
+                        .setTitle(song.title)
+                        .setArtist(song.artist)
+                        .setAlbumTitle(song.album)
+                        .setExtras(android.os.Bundle().apply { putString("path", song.path) })
+                        .build()
+                )
+                .build()
+            
+            player.setMediaItem(mediaItem)
             player.prepare()
             player.play()
         }

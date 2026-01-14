@@ -26,6 +26,15 @@ class PlayerViewModel @Inject constructor(
     private val _duration = MutableStateFlow(0L)
     val duration = _duration.asStateFlow()
 
+    private val _currentSongPath = MutableStateFlow<String?>(null)
+    val currentSongPath = _currentSongPath.asStateFlow()
+    
+    private val _songTitle = MutableStateFlow("Unknown")
+    val songTitle = _songTitle.asStateFlow()
+    
+    private val _songArtist = MutableStateFlow("Unknown Artist")
+    val songArtist = _songArtist.asStateFlow()
+
     init {
         viewModelScope.launch {
             // Wait for connection
@@ -61,6 +70,13 @@ class PlayerViewModel @Inject constructor(
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 _isPlaying.value = isPlaying
             }
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                mediaItem?.mediaMetadata?.let { meta ->
+                    _songTitle.value = meta.title?.toString() ?: "Unknown"
+                    _songArtist.value = meta.artist?.toString() ?: "Unknown Artist"
+                    _currentSongPath.value = meta.extras?.getString("path")
+                }
+            }
             override fun onPlaybackStateChanged(playbackState: Int) {
                if (playbackState == Player.STATE_READY) {
                    _duration.value = player.duration
@@ -69,6 +85,11 @@ class PlayerViewModel @Inject constructor(
         })
         _isPlaying.value = player.isPlaying
         _duration.value = player.duration
+        player.currentMediaItem?.mediaMetadata?.let { meta ->
+             _songTitle.value = meta.title?.toString() ?: "Unknown"
+             _songArtist.value = meta.artist?.toString() ?: "Unknown Artist"
+             _currentSongPath.value = meta.extras?.getString("path")
+        }
     }
 
     fun togglePlayPause() {
