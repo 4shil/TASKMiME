@@ -30,19 +30,19 @@
 18-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:10:5-77
 18-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:10:22-74
 19    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-19-->[androidx.media3:media3-common:1.2.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\45c91a5aa64cf4b2932591de91749be8\transformed\media3-common-1.2.1\AndroidManifest.xml:22:5-79
-19-->[androidx.media3:media3-common:1.2.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\45c91a5aa64cf4b2932591de91749be8\transformed\media3-common-1.2.1\AndroidManifest.xml:22:22-76
+19-->[androidx.media3:media3-common:1.2.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\a8c73367383914d8dccee7a92c271b39\transformed\media3-common-1.2.1\AndroidManifest.xml:22:5-79
+19-->[androidx.media3:media3-common:1.2.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\a8c73367383914d8dccee7a92c271b39\transformed\media3-common-1.2.1\AndroidManifest.xml:22:22-76
 20
 21    <permission
-21-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\0e4ed36c7a896fbebf64db2b64c904b8\transformed\core-1.12.0\AndroidManifest.xml:22:5-24:47
+21-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\6b3b204242da84c12b0c463f33e4f9f1\transformed\core-1.12.0\AndroidManifest.xml:22:5-24:47
 22        android:name="com.fourshil.musicya.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-22-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\0e4ed36c7a896fbebf64db2b64c904b8\transformed\core-1.12.0\AndroidManifest.xml:23:9-81
+22-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\6b3b204242da84c12b0c463f33e4f9f1\transformed\core-1.12.0\AndroidManifest.xml:23:9-81
 23        android:protectionLevel="signature" />
-23-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\0e4ed36c7a896fbebf64db2b64c904b8\transformed\core-1.12.0\AndroidManifest.xml:24:9-44
+23-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\6b3b204242da84c12b0c463f33e4f9f1\transformed\core-1.12.0\AndroidManifest.xml:24:9-44
 24
 25    <uses-permission android:name="com.fourshil.musicya.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-25-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\0e4ed36c7a896fbebf64db2b64c904b8\transformed\core-1.12.0\AndroidManifest.xml:26:5-97
-25-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\0e4ed36c7a896fbebf64db2b64c904b8\transformed\core-1.12.0\AndroidManifest.xml:26:22-94
+25-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\6b3b204242da84c12b0c463f33e4f9f1\transformed\core-1.12.0\AndroidManifest.xml:26:5-97
+25-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\6b3b204242da84c12b0c463f33e4f9f1\transformed\core-1.12.0\AndroidManifest.xml:26:22-94
 26
 27    <application
 27-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:12:5-43:19
@@ -51,7 +51,7 @@
 29        android:allowBackup="true"
 29-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:14:9-35
 30        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-30-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\0e4ed36c7a896fbebf64db2b64c904b8\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
+30-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\6b3b204242da84c12b0c463f33e4f9f1\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
 31        android:dataExtractionRules="@xml/data_extraction_rules"
 31-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:15:9-65
 32        android:debuggable="true"
@@ -105,90 +105,90 @@
 58        </service>
 59
 60        <provider
-60-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\2f4e3fc059e537b03c07461be481890b\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+60-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\9ab390fb727e9be01a3692abd1916a1c\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
 61            android:name="androidx.startup.InitializationProvider"
-61-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\2f4e3fc059e537b03c07461be481890b\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
+61-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\9ab390fb727e9be01a3692abd1916a1c\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
 62            android:authorities="com.fourshil.musicya.androidx-startup"
-62-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\2f4e3fc059e537b03c07461be481890b\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
+62-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\9ab390fb727e9be01a3692abd1916a1c\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
 63            android:exported="false" >
-63-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\2f4e3fc059e537b03c07461be481890b\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
+63-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\9ab390fb727e9be01a3692abd1916a1c\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
 64            <meta-data
-64-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\2f4e3fc059e537b03c07461be481890b\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+64-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\9ab390fb727e9be01a3692abd1916a1c\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
 65                android:name="androidx.emoji2.text.EmojiCompatInitializer"
-65-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\2f4e3fc059e537b03c07461be481890b\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+65-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\9ab390fb727e9be01a3692abd1916a1c\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
 66                android:value="androidx.startup" />
-66-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\2f4e3fc059e537b03c07461be481890b\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+66-->[androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\9ab390fb727e9be01a3692abd1916a1c\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
 67            <meta-data
-67-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\253c3acaeac87e20f990187d3f9d46a0\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:29:13-31:52
+67-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\48fe793b4f12abb0f49d66db970eca0d\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:29:13-31:52
 68                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
-68-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\253c3acaeac87e20f990187d3f9d46a0\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:30:17-78
+68-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\48fe793b4f12abb0f49d66db970eca0d\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:30:17-78
 69                android:value="androidx.startup" />
-69-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\253c3acaeac87e20f990187d3f9d46a0\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:31:17-49
+69-->[androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\48fe793b4f12abb0f49d66db970eca0d\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:31:17-49
 70            <meta-data
-70-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+70-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
 71                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
-71-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+71-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
 72                android:value="androidx.startup" />
-72-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+72-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
 73        </provider>
 74
 75        <activity
-75-->[androidx.compose.ui:ui-test-manifest:1.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\5db06069a31e4d41dc7f5ffc56a14010\transformed\ui-test-manifest-1.6.1\AndroidManifest.xml:23:9-25:39
+75-->[androidx.compose.ui:ui-test-manifest:1.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\c2db9290e0ced8ac1eb3f5c051432a5c\transformed\ui-test-manifest-1.6.1\AndroidManifest.xml:23:9-25:39
 76            android:name="androidx.activity.ComponentActivity"
-76-->[androidx.compose.ui:ui-test-manifest:1.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\5db06069a31e4d41dc7f5ffc56a14010\transformed\ui-test-manifest-1.6.1\AndroidManifest.xml:24:13-63
+76-->[androidx.compose.ui:ui-test-manifest:1.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\c2db9290e0ced8ac1eb3f5c051432a5c\transformed\ui-test-manifest-1.6.1\AndroidManifest.xml:24:13-63
 77            android:exported="true" />
-77-->[androidx.compose.ui:ui-test-manifest:1.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\5db06069a31e4d41dc7f5ffc56a14010\transformed\ui-test-manifest-1.6.1\AndroidManifest.xml:25:13-36
+77-->[androidx.compose.ui:ui-test-manifest:1.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\c2db9290e0ced8ac1eb3f5c051432a5c\transformed\ui-test-manifest-1.6.1\AndroidManifest.xml:25:13-36
 78        <activity
-78-->[androidx.compose.ui:ui-tooling-android:1.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\8b615ec7f653c8ebaaae3d70ed2e95ad\transformed\ui-tooling-release\AndroidManifest.xml:23:9-25:39
+78-->[androidx.compose.ui:ui-tooling-android:1.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\72531c0bfd61a7fdbb9c01d511a049ca\transformed\ui-tooling-release\AndroidManifest.xml:23:9-25:39
 79            android:name="androidx.compose.ui.tooling.PreviewActivity"
-79-->[androidx.compose.ui:ui-tooling-android:1.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\8b615ec7f653c8ebaaae3d70ed2e95ad\transformed\ui-tooling-release\AndroidManifest.xml:24:13-71
+79-->[androidx.compose.ui:ui-tooling-android:1.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\72531c0bfd61a7fdbb9c01d511a049ca\transformed\ui-tooling-release\AndroidManifest.xml:24:13-71
 80            android:exported="true" />
-80-->[androidx.compose.ui:ui-tooling-android:1.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\8b615ec7f653c8ebaaae3d70ed2e95ad\transformed\ui-tooling-release\AndroidManifest.xml:25:13-36
+80-->[androidx.compose.ui:ui-tooling-android:1.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\72531c0bfd61a7fdbb9c01d511a049ca\transformed\ui-tooling-release\AndroidManifest.xml:25:13-36
 81
 82        <service
-82-->[androidx.room:room-runtime:2.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\1a307af2eb280f3feca5e83b08f268af\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
+82-->[androidx.room:room-runtime:2.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\26bc896a342b03ca4647b79e23f36d88\transformed\room-runtime-2.6.1\AndroidManifest.xml:24:9-28:63
 83            android:name="androidx.room.MultiInstanceInvalidationService"
-83-->[androidx.room:room-runtime:2.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\1a307af2eb280f3feca5e83b08f268af\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
+83-->[androidx.room:room-runtime:2.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\26bc896a342b03ca4647b79e23f36d88\transformed\room-runtime-2.6.1\AndroidManifest.xml:25:13-74
 84            android:directBootAware="true"
-84-->[androidx.room:room-runtime:2.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\1a307af2eb280f3feca5e83b08f268af\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
+84-->[androidx.room:room-runtime:2.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\26bc896a342b03ca4647b79e23f36d88\transformed\room-runtime-2.6.1\AndroidManifest.xml:26:13-43
 85            android:exported="false" />
-85-->[androidx.room:room-runtime:2.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\1a307af2eb280f3feca5e83b08f268af\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
+85-->[androidx.room:room-runtime:2.6.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\26bc896a342b03ca4647b79e23f36d88\transformed\room-runtime-2.6.1\AndroidManifest.xml:27:13-37
 86
 87        <receiver
-87-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+87-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
 88            android:name="androidx.profileinstaller.ProfileInstallReceiver"
-88-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+88-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
 89            android:directBootAware="false"
-89-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+89-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
 90            android:enabled="true"
-90-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+90-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
 91            android:exported="true"
-91-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+91-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
 92            android:permission="android.permission.DUMP" >
-92-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+92-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
 93            <intent-filter>
-93-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+93-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
 94                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
-94-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
-94-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+94-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+94-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
 95            </intent-filter>
 96            <intent-filter>
-96-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+96-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
 97                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
-97-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
-97-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+97-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+97-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
 98            </intent-filter>
 99            <intent-filter>
-99-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+99-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
 100                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
-100-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
-100-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+100-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+100-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
 101            </intent-filter>
 102            <intent-filter>
-102-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+102-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
 103                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
-103-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
-103-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\034e83c2713486b9305d464cdcaca05a\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
+103-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+103-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\b82c19b25ad3041d4f9bc3d689256ebc\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
 104            </intent-filter>
 105        </receiver>
 106    </application>

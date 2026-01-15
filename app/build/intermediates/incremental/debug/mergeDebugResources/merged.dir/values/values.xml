@@ -337,7 +337,7 @@
     <item quantity="other">Rewind <ns1:g example="30" id="rewind_amount">%d</ns1:g> seconds</item>
   </plurals>
     <string name="androidx_startup" translatable="false">androidx.startup</string>
-    <string name="app_name">Musicya</string>
+    <string name="app_name">LYRA</string>
     <string name="authentication_required">Authentication required</string>
     <string name="call_notification_answer_action">Answer</string>
     <string name="call_notification_answer_video_action">Video</string>

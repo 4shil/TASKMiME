@@ -36,9 +36,39 @@ class EqualizerViewModel @Inject constructor(
 
     private val _currentPreset = MutableStateFlow(-1)
     val currentPreset = _currentPreset.asStateFlow()
+    
+    private val _isInitialized = MutableStateFlow(false)
+    val isInitialized = _isInitialized.asStateFlow()
+
+    init {
+        // Auto-initialize with priority 0 (applies to all audio output)
+        initializeGlobalEqualizer()
+    }
+    
+    private fun initializeGlobalEqualizer() {
+        try {
+            // Use priority 0 and audioSessionId 0 for global/output mix equalizer
+            equalizer = Equalizer(0, 0).apply {
+                enabled = false
+            }
+            bassBoost = BassBoost(0, 0).apply {
+                enabled = false
+            }
+            virtualizer = Virtualizer(0, 0).apply {
+                enabled = false
+            }
+
+            updateBands()
+            updatePresets()
+            _isInitialized.value = true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            _isInitialized.value = false
+        }
+    }
 
     fun initialize(audioSessionId: Int) {
-        if (audioSessionId == 0) return
+        if (audioSessionId == 0 || _isInitialized.value) return
 
         try {
             equalizer = Equalizer(0, audioSessionId).apply {

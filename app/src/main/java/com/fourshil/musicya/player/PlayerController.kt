@@ -45,6 +45,16 @@ class PlayerController @Inject constructor(
             try { controllerFuture?.get() } catch (e: Exception) { null }
         } else null
     
+    val audioSessionId: Int
+        get() = try {
+            // Get the audio session ID from the player
+            (controller as? androidx.media3.exoplayer.ExoPlayer)?.audioSessionId 
+                ?: controller?.let { 
+                    // Fallback: use reflection or broadcast audio session
+                    android.media.AudioManager.AUDIO_SESSION_ID_GENERATE
+                } ?: 0
+        } catch (e: Exception) { 0 }
+    
     fun connect() {
         if (controllerFuture != null) return
         
@@ -187,6 +197,89 @@ class PlayerController @Inject constructor(
             }
         }
     }
+    
+    /**
+     * Add a song to play next (after current song).
+     */
+    fun playNext(song: Song) {
+        val mediaItem = MediaItem.Builder()
+            .setMediaId(song.id.toString())
+            .setUri(song.uri)
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(song.title)
+                    .setArtist(song.artist)
+                    .setAlbumTitle(song.album)
+                    .setArtworkUri(song.albumArtUri)
+                    .build()
+            )
+            .build()
+        
+        controller?.let {
+            val nextIndex = it.currentMediaItemIndex + 1
+            it.addMediaItem(nextIndex, mediaItem)
+        }
+    }
+    
+    /**
+     * Add songs to the end of the queue.
+     */
+    fun addToQueue(songs: List<Song>) {
+        val mediaItems = songs.map { song ->
+            MediaItem.Builder()
+                .setMediaId(song.id.toString())
+                .setUri(song.uri)
+                .setMediaMetadata(
+                    MediaMetadata.Builder()
+                        .setTitle(song.title)
+                        .setArtist(song.artist)
+                        .setAlbumTitle(song.album)
+                        .setArtworkUri(song.albumArtUri)
+                        .build()
+                )
+                .build()
+        }
+        
+        controller?.addMediaItems(mediaItems)
+    }
+    
+    /**
+     * Add a single song to the end of the queue.
+     */
+    fun addToQueue(song: Song) {
+        addToQueue(listOf(song))
+    }
+    
+    /**
+     * Get current queue for display.
+     */
+    fun getQueue(): List<Song> {
+        val controller = controller ?: return emptyList()
+        val songs = mutableListOf<Song>()
+        
+        for (i in 0 until controller.mediaItemCount) {
+            val item = controller.getMediaItemAt(i)
+            val meta = item.mediaMetadata
+            songs.add(
+                Song(
+                    id = item.mediaId.toLongOrNull() ?: 0,
+                    title = meta.title?.toString() ?: "Unknown",
+                    artist = meta.artist?.toString() ?: "Unknown Artist",
+                    album = meta.albumTitle?.toString() ?: "Unknown Album",
+                    albumId = 0,
+                    duration = 0,
+                    uri = item.localConfiguration?.uri ?: android.net.Uri.EMPTY,
+                    path = "",
+                    dateAdded = 0,
+                    size = 0
+                )
+            )
+        }
+        
+        return songs
+    }
+    
+    fun getCurrentIndex(): Int = controller?.currentMediaItemIndex ?: -1
     
     fun release() {
         controllerFuture?.let { MediaController.releaseFuture(it) }

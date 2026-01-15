@@ -14,7 +14,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 @Composable
 fun EqualizerScreen(
     viewModel: EqualizerViewModel = hiltViewModel(),
-    audioSessionId: Int = 0,
     onBack: () -> Unit = {}
 ) {
     val isEnabled by viewModel.isEnabled.collectAsState()
@@ -23,12 +22,7 @@ fun EqualizerScreen(
     val virtualizerLevel by viewModel.virtualizerLevel.collectAsState()
     val presets by viewModel.presets.collectAsState()
     val currentPreset by viewModel.currentPreset.collectAsState()
-
-    LaunchedEffect(audioSessionId) {
-        if (audioSessionId > 0) {
-            viewModel.initialize(audioSessionId)
-        }
-    }
+    val isInitialized by viewModel.isInitialized.collectAsState()
 
     Scaffold(
         topBar = {
@@ -54,6 +48,28 @@ fun EqualizerScreen(
                 .padding(padding)
                 .padding(16.dp)
         ) {
+            // Show error if not initialized
+            if (!isInitialized) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            "Equalizer not available",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            "Your device may not support audio effects",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+                return@Scaffold
+            }
+            
             // Presets Dropdown
             if (presets.isNotEmpty()) {
                 var expanded by remember { mutableStateOf(false) }

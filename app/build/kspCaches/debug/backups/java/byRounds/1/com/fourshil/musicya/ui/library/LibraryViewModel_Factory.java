@@ -1,5 +1,6 @@
 package com.fourshil.musicya.ui.library;
 
+import com.fourshil.musicya.data.db.MusicDao;
 import com.fourshil.musicya.data.repository.MusicRepository;
 import com.fourshil.musicya.player.PlayerController;
 import dagger.internal.DaggerGenerated;
@@ -27,24 +28,27 @@ public final class LibraryViewModel_Factory implements Factory<LibraryViewModel>
 
   private final Provider<PlayerController> playerControllerProvider;
 
+  private final Provider<MusicDao> musicDaoProvider;
+
   public LibraryViewModel_Factory(Provider<MusicRepository> repositoryProvider,
-      Provider<PlayerController> playerControllerProvider) {
+      Provider<PlayerController> playerControllerProvider, Provider<MusicDao> musicDaoProvider) {
     this.repositoryProvider = repositoryProvider;
     this.playerControllerProvider = playerControllerProvider;
+    this.musicDaoProvider = musicDaoProvider;
   }
 
   @Override
   public LibraryViewModel get() {
-    return newInstance(repositoryProvider.get(), playerControllerProvider.get());
+    return newInstance(repositoryProvider.get(), playerControllerProvider.get(), musicDaoProvider.get());
   }
 
   public static LibraryViewModel_Factory create(Provider<MusicRepository> repositoryProvider,
-      Provider<PlayerController> playerControllerProvider) {
-    return new LibraryViewModel_Factory(repositoryProvider, playerControllerProvider);
+      Provider<PlayerController> playerControllerProvider, Provider<MusicDao> musicDaoProvider) {
+    return new LibraryViewModel_Factory(repositoryProvider, playerControllerProvider, musicDaoProvider);
   }
 
   public static LibraryViewModel newInstance(MusicRepository repository,
-      PlayerController playerController) {
-    return new LibraryViewModel(repository, playerController);
+      PlayerController playerController, MusicDao musicDao) {
+    return new LibraryViewModel(repository, playerController, musicDao);
   }
 }

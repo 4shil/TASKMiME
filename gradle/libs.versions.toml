@@ -19,6 +19,7 @@ hiltNavigationCompose = "1.1.0"
 accompanist = "0.34.0"
 kotlinxCoroutines = "1.7.3"
 jaudiotagger = "2.2.3"
+datastore = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -59,6 +60,9 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 
 # Coil
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+# DataStore
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 # Accompanist (Permissions etc)
 # Accompanist (Permissions etc)

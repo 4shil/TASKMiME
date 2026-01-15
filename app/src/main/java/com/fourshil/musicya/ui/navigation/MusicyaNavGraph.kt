@@ -8,11 +8,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.*
+import androidx.navigation.navArgument
 import com.fourshil.musicya.ui.components.MiniPlayer
 import com.fourshil.musicya.ui.library.*
 import com.fourshil.musicya.ui.nowplaying.NowPlayingScreen
 import com.fourshil.musicya.ui.nowplaying.NowPlayingViewModel
+import com.fourshil.musicya.ui.playlist.PlaylistDetailScreen
 import com.fourshil.musicya.ui.queue.QueueScreen
 import com.fourshil.musicya.ui.search.SearchScreen
 import com.fourshil.musicya.ui.settings.EqualizerScreen
@@ -39,7 +42,8 @@ fun MusicyaNavGraph() {
         BottomNavItem(Screen.Songs.route, "Songs") { Icon(Icons.Default.MusicNote, null) },
         BottomNavItem(Screen.Albums.route, "Albums") { Icon(Icons.Default.Album, null) },
         BottomNavItem(Screen.Artists.route, "Artists") { Icon(Icons.Default.Person, null) },
-        BottomNavItem(Screen.Folders.route, "Folders") { Icon(Icons.Default.Folder, null) }
+        BottomNavItem(Screen.Playlists.route, "Playlists") { Icon(Icons.Default.QueueMusic, null) },
+        BottomNavItem(Screen.Favorites.route, "Favorites") { Icon(Icons.Default.Favorite, null) }
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -47,19 +51,25 @@ fun MusicyaNavGraph() {
 
     // Hide bottom nav on full-screen pages
     val fullScreenRoutes = listOf(
-        Screen.NowPlaying.route, 
-        Screen.Queue.route, 
+        Screen.NowPlaying.route,
+        Screen.Queue.route,
         Screen.Search.route,
         Screen.Settings.route,
-        Screen.Equalizer.route
+        Screen.Equalizer.route,
+        Screen.PlaylistDetail.route
     )
-    val showBottomNav = currentRoute !in fullScreenRoutes
+    // Routes where mini player should be hidden (only full-screen player)
+    val hideMiniPlayerRoutes = listOf(
+        Screen.NowPlaying.route
+    )
+    val showBottomNav = fullScreenRoutes.none { currentRoute?.startsWith(it.substringBefore("{")) == true }
+    val showMiniPlayer = hideMiniPlayerRoutes.none { currentRoute?.startsWith(it.substringBefore("{")) == true }
 
     Scaffold(
         topBar = {
             if (showBottomNav) {
                 TopAppBar(
-                    title = { Text("Musicya") },
+                    title = { Text("LYRA") },
                     actions = {
                         IconButton(onClick = { navController.navigate(Screen.Search.route) }) {
                             Icon(Icons.Default.Search, contentDescription = "Search")
@@ -73,8 +83,8 @@ fun MusicyaNavGraph() {
         },
         bottomBar = {
             Column {
-                // Mini Player
-                if (showBottomNav && currentSong != null) {
+                // Mini Player - show on all pages except now playing
+                if (showMiniPlayer && currentSong != null) {
                     MiniPlayer(
                         song = currentSong,
                         isPlaying = isPlaying,
@@ -118,13 +128,35 @@ fun MusicyaNavGraph() {
                 SongsScreen()
             }
             composable(Screen.Albums.route) {
-                AlbumsScreen()
+                AlbumsScreen(
+                    onAlbumClick = { albumId ->
+                        navController.navigate(Screen.PlaylistDetail.createRoute("album", albumId.toString()))
+                    }
+                )
             }
             composable(Screen.Artists.route) {
-                ArtistsScreen()
+                ArtistsScreen(
+                    onArtistClick = { artistName ->
+                        navController.navigate(Screen.PlaylistDetail.createRoute("artist", artistName))
+                    }
+                )
             }
             composable(Screen.Folders.route) {
-                FoldersScreen()
+                FoldersScreen(
+                    onFolderClick = { folderPath ->
+                        navController.navigate(Screen.PlaylistDetail.createRoute("folder", folderPath))
+                    }
+                )
+            }
+            composable(Screen.Favorites.route) {
+                FavoritesScreen()
+            }
+            composable(Screen.Playlists.route) {
+                PlaylistsScreen(
+                    onPlaylistClick = { playlistId ->
+                        navController.navigate(Screen.PlaylistDetail.createRoute("playlist", playlistId.toString()))
+                    }
+                )
             }
             composable(Screen.NowPlaying.route) {
                 NowPlayingScreen(
@@ -150,6 +182,18 @@ fun MusicyaNavGraph() {
             }
             composable(Screen.Equalizer.route) {
                 EqualizerScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            // Playlist Detail Screen
+            composable(
+                route = Screen.PlaylistDetail.route,
+                arguments = listOf(
+                    navArgument("type") { type = NavType.StringType },
+                    navArgument("id") { type = NavType.StringType }
+                )
+            ) {
+                PlaylistDetailScreen(
                     onBack = { navController.popBackStack() }
                 )
             }

@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Musicya"
+rootProject.name = "LYRA"
 include(":app")

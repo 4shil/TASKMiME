@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -41,10 +41,7 @@ fun FoldersScreen(
             items(folders, key = { it.path }) { folder ->
                 FolderListItem(
                     folder = folder,
-                    onClick = { 
-                        // Play all songs in this folder as a queue
-                        viewModel.playFolder(folder.path)
-                    }
+                    onClick = { onFolderClick(folder.path) }
                 )
             }
         }
@@ -82,11 +79,10 @@ fun FolderListItem(
             }
         },
         trailingContent = {
-            // Play button to make it obvious folders are playable
             Icon(
-                Icons.Default.PlayArrow,
-                contentDescription = "Play folder",
-                tint = MaterialTheme.colorScheme.primary
+                Icons.Default.ChevronRight,
+                contentDescription = "Open",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
     )

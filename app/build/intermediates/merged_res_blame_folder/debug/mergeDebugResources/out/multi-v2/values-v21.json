@@ -1,29 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.fourshil.musicya.app-mergeDebugResources-65:/values-v21/values-v21.xml",
+            "outputFile": "com.fourshil.musicya.app-mergeDebugResources-67:/values-v21/values-v21.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\ashil\\.gradle\\caches\\9.0-milestone-1\\transforms\\0e4ed36c7a896fbebf64db2b64c904b8\\transformed\\core-1.12.0\\res\\values-v21\\values-v21.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,13",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,173,237,304,368,484,610,736,864,1036",
-                        "endLines": "2,3,4,5,6,7,8,9,12,17",
-                        "endColumns": "117,63,66,63,115,125,125,127,12,12",
-                        "endOffsets": "168,232,299,363,479,605,731,859,1031,1383"
-                    },
-                    "to": {
-                        "startLines": "2,4,5,6,12,13,20,24,28,31",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "55,232,296,363,714,830,1287,1581,1876,2048",
-                        "endLines": "2,4,5,6,12,13,20,24,30,35",
-                        "endColumns": "117,63,66,63,115,125,125,127,12,12",
-                        "endOffsets": "168,291,358,422,825,951,1408,1704,2043,2395"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\ashil\\.gradle\\caches\\9.0-milestone-1\\transforms\\850898377105fb9119204b12298e704e\\transformed\\media-1.6.0\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\ashil\\.gradle\\caches\\9.0-milestone-1\\transforms\\128a22f4ab5cc16559eb56a332cc5776\\transformed\\media-1.6.0\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,5,8,11",
                         "startColumns": "4,4,4,4",
@@ -42,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\ashil\\.gradle\\caches\\9.0-milestone-1\\transforms\\52c9d66a2aa7fbd7c9f2cd623f629b61\\transformed\\media3-ui-1.2.1\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\ashil\\.gradle\\caches\\9.0-milestone-1\\transforms\\698846bdedb986128a58e6761bc39488\\transformed\\media3-ui-1.2.1\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
@@ -58,6 +39,25 @@
                         "endLines": "3,11",
                         "endColumns": "58,10",
                         "endOffsets": "227,709"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\ashil\\.gradle\\caches\\9.0-milestone-1\\transforms\\6b3b204242da84c12b0c463f33e4f9f1\\transformed\\core-1.12.0\\res\\values-v21\\values-v21.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,13",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,173,237,304,368,484,610,736,864,1036",
+                        "endLines": "2,3,4,5,6,7,8,9,12,17",
+                        "endColumns": "117,63,66,63,115,125,125,127,12,12",
+                        "endOffsets": "168,232,299,363,479,605,731,859,1031,1383"
+                    },
+                    "to": {
+                        "startLines": "2,4,5,6,12,13,20,24,28,31",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "55,232,296,363,714,830,1287,1581,1876,2048",
+                        "endLines": "2,4,5,6,12,13,20,24,30,35",
+                        "endColumns": "117,63,66,63,115,125,125,127,12,12",
+                        "endOffsets": "168,291,358,422,825,951,1408,1704,2043,2395"
                     }
                 }
             ]

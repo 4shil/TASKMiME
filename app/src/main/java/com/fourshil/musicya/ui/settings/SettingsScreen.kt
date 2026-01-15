@@ -10,17 +10,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.fourshil.musicya.data.ThemeMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    viewModel: SettingsViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
     onEqualizerClick: () -> Unit = {}
 ) {
     var sleepTimerEnabled by remember { mutableStateOf(false) }
     var sleepTimerMinutes by remember { mutableStateOf(30) }
     var showSleepTimerDialog by remember { mutableStateOf(false) }
+    var showThemeDialog by remember { mutableStateOf(false) }
+    
+    val currentTheme by viewModel.themeMode.collectAsState()
 
     Scaffold(
         topBar = {
@@ -68,11 +73,19 @@ fun SettingsScreen(
 
             HorizontalDivider()
 
-            // Theme (placeholder)
+            // Theme
             ListItem(
+                modifier = Modifier.clickable { showThemeDialog = true },
                 headlineContent = { Text("Theme") },
-                supportingContent = { Text("System default") },
-                leadingContent = { Icon(Icons.Default.Palette, null) }
+                supportingContent = { 
+                    Text(when (currentTheme) {
+                        ThemeMode.SYSTEM -> "System default"
+                        ThemeMode.LIGHT -> "Light"
+                        ThemeMode.DARK -> "Dark"
+                    })
+                },
+                leadingContent = { Icon(Icons.Default.Palette, null) },
+                trailingContent = { Icon(Icons.Default.ChevronRight, null) }
             )
 
             HorizontalDivider()
@@ -80,7 +93,7 @@ fun SettingsScreen(
             // About
             ListItem(
                 headlineContent = { Text("About") },
-                supportingContent = { Text("Musicya v1.0") },
+                supportingContent = { Text("LYRA v1.0") },
                 leadingContent = { Icon(Icons.Default.Info, null) }
             )
         }
@@ -130,4 +143,45 @@ fun SettingsScreen(
             }
         )
     }
+    
+    // Theme Dialog
+    if (showThemeDialog) {
+        AlertDialog(
+            onDismissRequest = { showThemeDialog = false },
+            title = { Text("Choose Theme") },
+            text = {
+                Column {
+                    ThemeMode.entries.forEach { mode ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    viewModel.setThemeMode(mode)
+                                    showThemeDialog = false
+                                }
+                                .padding(vertical = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = currentTheme == mode,
+                                onClick = null
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(when (mode) {
+                                ThemeMode.SYSTEM -> "System default"
+                                ThemeMode.LIGHT -> "Light"
+                                ThemeMode.DARK -> "Dark"
+                            })
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showThemeDialog = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
 }
+

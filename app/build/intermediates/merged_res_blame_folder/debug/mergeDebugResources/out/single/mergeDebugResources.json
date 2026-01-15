@@ -1,26 +1,26 @@
 [
     {
-        "merged": "com.fourshil.musicya.app-debug-67:/xml_data_extraction_rules.xml.flat",
-        "source": "com.fourshil.musicya.app-main-69:/xml/data_extraction_rules.xml"
+        "merged": "com.fourshil.musicya.app-debug-69:/xml_widget_info.xml.flat",
+        "source": "com.fourshil.musicya.app-main-71:/xml/widget_info.xml"
     },
     {
-        "merged": "com.fourshil.musicya.app-debug-67:/xml_backup_rules.xml.flat",
-        "source": "com.fourshil.musicya.app-main-69:/xml/backup_rules.xml"
+        "merged": "com.fourshil.musicya.app-debug-69:/xml_backup_rules.xml.flat",
+        "source": "com.fourshil.musicya.app-main-71:/xml/backup_rules.xml"
     },
     {
-        "merged": "com.fourshil.musicya.app-debug-67:/xml_widget_info.xml.flat",
-        "source": "com.fourshil.musicya.app-main-69:/xml/widget_info.xml"
+        "merged": "com.fourshil.musicya.app-debug-69:/xml_automotive_app_desc.xml.flat",
+        "source": "com.fourshil.musicya.app-main-71:/xml/automotive_app_desc.xml"
     },
     {
-        "merged": "com.fourshil.musicya.app-debug-67:/xml_automotive_app_desc.xml.flat",
-        "source": "com.fourshil.musicya.app-main-69:/xml/automotive_app_desc.xml"
+        "merged": "com.fourshil.musicya.app-debug-69:/layout_widget_music_4x1.xml.flat",
+        "source": "com.fourshil.musicya.app-main-71:/layout/widget_music_4x1.xml"
     },
     {
-        "merged": "com.fourshil.musicya.app-debug-67:/drawable_widget_background.xml.flat",
-        "source": "com.fourshil.musicya.app-main-69:/drawable/widget_background.xml"
+        "merged": "com.fourshil.musicya.app-debug-69:/drawable_widget_background.xml.flat",
+        "source": "com.fourshil.musicya.app-main-71:/drawable/widget_background.xml"
     },
     {
-        "merged": "com.fourshil.musicya.app-debug-67:/layout_widget_music_4x1.xml.flat",
-        "source": "com.fourshil.musicya.app-main-69:/layout/widget_music_4x1.xml"
+        "merged": "com.fourshil.musicya.app-debug-69:/xml_data_extraction_rules.xml.flat",
+        "source": "com.fourshil.musicya.app-main-71:/xml/data_extraction_rules.xml"
     }
 ]
