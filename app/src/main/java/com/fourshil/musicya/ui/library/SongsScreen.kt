@@ -13,11 +13,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import com.fourshil.musicya.data.model.Song
 import com.fourshil.musicya.ui.components.*
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -330,17 +328,10 @@ fun SongListItem(
                     onCheckedChange = null
                 )
             } else {
-                Card(
-                    modifier = Modifier.size(48.dp),
-                    shape = MaterialTheme.shapes.small
-                ) {
-                    AsyncImage(
-                        model = song.albumArtUri,
-                        contentDescription = "Album Art",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+                AlbumArtImage(
+                    uri = song.albumArtUri,
+                    size = 48.dp
+                )
             }
         },
         trailingContent = {

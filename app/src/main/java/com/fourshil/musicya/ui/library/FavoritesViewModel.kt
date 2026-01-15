@@ -60,7 +60,7 @@ class FavoritesViewModel @Inject constructor(
     }
     
     fun playNext(song: Song) {
-        playerController.playNext(song)
+        playerController.`playNext(song)
     }
     
     fun addToQueue(song: Song) {

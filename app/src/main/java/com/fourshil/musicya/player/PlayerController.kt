@@ -45,16 +45,6 @@ class PlayerController @Inject constructor(
             try { controllerFuture?.get() } catch (e: Exception) { null }
         } else null
     
-    val audioSessionId: Int
-        get() = try {
-            // Get the audio session ID from the player
-            (controller as? androidx.media3.exoplayer.ExoPlayer)?.audioSessionId 
-                ?: controller?.let { 
-                    // Fallback: use reflection or broadcast audio session
-                    android.media.AudioManager.AUDIO_SESSION_ID_GENERATE
-                } ?: 0
-        } catch (e: Exception) { 0 }
-    
     fun connect() {
         if (controllerFuture != null) return
         
@@ -64,7 +54,6 @@ class PlayerController @Inject constructor(
         controllerFuture?.addListener({
             val controller = controller ?: return@addListener
             
-            // Add listener for state changes
             controller.addListener(object : Player.Listener {
                 override fun onIsPlayingChanged(isPlaying: Boolean) {
                     _isPlaying.value = isPlaying
@@ -89,7 +78,6 @@ class PlayerController @Inject constructor(
                 }
             })
             
-            // Sync initial state
             _isPlaying.value = controller.isPlaying
             _shuffleEnabled.value = controller.shuffleModeEnabled
             _repeatMode.value = controller.repeatMode
@@ -105,35 +93,24 @@ class PlayerController @Inject constructor(
         }
         
         val meta = mediaItem.mediaMetadata
-        // Reconstruct Song from metadata (simplified - ideally store original Song)
+        val albumId = meta.extras?.getLong("album_id") ?: 0L
+        
         _currentSong.value = Song(
             id = mediaItem.mediaId.toLongOrNull() ?: 0,
             title = meta.title?.toString() ?: "Unknown",
             artist = meta.artist?.toString() ?: "Unknown Artist",
             album = meta.albumTitle?.toString() ?: "Unknown Album",
-            albumId = 0, // Not stored in metadata
+            albumId = albumId,
             duration = controller?.duration ?: 0,
             uri = mediaItem.localConfiguration?.uri ?: android.net.Uri.EMPTY,
-            path = "",
+            path = meta.extras?.getString("path") ?: "",
             dateAdded = 0,
             size = 0
         )
     }
     
     fun playSong(song: Song) {
-        val mediaItem = MediaItem.Builder()
-            .setMediaId(song.id.toString())
-            .setUri(song.uri)
-            .setMediaMetadata(
-                MediaMetadata.Builder()
-                    .setTitle(song.title)
-                    .setArtist(song.artist)
-                    .setAlbumTitle(song.album)
-                    .setArtworkUri(song.albumArtUri)
-                    .build()
-            )
-            .build()
-        
+        val mediaItem = buildMediaItem(song)
         controller?.apply {
             setMediaItem(mediaItem)
             prepare()
@@ -142,26 +119,31 @@ class PlayerController @Inject constructor(
     }
     
     fun playSongs(songs: List<Song>, startIndex: Int = 0) {
-        val mediaItems = songs.map { song ->
-            MediaItem.Builder()
-                .setMediaId(song.id.toString())
-                .setUri(song.uri)
-                .setMediaMetadata(
-                    MediaMetadata.Builder()
-                        .setTitle(song.title)
-                        .setArtist(song.artist)
-                        .setAlbumTitle(song.album)
-                        .setArtworkUri(song.albumArtUri)
-                        .build()
-                )
-                .build()
-        }
-        
+        val mediaItems = songs.map { buildMediaItem(it) }
         controller?.apply {
             setMediaItems(mediaItems, startIndex, 0)
             prepare()
             play()
         }
+    }
+
+    private fun buildMediaItem(song: Song): MediaItem {
+        return MediaItem.Builder()
+            .setMediaId(song.id.toString())
+            .setUri(song.uri)
+            .setMediaMetadata(
+                MediaMetadata.Builder()
+                    .setTitle(song.title)
+                    .setArtist(song.artist)
+                    .setAlbumTitle(song.album)
+                    .setArtworkUri(song.albumArtUri)
+                    .setExtras(android.os.Bundle().apply {
+                        putLong("album_id", song.albumId)
+                        putString("path", song.path)
+                    })
+                    .build()
+            )
+            .build()
     }
     
     fun togglePlayPause() {
@@ -197,62 +179,24 @@ class PlayerController @Inject constructor(
             }
         }
     }
-    
-    /**
-     * Add a song to play next (after current song).
-     */
+
     fun playNext(song: Song) {
-        val mediaItem = MediaItem.Builder()
-            .setMediaId(song.id.toString())
-            .setUri(song.uri)
-            .setMediaMetadata(
-                MediaMetadata.Builder()
-                    .setTitle(song.title)
-                    .setArtist(song.artist)
-                    .setAlbumTitle(song.album)
-                    .setArtworkUri(song.albumArtUri)
-                    .build()
-            )
-            .build()
-        
+        val mediaItem = buildMediaItem(song)
         controller?.let {
             val nextIndex = it.currentMediaItemIndex + 1
             it.addMediaItem(nextIndex, mediaItem)
         }
     }
-    
-    /**
-     * Add songs to the end of the queue.
-     */
-    fun addToQueue(songs: List<Song>) {
-        val mediaItems = songs.map { song ->
-            MediaItem.Builder()
-                .setMediaId(song.id.toString())
-                .setUri(song.uri)
-                .setMediaMetadata(
-                    MediaMetadata.Builder()
-                        .setTitle(song.title)
-                        .setArtist(song.artist)
-                        .setAlbumTitle(song.album)
-                        .setArtworkUri(song.albumArtUri)
-                        .build()
-                )
-                .build()
-        }
-        
-        controller?.addMediaItems(mediaItems)
-    }
-    
-    /**
-     * Add a single song to the end of the queue.
-     */
+
     fun addToQueue(song: Song) {
         addToQueue(listOf(song))
     }
+
+    fun addToQueue(songs: List<Song>) {
+        val mediaItems = songs.map { buildMediaItem(it) }
+        controller?.addMediaItems(mediaItems)
+    }
     
-    /**
-     * Get current queue for display.
-     */
     fun getQueue(): List<Song> {
         val controller = controller ?: return emptyList()
         val songs = mutableListOf<Song>()
@@ -260,16 +204,17 @@ class PlayerController @Inject constructor(
         for (i in 0 until controller.mediaItemCount) {
             val item = controller.getMediaItemAt(i)
             val meta = item.mediaMetadata
+            val albumId = meta.extras?.getLong("album_id") ?: 0L
             songs.add(
                 Song(
                     id = item.mediaId.toLongOrNull() ?: 0,
                     title = meta.title?.toString() ?: "Unknown",
                     artist = meta.artist?.toString() ?: "Unknown Artist",
                     album = meta.albumTitle?.toString() ?: "Unknown Album",
-                    albumId = 0,
+                    albumId = albumId,
                     duration = 0,
                     uri = item.localConfiguration?.uri ?: android.net.Uri.EMPTY,
-                    path = "",
+                    path = meta.extras?.getString("path") ?: "",
                     dateAdded = 0,
                     size = 0
                 )
@@ -278,8 +223,6 @@ class PlayerController @Inject constructor(
         
         return songs
     }
-    
-    fun getCurrentIndex(): Int = controller?.currentMediaItemIndex ?: -1
     
     fun release() {
         controllerFuture?.let { MediaController.releaseFuture(it) }

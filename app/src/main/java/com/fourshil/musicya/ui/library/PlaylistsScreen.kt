@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fourshil.musicya.data.db.Playlist
 import com.fourshil.musicya.ui.components.CreatePlaylistDialog
+import com.fourshil.musicya.ui.components.PlaylistArtGrid
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -68,12 +69,13 @@ fun PlaylistsScreen(
                 contentPadding = PaddingValues(bottom = 80.dp)
             ) {
                 items(playlists, key = { it.id }) { playlist ->
-                    val songCount by viewModel.getPlaylistSongCount(playlist.id)
-                        .collectAsState(initial = 0)
+                    val playlistSongs by viewModel.getPlaylistSongs(playlist.id)
+                        .collectAsState(initial = emptyList())
                     
                     PlaylistItem(
                         playlist = playlist,
-                        songCount = songCount,
+                        songCount = playlistSongs.size,
+                        artUris = playlistSongs.map { it.albumArtUri },
                         onClick = { onPlaylistClick(playlist.id) },
                         onLongClick = { showDeleteDialog = playlist },
                         onRename = { showRenameDialog = playlist }
@@ -162,6 +164,7 @@ fun PlaylistsScreen(
 private fun PlaylistItem(
     playlist: Playlist,
     songCount: Int,
+    artUris: List<android.net.Uri>,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onRename: () -> Unit
@@ -179,18 +182,10 @@ private fun PlaylistItem(
             )
         },
         leadingContent = {
-            Surface(
-                modifier = Modifier.size(48.dp),
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.primaryContainer
-            ) {
-                Icon(
-                    Icons.Default.QueueMusic,
-                    contentDescription = null,
-                    modifier = Modifier.padding(12.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            }
+            PlaylistArtGrid(
+                uris = artUris,
+                size = 48.dp
+            )
         },
         trailingContent = {
             IconButton(onClick = onRename) {

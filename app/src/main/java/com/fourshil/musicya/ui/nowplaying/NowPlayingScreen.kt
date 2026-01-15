@@ -10,14 +10,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import com.fourshil.musicya.ui.components.LargeAlbumArt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,27 +67,11 @@ fun NowPlayingScreen(
         ) {
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Album Art - using MediaStore content URI with fallback
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-                shape = MaterialTheme.shapes.large,
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-            ) {
-                val context = LocalContext.current
-                AsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(currentSong?.albumArtUri)
-                        .crossfade(true)
-                        .error(android.R.drawable.ic_menu_gallery)
-                        .fallback(android.R.drawable.ic_menu_gallery)
-                        .build(),
-                    contentDescription = "Album Art",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
+            // Album Art with proper fallback
+            LargeAlbumArt(
+                uri = currentSong?.albumArtUri,
+                contentDescription = "Album Art for ${currentSong?.title}"
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
 

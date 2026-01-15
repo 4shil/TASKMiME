@@ -3,6 +3,7 @@ package com.fourshil.musicya.ui.playlist
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fourshil.musicya.data.db.MusicDao
 import com.fourshil.musicya.data.model.Song
 import com.fourshil.musicya.data.repository.MusicRepository
 import com.fourshil.musicya.player.PlayerController
@@ -13,14 +14,11 @@ import kotlinx.coroutines.launch
 import java.net.URLDecoder
 import javax.inject.Inject
 
-enum class PlaylistType {
-    ALBUM, ARTIST, FOLDER
-}
-
 @HiltViewModel
 class PlaylistDetailViewModel @Inject constructor(
     private val repository: MusicRepository,
     private val playerController: PlayerController,
+    private val musicDao: MusicDao,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -63,6 +61,7 @@ class PlaylistDetailViewModel @Inject constructor(
                         _subtitle.value = "${albumSongs.first().artist} • ${albumSongs.size} songs"
                         _artUri.value = albumSongs.first().albumArtUri.toString()
                     }
+                    _isLoading.value = false
                 }
                 "artist" -> {
                     val artistName = URLDecoder.decode(id, "UTF-8")
@@ -70,6 +69,7 @@ class PlaylistDetailViewModel @Inject constructor(
                     _songs.value = artistSongs
                     _title.value = artistName
                     _subtitle.value = "${artistSongs.size} songs"
+                    _isLoading.value = false
                 }
                 "folder" -> {
                     val folderPath = URLDecoder.decode(id, "UTF-8")
@@ -77,10 +77,32 @@ class PlaylistDetailViewModel @Inject constructor(
                     _songs.value = folderSongs
                     _title.value = folderPath.substringAfterLast("/")
                     _subtitle.value = "${folderSongs.size} songs"
+                    _isLoading.value = false
+                }
+                "playlist" -> {
+                    val playlistId = id.toLongOrNull() ?: 0L
+                    val playlist = musicDao.getPlaylist(playlistId)
+                    _title.value = playlist?.name ?: "Unknown Playlist"
+                    
+                    // Observe playlist songs flow
+                    musicDao.getPlaylistSongs(playlistId).collect { playlistSongs ->
+                        val ids = playlistSongs.map { it.songId }
+                        val rawSongs = repository.getSongsByIds(ids)
+                        // Maintain the order from the playlist_songs table
+                        val sortedSongs = ids.mapNotNull { itemId -> 
+                            rawSongs.find { it.id == itemId } 
+                        }
+                        
+                        _songs.value = sortedSongs
+                        _subtitle.value = "${sortedSongs.size} songs"
+                        _artUri.value = sortedSongs.firstOrNull()?.albumArtUri?.toString()
+                        _isLoading.value = false
+                    }
+                }
+                else -> {
+                    _isLoading.value = false
                 }
             }
-            
-            _isLoading.value = false
         }
     }
 

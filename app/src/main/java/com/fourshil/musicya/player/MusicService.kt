@@ -16,6 +16,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MusicService : MediaSessionService() {
 
+    @Inject lateinit var audioEngine: AudioEngine
+
     private var mediaSession: MediaSession? = null
     private var player: ExoPlayer? = null
 
@@ -33,6 +35,18 @@ class MusicService : MediaSessionService() {
             )
             .setHandleAudioBecomingNoisy(true) // Pause when headphones unplugged
             .build()
+            
+        // Attach Audio Engine to the player's session
+        player?.let {
+            audioEngine.attach(it.audioSessionId)
+            
+            // Re-attach if session ID changes (rare but possible)
+            it.addListener(object : Player.Listener {
+                override fun onAudioSessionIdChanged(audioSessionId: Int) {
+                    audioEngine.attach(audioSessionId)
+                }
+            })
+        }
         
         // Create a PendingIntent to launch MainActivity
         val intent = Intent(this, MainActivity::class.java)
@@ -64,6 +78,7 @@ class MusicService : MediaSessionService() {
             release()
             mediaSession = null
         }
+        audioEngine.release() // Release effects
         super.onDestroy()
     }
 }

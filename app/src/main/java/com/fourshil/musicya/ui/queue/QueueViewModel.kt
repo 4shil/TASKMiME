@@ -52,15 +52,18 @@ class QueueViewModel @Inject constructor(
 
     private fun mediaItemToSong(mediaItem: MediaItem): Song {
         val meta = mediaItem.mediaMetadata
+        val albumId = meta.extras?.getLong("album_id") ?: 0L
+        val path = meta.extras?.getString("path") ?: ""
+        
         return Song(
             id = mediaItem.mediaId.toLongOrNull() ?: 0,
             title = meta.title?.toString() ?: "Unknown",
             artist = meta.artist?.toString() ?: "Unknown Artist",
             album = meta.albumTitle?.toString() ?: "Unknown Album",
-            albumId = 0,
+            albumId = albumId,
             duration = 0,
             uri = mediaItem.localConfiguration?.uri ?: android.net.Uri.EMPTY,
-            path = "",
+            path = path,
             dateAdded = 0,
             size = 0
         )

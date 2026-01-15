@@ -1,5 +1,6 @@
 package com.fourshil.musicya.ui.playlist
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,14 +12,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.fourshil.musicya.data.model.Song
+import com.fourshil.musicya.ui.components.AlbumArtImage
+import com.fourshil.musicya.ui.components.LargeAlbumArt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,7 +30,6 @@ fun PlaylistDetailScreen(
     val subtitle by viewModel.subtitle.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val artUri by viewModel.artUri.collectAsState()
-    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -93,33 +91,18 @@ fun PlaylistHeader(
     onPlayAll: () -> Unit,
     onShuffle: () -> Unit
 ) {
-    val context = LocalContext.current
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Album art
-        Card(
-            modifier = Modifier
-                .size(200.dp),
-            shape = MaterialTheme.shapes.large,
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-        ) {
-            AsyncImage(
-                model = ImageRequest.Builder(context)
-                    .data(artUri)
-                    .crossfade(true)
-                    .error(android.R.drawable.ic_menu_gallery)
-                    .fallback(android.R.drawable.ic_menu_gallery)
-                    .build(),
-                contentDescription = "Cover",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-        }
+        // Album art with proper fallback
+        LargeAlbumArt(
+            uri = artUri?.let { Uri.parse(it) },
+            contentDescription = "Cover for $title",
+            modifier = Modifier.size(200.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -174,8 +157,6 @@ fun PlaylistSongItem(
     trackNumber: Int,
     onClick: () -> Unit
 ) {
-    val context = LocalContext.current
-
     ListItem(
         modifier = Modifier.clickable(onClick = onClick),
         headlineContent = {
@@ -194,17 +175,11 @@ fun PlaylistSongItem(
             )
         },
         leadingContent = {
-            // Track number or album art
-            Box(
-                modifier = Modifier.size(40.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = trackNumber.toString(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            // Album art for each song
+            AlbumArtImage(
+                uri = song.albumArtUri,
+                size = 48.dp
+            )
         },
         trailingContent = {
             Icon(

@@ -195,4 +195,9 @@ class MusicRepository @Inject constructor(
     suspend fun getSongsByFolder(folderPath: String): List<Song> = withContext(Dispatchers.IO) {
         getAllSongs().filter { File(it.path).parent == folderPath }
     }
+    
+    suspend fun getSongsByIds(songIds: List<Long>): List<Song> = withContext(Dispatchers.IO) {
+        val allSongs = getAllSongs().associateBy { it.id }
+        songIds.mapNotNull { allSongs[it] }
+    }
 }

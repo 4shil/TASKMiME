@@ -1,22 +1,26 @@
 package com.fourshil.musicya.ui.library
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Album
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.fourshil.musicya.data.model.Album
 
 @Composable
@@ -58,6 +62,8 @@ fun AlbumCard(
     album: Album,
     onClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -65,13 +71,22 @@ fun AlbumCard(
         shape = MaterialTheme.shapes.medium
     ) {
         Column {
-            AsyncImage(
-                model = album.artUri,
+            SubcomposeAsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(album.artUri)
+                    .crossfade(true)
+                    .build(),
                 contentDescription = album.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f)
+                    .aspectRatio(1f),
+                loading = {
+                    AlbumArtPlaceholder()
+                },
+                error = {
+                    AlbumArtPlaceholder()
+                }
             )
             Column(modifier = Modifier.padding(12.dp)) {
                 Text(
@@ -91,3 +106,21 @@ fun AlbumCard(
         }
     }
 }
+
+@Composable
+private fun AlbumArtPlaceholder() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surfaceVariant),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = Icons.Default.Album,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(48.dp)
+        )
+    }
+}
+

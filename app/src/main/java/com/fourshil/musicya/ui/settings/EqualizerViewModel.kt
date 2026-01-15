@@ -1,161 +1,52 @@
 package com.fourshil.musicya.ui.settings
 
-import android.media.audiofx.BassBoost
-import android.media.audiofx.Equalizer
-import android.media.audiofx.Virtualizer
 import androidx.lifecycle.ViewModel
-import com.fourshil.musicya.player.PlayerController
+import androidx.lifecycle.viewModelScope
+import com.fourshil.musicya.player.AudioEngine
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class EqualizerViewModel @Inject constructor(
-    private val playerController: PlayerController
+    private val audioEngine: AudioEngine
 ) : ViewModel() {
 
-    private var equalizer: Equalizer? = null
-    private var bassBoost: BassBoost? = null
-    private var virtualizer: Virtualizer? = null
-
-    private val _isEnabled = MutableStateFlow(false)
-    val isEnabled = _isEnabled.asStateFlow()
-
-    private val _bands = MutableStateFlow<List<BandState>>(emptyList())
-    val bands = _bands.asStateFlow()
-
-    private val _bassLevel = MutableStateFlow(0)
-    val bassLevel = _bassLevel.asStateFlow()
-
-    private val _virtualizerLevel = MutableStateFlow(0)
-    val virtualizerLevel = _virtualizerLevel.asStateFlow()
-
-    private val _presets = MutableStateFlow<List<String>>(emptyList())
-    val presets = _presets.asStateFlow()
-
-    private val _currentPreset = MutableStateFlow(-1)
-    val currentPreset = _currentPreset.asStateFlow()
+    val isEnabled = audioEngine.isEnabled
     
-    private val _isInitialized = MutableStateFlow(false)
-    val isInitialized = _isInitialized.asStateFlow()
-
-    init {
-        // Auto-initialize with priority 0 (applies to all audio output)
-        initializeGlobalEqualizer()
-    }
-    
-    private fun initializeGlobalEqualizer() {
-        try {
-            // Use priority 0 and audioSessionId 0 for global/output mix equalizer
-            equalizer = Equalizer(0, 0).apply {
-                enabled = false
-            }
-            bassBoost = BassBoost(0, 0).apply {
-                enabled = false
-            }
-            virtualizer = Virtualizer(0, 0).apply {
-                enabled = false
-            }
-
-            updateBands()
-            updatePresets()
-            _isInitialized.value = true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            _isInitialized.value = false
+    // Map AppBand (from AudioEngine) to local BandState (for UI)
+    val bands = audioEngine.bands.map { appBands ->
+        appBands.map { 
+            BandState(it.index, it.centerFreq, it.level, it.minLevel, it.maxLevel)
         }
-    }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    fun initialize(audioSessionId: Int) {
-        if (audioSessionId == 0 || _isInitialized.value) return
-
-        try {
-            equalizer = Equalizer(0, audioSessionId).apply {
-                enabled = false
-            }
-            bassBoost = BassBoost(0, audioSessionId).apply {
-                enabled = false
-            }
-            virtualizer = Virtualizer(0, audioSessionId).apply {
-                enabled = false
-            }
-
-            updateBands()
-            updatePresets()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun updateBands() {
-        equalizer?.let { eq ->
-            val bandList = mutableListOf<BandState>()
-            val minLevel = eq.bandLevelRange[0]
-            val maxLevel = eq.bandLevelRange[1]
-
-            for (i in 0 until eq.numberOfBands) {
-                val band = i.toShort()
-                bandList.add(
-                    BandState(
-                        index = i,
-                        centerFreq = eq.getCenterFreq(band) / 1000, // Hz to kHz
-                        level = eq.getBandLevel(band).toInt(),
-                        minLevel = minLevel.toInt(),
-                        maxLevel = maxLevel.toInt()
-                    )
-                )
-            }
-            _bands.value = bandList
-        }
-    }
-
-    private fun updatePresets() {
-        equalizer?.let { eq ->
-            val presetList = mutableListOf<String>()
-            for (i in 0 until eq.numberOfPresets) {
-                presetList.add(eq.getPresetName(i.toShort()))
-            }
-            _presets.value = presetList
-        }
-    }
+    val bassLevel = audioEngine.bassLevel
+    val virtualizerLevel = audioEngine.virtualizerLevel
+    val presets = audioEngine.presets
+    val currentPreset = audioEngine.currentPreset
+    val isInitialized = audioEngine.isInitialized
 
     fun toggleEnabled(enabled: Boolean) {
-        _isEnabled.value = enabled
-        equalizer?.enabled = enabled
-        bassBoost?.enabled = enabled
-        virtualizer?.enabled = enabled
+        audioEngine.setEnabled(enabled)
     }
 
     fun setBandLevel(bandIndex: Int, level: Int) {
-        equalizer?.setBandLevel(bandIndex.toShort(), level.toShort())
-        val updated = _bands.value.toMutableList()
-        updated[bandIndex] = updated[bandIndex].copy(level = level)
-        _bands.value = updated
-        _currentPreset.value = -1 // Custom
+        audioEngine.setBandLevel(bandIndex, level)
     }
 
     fun setPreset(presetIndex: Int) {
-        equalizer?.usePreset(presetIndex.toShort())
-        _currentPreset.value = presetIndex
-        updateBands()
+        audioEngine.setPreset(presetIndex)
     }
 
     fun setBassLevel(level: Int) {
-        bassBoost?.setStrength(level.toShort())
-        _bassLevel.value = level
+        audioEngine.setBassLevel(level)
     }
 
     fun setVirtualizerLevel(level: Int) {
-        virtualizer?.setStrength(level.toShort())
-        _virtualizerLevel.value = level
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        equalizer?.release()
-        bassBoost?.release()
-        virtualizer?.release()
+        audioEngine.setVirtualizerLevel(level)
     }
 }
 

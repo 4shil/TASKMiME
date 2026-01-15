@@ -10,12 +10,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.fourshil.musicya.data.model.Song
 
 @Composable
@@ -59,24 +55,11 @@ fun MiniPlayer(
                     .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Album art with proper loading
-                val context = LocalContext.current
-                Card(
-                    modifier = Modifier.size(48.dp),
-                    shape = MaterialTheme.shapes.small
-                ) {
-                    AsyncImage(
-                        model = ImageRequest.Builder(context)
-                            .data(song.albumArtUri)
-                            .crossfade(true)
-                            .error(android.R.drawable.ic_menu_gallery)
-                            .fallback(android.R.drawable.ic_menu_gallery)
-                            .build(),
-                        contentDescription = "Album Art",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+                // Album art with proper fallback
+                AlbumArtImage(
+                    uri = song.albumArtUri,
+                    size = 48.dp
+                )
 
                 Spacer(modifier = Modifier.width(12.dp))
 
@@ -113,3 +96,4 @@ fun MiniPlayer(
         }
     }
 }
+

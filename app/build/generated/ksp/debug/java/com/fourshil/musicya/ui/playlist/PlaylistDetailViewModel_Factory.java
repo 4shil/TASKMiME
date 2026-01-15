@@ -1,6 +1,7 @@
 package com.fourshil.musicya.ui.playlist;
 
 import androidx.lifecycle.SavedStateHandle;
+import com.fourshil.musicya.data.db.MusicDao;
 import com.fourshil.musicya.data.repository.MusicRepository;
 import com.fourshil.musicya.player.PlayerController;
 import dagger.internal.DaggerGenerated;
@@ -28,29 +29,32 @@ public final class PlaylistDetailViewModel_Factory implements Factory<PlaylistDe
 
   private final Provider<PlayerController> playerControllerProvider;
 
+  private final Provider<MusicDao> musicDaoProvider;
+
   private final Provider<SavedStateHandle> savedStateHandleProvider;
 
   public PlaylistDetailViewModel_Factory(Provider<MusicRepository> repositoryProvider,
-      Provider<PlayerController> playerControllerProvider,
+      Provider<PlayerController> playerControllerProvider, Provider<MusicDao> musicDaoProvider,
       Provider<SavedStateHandle> savedStateHandleProvider) {
     this.repositoryProvider = repositoryProvider;
     this.playerControllerProvider = playerControllerProvider;
+    this.musicDaoProvider = musicDaoProvider;
     this.savedStateHandleProvider = savedStateHandleProvider;
   }
 
   @Override
   public PlaylistDetailViewModel get() {
-    return newInstance(repositoryProvider.get(), playerControllerProvider.get(), savedStateHandleProvider.get());
+    return newInstance(repositoryProvider.get(), playerControllerProvider.get(), musicDaoProvider.get(), savedStateHandleProvider.get());
   }
 
   public static PlaylistDetailViewModel_Factory create(Provider<MusicRepository> repositoryProvider,
-      Provider<PlayerController> playerControllerProvider,
+      Provider<PlayerController> playerControllerProvider, Provider<MusicDao> musicDaoProvider,
       Provider<SavedStateHandle> savedStateHandleProvider) {
-    return new PlaylistDetailViewModel_Factory(repositoryProvider, playerControllerProvider, savedStateHandleProvider);
+    return new PlaylistDetailViewModel_Factory(repositoryProvider, playerControllerProvider, musicDaoProvider, savedStateHandleProvider);
   }
 
   public static PlaylistDetailViewModel newInstance(MusicRepository repository,
-      PlayerController playerController, SavedStateHandle savedStateHandle) {
-    return new PlaylistDetailViewModel(repository, playerController, savedStateHandle);
+      PlayerController playerController, MusicDao musicDao, SavedStateHandle savedStateHandle) {
+    return new PlaylistDetailViewModel(repository, playerController, musicDao, savedStateHandle);
   }
 }
