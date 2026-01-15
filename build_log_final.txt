@@ -34,25 +34,18 @@
 > Task :app:writeDebugAppMetadata UP-TO-DATE
 > Task :app:writeDebugSigningConfigVersions UP-TO-DATE
 > Task :app:kspDebugKotlin
-
 > Task :app:compileDebugKotlin
-w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/lyrics/LyricsViewModel.kt:45:13 Variable 'mediaItem' is never used
-w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/dsp/DspScreen.kt:29:5 Parameter 'onBack' is never used
-w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/LibraryScreen.kt:30:5 Parameter 'onBack' is never used
-w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerScreen.kt:173:32 'QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Rounded.QueueMusic
-w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerScreen.kt:251:17 Variable 'path' is never used
-
 > Task :app:compileDebugJavaWithJavac
 > Task :app:hiltAggregateDepsDebug
 > Task :app:hiltJavaCompileDebug
 > Task :app:processDebugJavaRes
 > Task :app:transformDebugClassesWithAsm
+> Task :app:mergeDebugJavaResource
 > Task :app:dexBuilderDebug
 > Task :app:mergeProjectDexDebug
-> Task :app:mergeDebugJavaResource
 > Task :app:packageDebug
-> Task :app:createDebugApkListingFileRedirect
+> Task :app:createDebugApkListingFileRedirect UP-TO-DATE
 > Task :app:assembleDebug
 
-BUILD SUCCESSFUL in 55s
-40 actionable tasks: 13 executed, 27 up-to-date
+BUILD SUCCESSFUL in 38s
+40 actionable tasks: 12 executed, 28 up-to-date

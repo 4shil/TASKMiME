@@ -3,18 +3,20 @@ package com.fourshil.musicya.ui.navigation
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.automirrored.filled.QueueMusic
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
 import com.fourshil.musicya.ui.components.MiniPlayer
 import com.fourshil.musicya.ui.library.*
 import com.fourshil.musicya.ui.nowplaying.NowPlayingScreen
 import com.fourshil.musicya.ui.nowplaying.NowPlayingViewModel
+import com.fourshil.musicya.ui.queue.QueueScreen
+import com.fourshil.musicya.ui.search.SearchScreen
+import com.fourshil.musicya.ui.settings.EqualizerScreen
+import com.fourshil.musicya.ui.settings.SettingsScreen
 
 data class BottomNavItem(
     val route: String,
@@ -43,10 +45,32 @@ fun MusicyaNavGraph() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // Hide bottom nav on NowPlaying screen
-    val showBottomNav = currentRoute !in listOf(Screen.NowPlaying.route, Screen.Queue.route)
+    // Hide bottom nav on full-screen pages
+    val fullScreenRoutes = listOf(
+        Screen.NowPlaying.route, 
+        Screen.Queue.route, 
+        Screen.Search.route,
+        Screen.Settings.route,
+        Screen.Equalizer.route
+    )
+    val showBottomNav = currentRoute !in fullScreenRoutes
 
     Scaffold(
+        topBar = {
+            if (showBottomNav) {
+                TopAppBar(
+                    title = { Text("Musicya") },
+                    actions = {
+                        IconButton(onClick = { navController.navigate(Screen.Search.route) }) {
+                            Icon(Icons.Default.Search, contentDescription = "Search")
+                        }
+                        IconButton(onClick = { navController.navigate(Screen.Settings.route) }) {
+                            Icon(Icons.Default.Settings, contentDescription = "Settings")
+                        }
+                    }
+                )
+            }
+        },
         bottomBar = {
             Column {
                 // Mini Player
@@ -109,8 +133,25 @@ fun MusicyaNavGraph() {
                 )
             }
             composable(Screen.Queue.route) {
-                // Queue screen - placeholder for now
-                Box(modifier = Modifier.fillMaxSize())
+                QueueScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(Screen.Search.route) {
+                SearchScreen(
+                    onBack = { navController.popBackStack() }
+                )
+            }
+            composable(Screen.Settings.route) {
+                SettingsScreen(
+                    onBack = { navController.popBackStack() },
+                    onEqualizerClick = { navController.navigate(Screen.Equalizer.route) }
+                )
+            }
+            composable(Screen.Equalizer.route) {
+                EqualizerScreen(
+                    onBack = { navController.popBackStack() }
+                )
             }
         }
     }

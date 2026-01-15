@@ -3,6 +3,9 @@ package com.fourshil.musicya;
 import com.fourshil.musicya.player.MusicService_GeneratedInjector;
 import com.fourshil.musicya.ui.library.LibraryViewModel_HiltModules;
 import com.fourshil.musicya.ui.nowplaying.NowPlayingViewModel_HiltModules;
+import com.fourshil.musicya.ui.queue.QueueViewModel_HiltModules;
+import com.fourshil.musicya.ui.search.SearchViewModel_HiltModules;
+import com.fourshil.musicya.ui.settings.EqualizerViewModel_HiltModules;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -145,12 +148,15 @@ public final class MusicyaApp_HiltComponents {
 
   @Subcomponent(
       modules = {
+          EqualizerViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HiltWrapper_SavedStateHandleModule.class,
           LibraryViewModel_HiltModules.KeyModule.class,
           ActivityCBuilderModule.class,
           ViewModelCBuilderModule.class,
-          NowPlayingViewModel_HiltModules.KeyModule.class
+          NowPlayingViewModel_HiltModules.KeyModule.class,
+          QueueViewModel_HiltModules.KeyModule.class,
+          SearchViewModel_HiltModules.KeyModule.class
       }
   )
   @ActivityRetainedScoped
@@ -186,9 +192,12 @@ public final class MusicyaApp_HiltComponents {
 
   @Subcomponent(
       modules = {
+          EqualizerViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           LibraryViewModel_HiltModules.BindsModule.class,
-          NowPlayingViewModel_HiltModules.BindsModule.class
+          NowPlayingViewModel_HiltModules.BindsModule.class,
+          QueueViewModel_HiltModules.BindsModule.class,
+          SearchViewModel_HiltModules.BindsModule.class
       }
   )
   @ViewModelScoped
