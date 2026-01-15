@@ -1,6 +1,7 @@
 package com.fourshil.musicya.ui.nowplaying
 
-import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fourshil.musicya.ui.components.LargeAlbumArt
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,16 +32,23 @@ fun NowPlayingScreen(
     val shuffleEnabled by viewModel.shuffleEnabled.collectAsState()
     val repeatMode by viewModel.repeatMode.collectAsState()
 
-    // Smooth animated progress
+    // seeker state
     var isSeeking by remember { mutableStateOf(false) }
-    var seekValue by remember { mutableFloatStateOf(0f) }
+    var sliderValue by remember { mutableFloatStateOf(0f) }
     
-    val progress = if (duration > 0) position.toFloat() / duration else 0f
-    val animatedProgress by animateFloatAsState(
-        targetValue = if (isSeeking) seekValue else progress,
-        animationSpec = tween(durationMillis = if (isSeeking) 0 else 200),
-        label = "progress"
-    )
+    // Smoothly animated progress for the bar
+    val smoothProgress = remember { Animatable(0f) }
+
+    // Sync smoothProgress with actual player position when not seeking
+    LaunchedEffect(position, duration, isSeeking) {
+        if (!isSeeking && duration > 0) {
+            val target = position.toFloat() / duration
+            smoothProgress.animateTo(
+                targetValue = target,
+                animationSpec = tween(durationMillis = 250, easing = LinearEasing)
+            )
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -67,15 +76,13 @@ fun NowPlayingScreen(
         ) {
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Album Art with proper fallback
             LargeAlbumArt(
                 uri = currentSong?.albumArtUri,
-                contentDescription = "Album Art for ${currentSong?.title}"
+                contentDescription = "Album Art"
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Song Info with animation
             Text(
                 text = currentSong?.title ?: "No song",
                 style = MaterialTheme.typography.headlineSmall,
@@ -94,16 +101,17 @@ fun NowPlayingScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Progress Bar - smooth seeking
+            // Functional and Smooth Seeker
             Column(modifier = Modifier.fillMaxWidth()) {
                 Slider(
-                    value = animatedProgress,
+                    value = if (isSeeking) sliderValue else smoothProgress.value.coerceIn(0f, 1f),
                     onValueChange = { 
                         isSeeking = true
-                        seekValue = it
+                        sliderValue = it
                     },
                     onValueChangeFinished = {
-                        viewModel.seekTo((seekValue * duration).toLong())
+                        val newPos = (sliderValue * duration).toLong()
+                        viewModel.seekTo(newPos)
                         isSeeking = false
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -112,8 +120,9 @@ fun NowPlayingScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    val displayPos = if (isSeeking) (sliderValue * duration).toLong() else position
                     Text(
-                        text = formatTime(if (isSeeking) (seekValue * duration).toLong() else position),
+                        text = formatTime(displayPos),
                         style = MaterialTheme.typography.labelSmall
                     )
                     Text(
@@ -125,7 +134,7 @@ fun NowPlayingScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Controls with smooth taps
+            // Controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
@@ -193,7 +202,7 @@ fun NowPlayingScreen(
 }
 
 private fun formatTime(ms: Long): String {
-    if (ms < 0) return "0:00"
+    if (ms <= 0) return "0:00"
     val totalSeconds = ms / 1000
     val minutes = totalSeconds / 60
     val seconds = totalSeconds % 60

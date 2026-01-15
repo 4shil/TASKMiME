@@ -13,7 +13,9 @@ import com.fourshil.musicya.data.db.MusicDao;
 import com.fourshil.musicya.data.repository.MusicRepository;
 import com.fourshil.musicya.di.DatabaseModule_ProvideAppDatabaseFactory;
 import com.fourshil.musicya.di.DatabaseModule_ProvideMusicDaoFactory;
+import com.fourshil.musicya.player.AudioEngine;
 import com.fourshil.musicya.player.MusicService;
+import com.fourshil.musicya.player.MusicService_MembersInjector;
 import com.fourshil.musicya.player.PlayerController;
 import com.fourshil.musicya.ui.library.FavoritesViewModel;
 import com.fourshil.musicya.ui.library.FavoritesViewModel_HiltModules_KeyModule_ProvideFactory;
@@ -494,7 +496,7 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
       public T get() {
         switch (id) {
           case 0: // com.fourshil.musicya.ui.settings.EqualizerViewModel 
-          return (T) new EqualizerViewModel(singletonCImpl.playerControllerProvider.get());
+          return (T) new EqualizerViewModel(singletonCImpl.audioEngineProvider.get());
 
           case 1: // com.fourshil.musicya.ui.library.FavoritesViewModel 
           return (T) new FavoritesViewModel(singletonCImpl.provideMusicDaoProvider.get(), singletonCImpl.musicRepositoryProvider.get(), singletonCImpl.playerControllerProvider.get());
@@ -509,7 +511,7 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
           return (T) new PlaylistDetailViewModel(singletonCImpl.musicRepositoryProvider.get(), singletonCImpl.playerControllerProvider.get(), singletonCImpl.provideMusicDaoProvider.get(), viewModelCImpl.savedStateHandle);
 
           case 5: // com.fourshil.musicya.ui.library.PlaylistsViewModel 
-          return (T) new PlaylistsViewModel(singletonCImpl.provideMusicDaoProvider.get());
+          return (T) new PlaylistsViewModel(singletonCImpl.provideMusicDaoProvider.get(), singletonCImpl.musicRepositoryProvider.get());
 
           case 6: // com.fourshil.musicya.ui.queue.QueueViewModel 
           return (T) new QueueViewModel(singletonCImpl.playerControllerProvider.get());
@@ -596,6 +598,13 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
 
     @Override
     public void injectMusicService(MusicService musicService) {
+      injectMusicService2(musicService);
+    }
+
+    @CanIgnoreReturnValue
+    private MusicService injectMusicService2(MusicService instance) {
+      MusicService_MembersInjector.injectAudioEngine(instance, singletonCImpl.audioEngineProvider.get());
+      return instance;
     }
   }
 
@@ -606,13 +615,15 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
 
     private Provider<SettingsPreferences> settingsPreferencesProvider;
 
-    private Provider<PlayerController> playerControllerProvider;
+    private Provider<AudioEngine> audioEngineProvider;
 
     private Provider<AppDatabase> provideAppDatabaseProvider;
 
     private Provider<MusicDao> provideMusicDaoProvider;
 
     private Provider<MusicRepository> musicRepositoryProvider;
+
+    private Provider<PlayerController> playerControllerProvider;
 
     private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
       this.applicationContextModule = applicationContextModuleParam;
@@ -623,10 +634,11 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
     @SuppressWarnings("unchecked")
     private void initialize(final ApplicationContextModule applicationContextModuleParam) {
       this.settingsPreferencesProvider = DoubleCheck.provider(new SwitchingProvider<SettingsPreferences>(singletonCImpl, 0));
-      this.playerControllerProvider = DoubleCheck.provider(new SwitchingProvider<PlayerController>(singletonCImpl, 1));
+      this.audioEngineProvider = DoubleCheck.provider(new SwitchingProvider<AudioEngine>(singletonCImpl, 1));
       this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 3));
       this.provideMusicDaoProvider = DoubleCheck.provider(new SwitchingProvider<MusicDao>(singletonCImpl, 2));
       this.musicRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<MusicRepository>(singletonCImpl, 4));
+      this.playerControllerProvider = DoubleCheck.provider(new SwitchingProvider<PlayerController>(singletonCImpl, 5));
     }
 
     @Override
@@ -665,8 +677,8 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
           case 0: // com.fourshil.musicya.data.SettingsPreferences 
           return (T) new SettingsPreferences(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 1: // com.fourshil.musicya.player.PlayerController 
-          return (T) new PlayerController(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+          case 1: // com.fourshil.musicya.player.AudioEngine 
+          return (T) new AudioEngine();
 
           case 2: // com.fourshil.musicya.data.db.MusicDao 
           return (T) DatabaseModule_ProvideMusicDaoFactory.provideMusicDao(singletonCImpl.provideAppDatabaseProvider.get());
@@ -676,6 +688,9 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
 
           case 4: // com.fourshil.musicya.data.repository.MusicRepository 
           return (T) new MusicRepository(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+
+          case 5: // com.fourshil.musicya.player.PlayerController 
+          return (T) new PlayerController(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
           default: throw new AssertionError(id);
         }

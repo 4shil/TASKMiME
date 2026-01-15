@@ -511,7 +511,7 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
           return (T) new PlaylistDetailViewModel(singletonCImpl.musicRepositoryProvider.get(), singletonCImpl.playerControllerProvider.get(), singletonCImpl.provideMusicDaoProvider.get(), viewModelCImpl.savedStateHandle);
 
           case 5: // com.fourshil.musicya.ui.library.PlaylistsViewModel 
-          return (T) new PlaylistsViewModel(singletonCImpl.provideMusicDaoProvider.get());
+          return (T) new PlaylistsViewModel(singletonCImpl.provideMusicDaoProvider.get(), singletonCImpl.musicRepositoryProvider.get());
 
           case 6: // com.fourshil.musicya.ui.queue.QueueViewModel 
           return (T) new QueueViewModel(singletonCImpl.playerControllerProvider.get());

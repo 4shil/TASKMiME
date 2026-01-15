@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -16,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fourshil.musicya.data.model.Folder
+import com.fourshil.musicya.ui.components.PlaylistArtGrid
 
 @Composable
 fun FoldersScreen(
@@ -23,6 +23,7 @@ fun FoldersScreen(
     onFolderClick: (String) -> Unit = {}
 ) {
     val folders by viewModel.folders.collectAsState()
+    val songs by viewModel.songs.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
     if (isLoading) {
@@ -39,8 +40,15 @@ fun FoldersScreen(
             contentPadding = PaddingValues(bottom = 80.dp)
         ) {
             items(folders, key = { it.path }) { folder ->
+                // Find songs in this folder for the artwork grid
+                val folderSongs = songs.filter { 
+                    val parent = java.io.File(it.path).parent ?: ""
+                    parent == folder.path 
+                }
+                
                 FolderListItem(
                     folder = folder,
+                    artUris = folderSongs.map { it.albumArtUri },
                     onClick = { onFolderClick(folder.path) }
                 )
             }
@@ -51,6 +59,7 @@ fun FoldersScreen(
 @Composable
 fun FolderListItem(
     folder: Folder,
+    artUris: List<android.net.Uri>,
     onClick: () -> Unit
 ) {
     ListItem(
@@ -65,18 +74,10 @@ fun FolderListItem(
             )
         },
         leadingContent = {
-            Surface(
-                modifier = Modifier.size(48.dp),
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.secondaryContainer
-            ) {
-                Icon(
-                    Icons.Default.Folder,
-                    contentDescription = null,
-                    modifier = Modifier.padding(12.dp),
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer
-                )
-            }
+            PlaylistArtGrid(
+                uris = artUris,
+                size = 48.dp
+            )
         },
         trailingContent = {
             Icon(

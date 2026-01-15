@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
@@ -107,31 +108,51 @@ fun EqualizerScreen(
 
             // EQ Bands
             Text("Equalizer", style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
+            // Use a fixed height for the vertical sliders area
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                    .height(250.dp), // Increased height for vertical sliders
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 bands.forEach { band ->
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.SpaceBetween 
                     ) {
-                        Slider(
-                            value = band.level.toFloat(),
-                            onValueChange = { viewModel.setBandLevel(band.index, it.toInt()) },
-                            valueRange = band.minLevel.toFloat()..band.maxLevel.toFloat(),
-                            enabled = isEnabled,
+                        // Vertical Slider (Rotated)
+                        // Use a Box to containing the rotated slider to handle layout sizing
+                        Box(
+                            contentAlignment = Alignment.Center,
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(horizontal = 4.dp)
-                        )
+                                .width(40.dp) // Touch target width
+                        ) {
+                            Slider(
+                                value = band.level.toFloat(),
+                                onValueChange = { viewModel.setBandLevel(band.index, it.toInt()) },
+                                valueRange = band.minLevel.toFloat()..band.maxLevel.toFloat(),
+                                enabled = isEnabled,
+                                modifier = Modifier
+                                    .graphicsLayer {
+                                        rotationZ = 270f
+                                    }
+                                    .width(200.dp) // This becomes the visual height
+                            )
+                        }
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
+                        
                         Text(
-                            "${band.centerFreq}Hz",
-                            style = MaterialTheme.typography.labelSmall
+                            text = "${band.centerFreq}Hz",
+                            style = MaterialTheme.typography.labelSmall,
+                            maxLines = 1
                         )
                     }
                 }
@@ -163,3 +184,4 @@ fun EqualizerScreen(
         }
     }
 }
+

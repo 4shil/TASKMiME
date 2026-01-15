@@ -1,6 +1,7 @@
 package com.fourshil.musicya.ui.library;
 
 import com.fourshil.musicya.data.db.MusicDao;
+import com.fourshil.musicya.data.repository.MusicRepository;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
 import dagger.internal.QualifierMetadata;
@@ -24,20 +25,25 @@ import javax.inject.Provider;
 public final class PlaylistsViewModel_Factory implements Factory<PlaylistsViewModel> {
   private final Provider<MusicDao> musicDaoProvider;
 
-  public PlaylistsViewModel_Factory(Provider<MusicDao> musicDaoProvider) {
+  private final Provider<MusicRepository> musicRepositoryProvider;
+
+  public PlaylistsViewModel_Factory(Provider<MusicDao> musicDaoProvider,
+      Provider<MusicRepository> musicRepositoryProvider) {
     this.musicDaoProvider = musicDaoProvider;
+    this.musicRepositoryProvider = musicRepositoryProvider;
   }
 
   @Override
   public PlaylistsViewModel get() {
-    return newInstance(musicDaoProvider.get());
+    return newInstance(musicDaoProvider.get(), musicRepositoryProvider.get());
   }
 
-  public static PlaylistsViewModel_Factory create(Provider<MusicDao> musicDaoProvider) {
-    return new PlaylistsViewModel_Factory(musicDaoProvider);
+  public static PlaylistsViewModel_Factory create(Provider<MusicDao> musicDaoProvider,
+      Provider<MusicRepository> musicRepositoryProvider) {
+    return new PlaylistsViewModel_Factory(musicDaoProvider, musicRepositoryProvider);
   }
 
-  public static PlaylistsViewModel newInstance(MusicDao musicDao) {
-    return new PlaylistsViewModel(musicDao);
+  public static PlaylistsViewModel newInstance(MusicDao musicDao, MusicRepository musicRepository) {
+    return new PlaylistsViewModel(musicDao, musicRepository);
   }
 }

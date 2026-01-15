@@ -1,7 +1,6 @@
 package com.fourshil.musicya.ui.components
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -27,20 +26,16 @@ fun MiniPlayer(
     if (song == null) return
 
     // Smooth animated progress
-    val animatedProgress by animateFloatAsState(
-        targetValue = progress.coerceIn(0f, 1f),
-        animationSpec = tween(durationMillis = 300),
-        label = "miniPlayerProgress"
-    )
-
+    // Use raw progress, updated frequently (20Hz) by ViewModel for smoothness
+    
     Surface(
         modifier = modifier.fillMaxWidth(),
         tonalElevation = 3.dp
     ) {
         Column {
-            // Progress indicator - smooth animation
+            // Progress indicator - smooth animation from 20Hz updates
             LinearProgressIndicator(
-                progress = { animatedProgress },
+                progress = { progress.coerceIn(0f, 1f) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(2.dp),

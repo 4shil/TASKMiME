@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fourshil.musicya.data.model.Artist
+import com.fourshil.musicya.ui.components.PlaylistArtGrid
 
 @Composable
 fun ArtistsScreen(
@@ -22,6 +23,7 @@ fun ArtistsScreen(
     onArtistClick: (String) -> Unit = {}
 ) {
     val artists by viewModel.artists.collectAsState()
+    val songs by viewModel.songs.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
     if (isLoading) {
@@ -38,8 +40,12 @@ fun ArtistsScreen(
             contentPadding = PaddingValues(bottom = 80.dp)
         ) {
             items(artists, key = { it.id }) { artist ->
+                // Find songs by this artist for the artwork grid
+                val artistSongs = songs.filter { it.artist == artist.name }
+                
                 ArtistListItem(
                     artist = artist,
+                    artUris = artistSongs.map { it.albumArtUri },
                     onClick = { onArtistClick(artist.name) }
                 )
             }
@@ -50,6 +56,7 @@ fun ArtistsScreen(
 @Composable
 fun ArtistListItem(
     artist: Artist,
+    artUris: List<android.net.Uri>,
     onClick: () -> Unit
 ) {
     ListItem(
@@ -64,18 +71,10 @@ fun ArtistListItem(
             )
         },
         leadingContent = {
-            Surface(
-                modifier = Modifier.size(48.dp),
-                shape = MaterialTheme.shapes.medium,
-                color = MaterialTheme.colorScheme.primaryContainer
-            ) {
-                Icon(
-                    Icons.Default.Person,
-                    contentDescription = null,
-                    modifier = Modifier.padding(12.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            }
+            PlaylistArtGrid(
+                uris = artUris,
+                size = 48.dp
+            )
         }
     )
 }

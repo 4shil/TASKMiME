@@ -52,6 +52,16 @@ fun MusicyaNavGraph() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    // Pages that are not "top-level" tabs but still part of the main library structure
+    val mainLibraryRoutes = listOf(
+        Screen.Songs.route,
+        Screen.Albums.route,
+        Screen.Artists.route,
+        Screen.Folders.route,
+        Screen.Favorites.route,
+        Screen.Playlists.route
+    )
+
     // Hide bottom nav on full-screen pages
     val fullScreenRoutes = listOf(
         Screen.NowPlaying.route,
@@ -61,20 +71,24 @@ fun MusicyaNavGraph() {
         Screen.Equalizer.route,
         Screen.PlaylistDetail.route
     )
-    // Routes where mini player should be hidden (only full-screen player)
+    // Routes where mini player should be hidden
     val hideMiniPlayerRoutes = listOf(
         Screen.NowPlaying.route
     )
-    val showBottomNav = fullScreenRoutes.none { currentRoute?.startsWith(it.substringBefore("{")) == true }
+
+    // Show bottom nav for all library routes (including favorites/playlists)
+    val showBottomNav = mainLibraryRoutes.any { currentRoute == it } || 
+                      fullScreenRoutes.none { currentRoute?.startsWith(it.substringBefore("{")) == true }
+    
     val showMiniPlayer = hideMiniPlayerRoutes.none { currentRoute?.startsWith(it.substringBefore("{")) == true }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = currentRoute != Screen.NowPlaying.route,
         drawerContent = {
             ModalDrawerSheet {
                 Spacer(Modifier.height(12.dp))
                 
-                // Header
                 Text(
                     text = "LYRA",
                     style = MaterialTheme.typography.headlineMedium,
@@ -87,7 +101,13 @@ fun MusicyaNavGraph() {
                     selected = currentRoute == Screen.Favorites.route,
                     onClick = {
                         scope.launch { drawerState.close() }
-                        navController.navigate(Screen.Favorites.route)
+                        navController.navigate(Screen.Favorites.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
@@ -98,12 +118,18 @@ fun MusicyaNavGraph() {
                     selected = currentRoute == Screen.Playlists.route,
                     onClick = {
                         scope.launch { drawerState.close() }
-                        navController.navigate(Screen.Playlists.route)
+                        navController.navigate(Screen.Playlists.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     },
                     modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
                 )
                 
-                Divider(modifier = Modifier.padding(vertical = 8.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 
                 NavigationDrawerItem(
                     label = { Text("Settings") },
@@ -122,7 +148,15 @@ fun MusicyaNavGraph() {
             topBar = {
                 if (showBottomNav) {
                     TopAppBar(
-                        title = { Text("LYRA") },
+                        title = { 
+                            Text(
+                                when (currentRoute) {
+                                    Screen.Favorites.route -> "Favorites"
+                                    Screen.Playlists.route -> "Playlists"
+                                    else -> "LYRA"
+                                }
+                            )
+                        },
                         navigationIcon = {
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
                                 Icon(Icons.Default.Menu, contentDescription = "Menu")
@@ -138,7 +172,6 @@ fun MusicyaNavGraph() {
             },
             bottomBar = {
                 Column {
-                    // Mini Player - show on all pages except now playing
                     if (showMiniPlayer && currentSong != null) {
                         MiniPlayer(
                             song = currentSong,
@@ -150,7 +183,6 @@ fun MusicyaNavGraph() {
                         )
                     }
 
-                    // Bottom Navigation
                     if (showBottomNav) {
                         NavigationBar {
                             bottomNavItems.forEach { item ->
@@ -160,6 +192,8 @@ fun MusicyaNavGraph() {
                                     selected = currentRoute == item.route,
                                     onClick = {
                                         navController.navigate(item.route) {
+                                            // Pop up to the start destination to avoid building up a large stack
+                                            // when switching between library tabs/pages
                                             popUpTo(navController.graph.findStartDestination().id) {
                                                 saveState = true
                                             }
@@ -240,7 +274,6 @@ fun MusicyaNavGraph() {
                         onBack = { navController.popBackStack() }
                     )
                 }
-                // Playlist Detail Screen
                 composable(
                     route = Screen.PlaylistDetail.route,
                     arguments = listOf(
@@ -256,4 +289,3 @@ fun MusicyaNavGraph() {
         }
     }
 }
-
