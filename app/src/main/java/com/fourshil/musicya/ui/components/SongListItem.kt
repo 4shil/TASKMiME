@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fourshil.musicya.data.model.Song
 import com.fourshil.musicya.ui.theme.MangaRed
+import com.fourshil.musicya.ui.components.MarqueeText
 import com.fourshil.musicya.ui.theme.PureBlack
 
 @Composable
@@ -81,14 +82,13 @@ fun SongListItem(
 
             // Text Info
             Column(modifier = Modifier.weight(1f)) {
-                Text(
+                MarqueeText(
                     text = song.title.uppercase(),
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontSize = 20.sp,
                         letterSpacing = (-1).sp
                     ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    modifier = Modifier.fillMaxWidth()
                 )
                 Text(
                     text = song.artist.uppercase(),

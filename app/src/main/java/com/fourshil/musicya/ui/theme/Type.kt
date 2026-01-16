@@ -16,21 +16,21 @@ val Typography = Typography(
         fontWeight = FontWeight.Black,
         fontSize = 72.sp,
         lineHeight = 64.sp,
-        letterSpacing = (-4).sp // Tighter tracking for that Manga header look
+        letterSpacing = (-2).sp // Relaxed from -4
     ),
     displayMedium = TextStyle(
         fontFamily = FontFamily.Serif,
         fontWeight = FontWeight.Black,
         fontSize = 48.sp,
         lineHeight = 44.sp,
-        letterSpacing = (-2).sp
+        letterSpacing = (-1).sp // Relaxed from -2
     ),
     headlineLarge = TextStyle(
         fontFamily = FontFamily.SansSerif,
         fontWeight = FontWeight.Black,
         fontSize = 32.sp,
         lineHeight = 36.sp,
-         letterSpacing = (-1).sp
+         letterSpacing = (-0.5).sp // Relaxed from -1
     ),
     titleLarge = TextStyle(
         fontFamily = FontFamily.Serif, // Used for buttons/tabs

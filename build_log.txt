@@ -13,11 +13,8 @@
 > Task :app:parseDebugLocalResources UP-TO-DATE
 > Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
 > Task :app:extractDeepLinksDebug UP-TO-DATE
-> Task :app:processDebugMainManifest UP-TO-DATE
-> Task :app:processDebugManifest UP-TO-DATE
-> Task :app:processDebugManifestForPackage UP-TO-DATE
-> Task :app:processDebugResources UP-TO-DATE
-> Task :app:kspDebugKotlin UP-TO-DATE
+> Task :app:processDebugMainManifest
+> Task :app:processDebugManifest
 > Task :app:javaPreCompileDebug UP-TO-DATE
 > Task :app:mergeDebugShaders UP-TO-DATE
 > Task :app:compileDebugShaders NO-SOURCE
@@ -34,22 +31,34 @@
 > Task :app:validateSigningDebug UP-TO-DATE
 > Task :app:writeDebugAppMetadata UP-TO-DATE
 > Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:processDebugManifestForPackage
+> Task :app:processDebugResources
+> Task :app:kspDebugKotlin
+> Task :app:compileDebugKotlin
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/player/AudioEngine.kt:211:23 Parameter 'bass' is never used
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/player/AudioEngine.kt:211:34 Parameter 'treble' is never used
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/player/MusicService.kt:77:19 Unnecessary safe call on a non-null receiver of type Player
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/ArtisticComponents.kt:73:9 Variable 'offset' is never used
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/MarqueeText.kt:28:5 Parameter 'softWrap' is never used
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/MarqueeText.kt:29:5 Parameter 'maxLines' is never used
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/MiniPlayer.kt:45:5 Parameter 'onNextClick' is never used
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/PlaylistArtGrid.kt:41:35 'QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.QueueMusic
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/PlaylistArtGrid.kt:48:17 Variable 'context' is never used
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/PlaylistDialogs.kt:85:52 'QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.QueueMusic
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/SongActionsBottomSheet.kt:62:38 'PlaylistPlay: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.PlaylistPlay
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/SongActionsBottomSheet.kt:71:38 'QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.QueueMusic
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/SongActionsBottomSheet.kt:89:38 'PlaylistAdd: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.PlaylistAdd
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/SongActionsBottomSheet.kt:186:55 'QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.QueueMusic
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/SongActionsBottomSheet.kt:208:55 'PlaylistAdd: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.PlaylistAdd
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/SongListItem.kt:36:5 Parameter 'isFavorite' is never used
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/SongListItem.kt:40:5 Parameter 'onLongClick' is never used
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/SongListItem.kt:69:20 Condition 'song.albumArtUri != null' is always 'true'
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/PlaylistsScreen.kt:182:5 Parameter 'onLongClick' is never used
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:54:9 Variable 'isFavorite' is never used
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:100:49 'ArrowBack: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.ArrowBack
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:119:49 'QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.QueueMusic
+w: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingViewModel.kt:32:34 This declaration needs opt-in. Its usage should be marked with '@kotlinx.coroutines.ExperimentalCoroutinesApi' or '@OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)'
 
-> Task :app:compileDebugKotlin FAILED
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/playlist/PlaylistDetailScreen.kt:86:58 Null can not be a value of a non-null type String
-
-FAILURE: Build failed with an exception.
-
-* What went wrong:
-Execution failed for task ':app:compileDebugKotlin'.
-> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
-   > Compilation error. See log for more details
-
-* Try:
-> Run with --stacktrace option to get the stack trace.
-> Run with --info or --debug option to get more log output.
-> Run with --scan to get full insights.
-> Get more help at https://help.gradle.org.
-
-BUILD FAILED in 17s
-30 actionable tasks: 2 executed, 28 up-to-date
+> Task :app:compileDebugJavaWithJavac
+> Task :app:hiltAggregateDepsDebug UP-TO-DATE
+> Task :app:hiltJavaCompileDebug

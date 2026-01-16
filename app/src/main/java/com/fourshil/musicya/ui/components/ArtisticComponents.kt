@@ -31,8 +31,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.Spring
 import com.fourshil.musicya.ui.theme.MangaRed
 import com.fourshil.musicya.ui.theme.PureBlack
+import androidx.compose.material.ripple.rememberRipple
 
 @Composable
 fun HalftoneBackground(
@@ -67,13 +70,21 @@ fun ArtisticCard(
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     
-    val offset by animateFloatAsState(if (isPressed) 2f else 6f, label = "offset")
-    val shadowOffset by animateFloatAsState(if (isPressed) 0f else 6f, label = "shadow")
+    val offset by animateFloatAsState(
+        targetValue = if (isPressed) 2f else 6f, 
+        label = "offset",
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow)
+    )
+    val shadowOffset by animateFloatAsState(
+        targetValue = if (isPressed) 0f else 6f, 
+        label = "shadow",
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow)
+    )
     
     val currentModifier = if (onClick != null) {
         Modifier.clickable(
             interactionSource = interactionSource,
-            indication = null,
+            indication = androidx.compose.material.ripple.rememberRipple(bounded = true),
             onClick = onClick
         )
     } else Modifier
@@ -124,15 +135,23 @@ fun ArtisticButton(
     val currentBg = if (isActive || isPressed) activeColor else backgroundColor
     val currentContent = if (isActive || isPressed) activeContentColor else contentColor
     
-    val shadowSize = if (isPressed) 0.dp else 4.dp
-    val pressOffset = if (isPressed) 4.dp else 0.dp
+    val shadowSize by androidx.compose.animation.core.animateDpAsState(
+        targetValue = if (isPressed) 0.dp else 4.dp,
+        label = "shadow",
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow)
+    )
+    val pressOffset by androidx.compose.animation.core.animateDpAsState(
+        targetValue = if (isPressed) 4.dp else 0.dp,
+        label = "offset",
+        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow)
+    )
 
     Box(
         modifier = modifier
             .padding(bottom = 4.dp, end = 4.dp)
             .clickable(
                 interactionSource = interactionSource,
-                indication = null,
+                indication = androidx.compose.material.ripple.rememberRipple(bounded = true),
                 onClick = onClick
             )
     ) {

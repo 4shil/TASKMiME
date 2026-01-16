@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import com.fourshil.musicya.ui.components.MarqueeText
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -179,7 +180,7 @@ fun NowPlayingScreen(
 
             // Title & Artist
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
+                MarqueeText(
                     text = currentSong?.title ?: "UNTITLED",
                     style = MaterialTheme.typography.displayMedium.copy(
                          fontSize = 36.sp,
@@ -187,8 +188,7 @@ fun NowPlayingScreen(
                          textAlign = TextAlign.Center
                     ),
                     color = text,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                    modifier = Modifier.fillMaxWidth()
                 )
                 
                 Spacer(modifier = Modifier.height(16.dp))
