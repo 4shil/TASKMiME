@@ -36,6 +36,9 @@ import androidx.compose.animation.core.Spring
 import com.fourshil.musicya.ui.theme.MangaRed
 import com.fourshil.musicya.ui.theme.PureBlack
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.graphics.PointMode
+import androidx.compose.ui.graphics.StrokeCap
 
 @Composable
 fun HalftoneBackground(
@@ -44,18 +47,35 @@ fun HalftoneBackground(
     spacing: Float = 12f,
     modifier: Modifier = Modifier
 ) {
-    Canvas(modifier = modifier.fillMaxSize()) {
-        val radius = dotSize / 2
-        for (x in 0 until size.width.toInt() step spacing.toInt()) {
-            for (y in 0 until size.height.toInt() step spacing.toInt()) {
-                drawCircle(
-                    color = color.copy(alpha = 0.15f),
-                    radius = radius,
-                    center = Offset(x.toFloat(), y.toFloat())
-                )
+    val paintColor = color.copy(alpha = 0.15f)
+
+    androidx.compose.foundation.layout.Spacer(
+        modifier = modifier
+            .fillMaxSize()
+            .drawWithCache {
+                val width = size.width
+                val height = size.height
+                
+                // Detailed optimization: Pre-calculate points only when size changes
+                // This removes the O(width*height) complexity from the drawing phase
+                val points = ArrayList<Offset>((width / spacing * height / spacing).toInt())
+                for (x in 0 until width.toInt() step spacing.toInt()) {
+                    for (y in 0 until height.toInt() step spacing.toInt()) {
+                        points.add(Offset(x.toFloat(), y.toFloat()))
+                    }
+                }
+
+                onDrawBehind {
+                    drawPoints(
+                        points = points,
+                        pointMode = PointMode.Points,
+                        color = paintColor,
+                        strokeWidth = dotSize,
+                        cap = StrokeCap.Round
+                    )
+                }
             }
-        }
-    }
+    )
 }
 
 @Composable

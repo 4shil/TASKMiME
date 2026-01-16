@@ -21,8 +21,7 @@ data class Song(
             return "%d:%02d".format(minutes, seconds)
         }
     
-    val albumArtUri: Uri
-        get() = Uri.parse("content://media/external/audio/albumart/$albumId")
+    val albumArtUri: Uri = Uri.parse("content://media/external/audio/albumart/$albumId")
 }
 
 data class Album(
@@ -32,8 +31,7 @@ data class Album(
     val songCount: Int,
     val year: Int
 ) {
-    val artUri: Uri
-        get() = Uri.parse("content://media/external/audio/albumart/$id")
+    val artUri: Uri = Uri.parse("content://media/external/audio/albumart/$id")
 }
 
 data class Artist(

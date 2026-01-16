@@ -197,7 +197,11 @@ fun SongsScreen(
                         contentPadding = PaddingValues(bottom = 160.dp), // Space for bottom bar + mini player
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        itemsIndexed(songs, key = { _, song -> song.id }) { index, song ->
+                        itemsIndexed(
+                            items = songs,
+                            key = { _, song -> song.id },
+                            contentType = { _, _ -> "song" }
+                        ) { index, song ->
                             val isFavorite = song.id in favoriteIds
                             
                             SongListItem(

@@ -19,7 +19,11 @@ class MusicRepository @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     
+    private var cachedSongs: List<Song>? = null
+
     suspend fun getAllSongs(): List<Song> = withContext(Dispatchers.IO) {
+        if (cachedSongs != null) return@withContext cachedSongs!!
+
         val songs = mutableListOf<Song>()
         
         val projection = arrayOf(
@@ -82,6 +86,7 @@ class MusicRepository @Inject constructor(
             e.printStackTrace()
         }
         
+        cachedSongs = songs
         songs
     }
     
