@@ -4,40 +4,32 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import com.fourshil.musicya.ui.components.MarqueeText
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.zIndex
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.fourshil.musicya.ui.components.*
-import com.fourshil.musicya.ui.theme.MangaRed
-import com.fourshil.musicya.ui.theme.MangaYellow
-import com.fourshil.musicya.ui.theme.PureBlack
-import com.fourshil.musicya.ui.theme.PureWhite
+import com.fourshil.musicya.ui.components.ArtisticButton
+import com.fourshil.musicya.ui.components.MarqueeText
+import com.fourshil.musicya.ui.theme.*
 
 @Composable
 fun NowPlayingScreen(
@@ -53,32 +45,40 @@ fun NowPlayingScreen(
     val repeatMode by viewModel.repeatMode.collectAsState()
     val isFavorite by viewModel.isFavorite.collectAsState()
 
-    val text = MaterialTheme.colorScheme.onBackground
+    // Theme-aware colors
+    val isDark = isSystemInDarkTheme()
+    val bgColor = if (isDark) DeepBlack else OffWhite
+    val contentColor = if (isDark) PureWhite else PureBlack
+    val surfaceColor = if (isDark) PureBlack else PureWhite
 
-    // Disc Rotation
-    val infiniteTransition = rememberInfiniteTransition()
-    val rotation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(10000, easing = LinearEasing)
-        )
-    )
-    val currentRotation = if (isPlaying) rotation else 0f // In a real app we'd pause the value
-
-    var isSeeking by remember { mutableStateOf(false) }
-    var localProgress by remember { mutableFloatStateOf(0f) }
-    
-    val currentProgress = animateFloatAsState(
-        targetValue = if (isSeeking) localProgress else if (duration > 0) position.toFloat() / duration else 0f,
-        animationSpec = if (isSeeking) snap() else tween(durationMillis = 500),
+    // Progress calculation
+    val progress = if (duration > 0) position.toFloat() / duration else 0f
+    val animatedProgress by animateFloatAsState(
+        targetValue = progress,
+        animationSpec = tween(durationMillis = 300),
         label = "progress"
     )
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        // Shared Halftone Background
-       // HalftoneBackground(modifier = Modifier.alpha(0.1f))
-
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(bgColor)
+            .drawBehind {
+                // Dot grid background pattern
+                val dotSpacing = 24.dp.toPx()
+                val dotRadius = 1.2f
+                val dotColor = contentColor.copy(alpha = 0.08f)
+                for (x in 0 until (size.width / dotSpacing).toInt() + 1) {
+                    for (y in 0 until (size.height / dotSpacing).toInt() + 1) {
+                        drawCircle(
+                            color = dotColor,
+                            radius = dotRadius,
+                            center = Offset(x * dotSpacing, y * dotSpacing)
+                        )
+                    }
+                }
+            }
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -86,200 +86,268 @@ fun NowPlayingScreen(
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Header
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                ArtisticButton(
-                    onClick = onBack,
-                    icon = { Icon(Icons.Default.ArrowBack, null, tint = PureBlack) },
-                    modifier = Modifier.size(56.dp)
-                )
-                
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        "ACTIVE CANVAS",
-                        style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 2.sp),
-                        color = text.copy(0.4f)
-                    )
-                    Text(
-                        "NOW PLAYING",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = text
-                    )
-                }
-
-                ArtisticButton(
-                    onClick = onQueueClick,
-                    icon = { Icon(Icons.Default.QueueMusic, null, tint = PureBlack) },
-                    modifier = Modifier.size(56.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.weight(0.1f))
-
-            // Artwork
-            Box(contentAlignment = Alignment.Center) {
-                // Large Background Disc Decoration
-                Icon(
-                    Icons.Default.DiscFull, null,
-                    modifier = Modifier
-                        .size(320.dp)
-                        .alpha(0.05f)
-                        .rotate(currentRotation),
-                    tint = text
-                )
-
-
-
-                // Main Capsule / Card
-                ArtisticCard(
-                    modifier = Modifier.size(280.dp),
-                    onClick = null
-                ) {
-                    Box {
-                         // Overlay Speed lines?
-                         // Built-in Halftone is already there from ArtisticCard
-
-                        AsyncImage(
-                            model = currentSong?.albumArtUri,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize().alpha(0.9f)
-                        )
-                        
-
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.weight(0.1f))
-
-            // Title & Artist
+            // --- HEADER ---
+            Spacer(modifier = Modifier.height(16.dp))
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = "ACTIVE CANVAS",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        letterSpacing = 4.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = contentColor.copy(alpha = 0.5f)
+                )
                 MarqueeText(
                     text = currentSong?.title ?: "UNTITLED",
                     style = MaterialTheme.typography.displayMedium.copy(
-                         fontSize = 36.sp,
-                         lineHeight = 40.sp,
-                         textAlign = TextAlign.Center
+                        fontSize = 42.sp,
+                        fontWeight = FontWeight.Black,
+                        fontStyle = FontStyle.Italic,
+                        letterSpacing = (-2).sp
                     ),
-                    color = text,
+                    color = contentColor,
                     modifier = Modifier.fillMaxWidth()
                 )
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
+            }
+
+            Spacer(modifier = Modifier.weight(0.08f))
+
+            // --- ALBUM ART ---
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+                    .widthIn(max = 340.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                // Shadow layer
                 Box(
                     modifier = Modifier
-                        .rotate(-2f)
-                        .background(MangaYellow)
-                        .border(4.dp, PureBlack)
-                        .padding(horizontal = 24.dp, vertical = 8.dp)
+                        .fillMaxSize()
+                        .offset(x = 4.dp, y = 4.dp)
+                        .background(contentColor)
+                )
+                // Art container
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .border(3.dp, contentColor)
+                        .background(PureBlack)
+                ) {
+                    AsyncImage(
+                        model = currentSong?.albumArtUri,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize(),
+                        colorFilter = ColorFilter.colorMatrix(
+                            ColorMatrix().apply { setToSaturation(0f) } // Grayscale
+                        )
+                    )
+                    // Red overlay
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(AccentRed.copy(alpha = 0.2f))
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.weight(0.06f))
+
+            // --- ARTIST ROW ---
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .widthIn(max = 340.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Favorite Button
+                ArtisticButton(
+                    onClick = { viewModel.toggleFavorite() },
+                    modifier = Modifier.size(48.dp),
+                    backgroundColor = surfaceColor,
+                    icon = {
+                        Icon(
+                            if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            null,
+                            tint = if (isFavorite) AccentRed else contentColor
+                        )
+                    }
+                )
+
+                // Artist Badge
+                Box(modifier = Modifier.weight(1f)) {
+                    // Shadow
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset(x = 4.dp, y = 4.dp)
+                            .height(48.dp)
+                            .background(contentColor)
+                    )
+                    // Badge
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .border(3.dp, contentColor)
+                            .background(MustardYellow),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = currentSong?.artist?.uppercase() ?: "UNKNOWN",
+                            style = MaterialTheme.typography.titleMedium.copy(
+                                fontWeight = FontWeight.Black,
+                                letterSpacing = 1.sp
+                            ),
+                            color = PureBlack,
+                            maxLines = 1
+                        )
+                    }
+                }
+
+                // Add to Playlist Button
+                ArtisticButton(
+                    onClick = { /* TODO: Add to playlist */ },
+                    modifier = Modifier.size(48.dp),
+                    backgroundColor = surfaceColor,
+                    icon = { Icon(Icons.Default.Add, null, tint = contentColor) }
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(0.08f))
+
+            // --- PROGRESS BAR ---
+            Column(modifier = Modifier.fillMaxWidth().widthIn(max = 340.dp)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(32.dp)
+                        .border(3.dp, contentColor)
+                        .background(surfaceColor)
+                ) {
+                    // Progress fill
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth(animatedProgress)
+                            .background(contentColor)
+                    ) {
+                        // Red head
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .width(8.dp)
+                                .fillMaxHeight()
+                                .background(AccentRed)
+                                .border(width = 3.dp, color = contentColor)
+                        )
+                    }
+                }
+                // Time labels
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = currentSong?.artist ?: "UNKNOWN",
-                        style = MaterialTheme.typography.headlineLarge.copy(fontSize = 24.sp),
-                        color = PureBlack
+                        text = formatTime(position),
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp
+                        ),
+                        color = contentColor
+                    )
+                    Text(
+                        text = formatTime(duration),
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp
+                        ),
+                        color = contentColor
                     )
                 }
             }
 
             Spacer(modifier = Modifier.weight(0.1f))
 
-            // Seeker
-            Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
-                Spacer(modifier = Modifier.height(12.dp))
-                
-                // Manga Progress Bar
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp)
-                        .border(5.dp, PureBlack)
-                        .background(PureWhite)
-                        .pointerInput(Unit) {
-                            detectTapGestures { offset ->
-                                val p = (offset.x / size.width).coerceIn(0f, 1f)
-                                viewModel.seekTo((p * duration).toLong())
-                            }
-                        }
-                ) {
-                     // Halftone background inside?
-                    HalftoneBackground(modifier = Modifier.alpha(0.1f))
-                    
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .fillMaxWidth(currentProgress.value)
-                            .background(PureBlack)
-                    ) {
-                        // Progress head
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.CenterEnd)
-                                .width(12.dp)
-                                .fillMaxHeight()
-                                .background(MangaRed)
-                                .border(3.dp, PureBlack)
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.weight(0.1f))
-
-            // Controls
+            // --- PLAYBACK CONTROLS ---
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 40.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                    .widthIn(max = 340.dp)
+                    .padding(bottom = 32.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                 ArtisticButton(
-                    onClick = { viewModel.toggleShuffle() },
-                    icon = { Icon(Icons.Default.Shuffle, null, tint = if(shuffleEnabled) MangaRed else PureBlack) },
-                    modifier = Modifier.size(56.dp).rotate(-8f)
-                 )
-
-                Icon(
-                    Icons.Default.SkipPrevious, null, 
-                    modifier = Modifier.size(56.dp).clickable { viewModel.skipToPrevious() }, 
-                    tint = text
-                )
-                
-                // Play Button
+                // Shuffle
                 ArtisticButton(
-                    onClick = { viewModel.togglePlayPause() },
-                    modifier = Modifier.size(100.dp),
-                    backgroundColor = PureWhite,
-                    icon = { 
+                    onClick = { viewModel.toggleShuffle() },
+                    modifier = Modifier.size(48.dp),
+                    backgroundColor = surfaceColor,
+                    icon = {
                         Icon(
-                            if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow, 
-                            null, 
-                            modifier = Modifier.size(48.dp),
-                            tint = PureBlack
+                            Icons.Default.Shuffle, null,
+                            tint = if (shuffleEnabled) AccentRed else contentColor
                         )
                     }
                 )
 
+                // Skip Previous (No border)
                 Icon(
-                    Icons.Default.SkipNext, null, 
-                    modifier = Modifier.size(56.dp).clickable { viewModel.skipToNext() }, 
-                    tint = text
+                    Icons.Default.SkipPrevious, null,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clickable { viewModel.skipToPrevious() },
+                    tint = contentColor
                 )
 
+                // Play/Pause (Largest)
+                ArtisticButton(
+                    onClick = { viewModel.togglePlayPause() },
+                    modifier = Modifier.size(80.dp),
+                    backgroundColor = surfaceColor,
+                    icon = {
+                        Icon(
+                            if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                            null,
+                            modifier = Modifier.size(48.dp),
+                            tint = contentColor
+                        )
+                    }
+                )
+
+                // Skip Next (No border)
+                Icon(
+                    Icons.Default.SkipNext, null,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clickable { viewModel.skipToNext() },
+                    tint = contentColor
+                )
+
+                // Repeat
                 ArtisticButton(
                     onClick = { viewModel.toggleRepeat() },
-                    icon = { Icon(Icons.Default.Repeat, null, tint = if(repeatMode!=0) MangaRed else PureBlack) },
-                    modifier = Modifier.size(56.dp).rotate(8f)
-                 )
+                    modifier = Modifier.size(48.dp),
+                    backgroundColor = surfaceColor,
+                    icon = {
+                        Icon(
+                            if (repeatMode == 2) Icons.Default.RepeatOne else Icons.Default.Repeat,
+                            null,
+                            tint = if (repeatMode != 0) AccentRed else contentColor
+                        )
+                    }
+                )
             }
         }
     }
 }
+
+private fun formatTime(ms: Long): String {
+    val totalSeconds = ms / 1000
+    val minutes = totalSeconds / 60
+    val seconds = totalSeconds % 60
+    return "%02d:%02d".format(minutes, seconds)
+}
+
