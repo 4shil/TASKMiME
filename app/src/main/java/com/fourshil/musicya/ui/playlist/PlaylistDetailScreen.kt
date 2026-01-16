@@ -81,8 +81,7 @@ fun PlaylistDetailScreen(
                                 onClick = null,
                                 modifier = Modifier.size(200.dp)
                             ) {
-                                LargeAlbumArt(
-                                     uri = artUri?.let { Uri.parse(it) },
+                                    uri = if (artUri != null) Uri.parse(artUri) else null,
                                     contentDescription = null,
                                     modifier = Modifier.fillMaxSize()
                                 )
