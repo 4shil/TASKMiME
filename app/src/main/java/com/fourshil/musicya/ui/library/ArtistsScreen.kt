@@ -141,4 +141,36 @@ fun ArtistArtisticItem(
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
-        
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Art Grid
+            Box(
+                modifier = Modifier
+                    .size(64.dp)
+                    .border(3.dp, PureBlack)
+                    .background(PureBlack)
+            ) {
+                 PlaylistArtGrid(uris = artUris, size = 64.dp)
+            }
+           
+            Spacer(modifier = Modifier.width(16.dp))
+            
+            Column {
+                Text(
+                    text = artist.name.uppercase(),
+                    style = MaterialTheme.typography.headlineLarge.copy(fontSize = 24.sp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = "${artist.songCount} TRKS // ${artist.albumCount} ALBS",
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp
+                    ),
+                    color = MangaRed
+                )
+            }
+        }
+    }
+}

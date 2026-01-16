@@ -20,9 +20,15 @@ import com.fourshil.musicya.ui.components.SongListItem
 import com.fourshil.musicya.ui.theme.MangaRed
 import com.fourshil.musicya.ui.theme.PureBlack
 
+import com.fourshil.musicya.ui.components.TopNavItem
+import com.fourshil.musicya.ui.components.TopNavigationChips
+import com.fourshil.musicya.ui.navigation.Screen
+
 @Composable
 fun FavoritesScreen(
-    viewModel: FavoritesViewModel = hiltViewModel()
+    viewModel: FavoritesViewModel = hiltViewModel(),
+    currentRoute: String? = null,
+    onNavigate: (String) -> Unit = {}
 ) {
     val songs by viewModel.favoriteSongs.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -32,57 +38,76 @@ fun FavoritesScreen(
     var selectedSong by remember { mutableStateOf<Song?>(null) }
     var showDetailsDialog by remember { mutableStateOf(false) }
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 24.dp)
-            .statusBarsPadding()
+            .statusBarsPadding(),
+        contentPadding = PaddingValues(bottom = 160.dp)
     ) {
-         Spacer(modifier = Modifier.height(24.dp))
-        
-        // Header: HEARTS
-        Text(
-            text = "YOUR",
-             style = MaterialTheme.typography.displayMedium.copy(
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Black
-            )
-        )
-        Text(
-            text = "HEARTS",
-             style = MaterialTheme.typography.displayMedium.copy(
-                fontSize = 64.sp,
-                fontWeight = FontWeight.Black,
-                fontStyle = FontStyle.Italic,
-                color = MangaRed
-            ),
-             modifier = Modifier.padding(bottom = 32.dp)
-        )
+        item {
+             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+                Spacer(modifier = Modifier.height(24.dp))
+                
+                // Header: HEARTS
+                Text(
+                    text = "YOUR",
+                     style = MaterialTheme.typography.displayMedium.copy(
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Black
+                    ),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = "HEARTS",
+                     style = MaterialTheme.typography.displayMedium.copy(
+                        fontSize = 64.sp,
+                        fontWeight = FontWeight.Black,
+                        fontStyle = FontStyle.Italic,
+                        color = MangaRed
+                    ),
+                     modifier = Modifier.padding(bottom = 32.dp)
+                )
+
+                TopNavigationChips(
+                    items = listOf(
+                        TopNavItem(Screen.Songs.route, "Gallery"),
+                        TopNavItem(Screen.Favorites.route, "Hearts"),
+                        TopNavItem(Screen.Folders.route, "Files"),
+                        TopNavItem(Screen.Playlists.route, "Assets"),
+                        TopNavItem(Screen.Albums.route, "Ink"),
+                        TopNavItem(Screen.Artists.route, "Muses")
+                    ),
+                    currentRoute = currentRoute,
+                    onItemClick = onNavigate,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+             }
+        }
 
         if (isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = PureBlack)
-            }
+             item {
+                Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
+                }
+             }
         } else if (songs.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("NO LOVE YET", style = MaterialTheme.typography.headlineLarge)
-                 }
-            }
+             item {
+                Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
+                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("NO LOVE YET", style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.onBackground)
+                     }
+                }
+             }
         } else {
-             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = 160.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                itemsIndexed(songs, key = { _, song -> song.id }) { index, song ->
-                    SongListItem(
+             itemsIndexed(songs, key = { _, song -> song.id }) { index, song ->
+                Box(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)) {
+                     SongListItem(
                         song = song,
-                        isFavorite = true, // It is favorites screen
+                        isFavorite = true,
                         isSelected = false,
                         isSelectionMode = false,
                         onClick = { viewModel.playSongAt(index) },
-                        onLongClick = { /* No selection mode here for simplicity */ },
+                        onLongClick = { },
                         onMoreClick = {
                             selectedSong = song
                             showActionsSheet = true

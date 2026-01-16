@@ -95,18 +95,69 @@ fun MusicyaNavGraph() {
                         )
                     }
                     composable(Screen.Albums.route) {
-                        AlbumsScreen(onAlbumClick = { id -> navController.navigate(Screen.PlaylistDetail.createRoute("album", id.toString())) })
+                        AlbumsScreen(
+                            onAlbumClick = { id -> navController.navigate(Screen.PlaylistDetail.createRoute("album", id.toString())) },
+                            currentRoute = currentRoute,
+                            onNavigate = { route ->
+                                navController.navigate(route) {
+                                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        )
                     }
                     composable(Screen.Artists.route) {
-                        ArtistsScreen(onArtistClick = { name -> navController.navigate(Screen.PlaylistDetail.createRoute("artist", name)) })
+                        ArtistsScreen(
+                            onArtistClick = { name -> navController.navigate(Screen.PlaylistDetail.createRoute("artist", name)) },
+                            currentRoute = currentRoute,
+                            onNavigate = { route ->
+                                navController.navigate(route) {
+                                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        )
                     }
                     composable(Screen.Folders.route) {
-                        FoldersScreen(onFolderClick = { path -> navController.navigate(Screen.PlaylistDetail.createRoute("folder", path)) })
+                        FoldersScreen(
+                            onFolderClick = { path -> navController.navigate(Screen.PlaylistDetail.createRoute("folder", path)) },
+                            currentRoute = currentRoute,
+                            onNavigate = { route ->
+                                navController.navigate(route) {
+                                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        )
                     }
-                    composable(Screen.Favorites.route) { FavoritesScreen() }
+                    composable(Screen.Favorites.route) { 
+                        FavoritesScreen(
+                            currentRoute = currentRoute,
+                            onNavigate = { route ->
+                                navController.navigate(route) {
+                                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        )
+                    }
                     
                     composable(Screen.Playlists.route) {
-                        PlaylistsScreen(onPlaylistClick = { id -> navController.navigate(Screen.PlaylistDetail.createRoute("playlist", id.toString())) })
+                        PlaylistsScreen(
+                            onPlaylistClick = { id -> navController.navigate(Screen.PlaylistDetail.createRoute("playlist", id.toString())) },
+                            currentRoute = currentRoute,
+                            onNavigate = { route ->
+                                navController.navigate(route) {
+                                    popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                                    launchSingleTop = true
+                                    restoreState = true
+                                }
+                            }
+                        )
                     }
                     
                     composable(Screen.NowPlaying.route) {

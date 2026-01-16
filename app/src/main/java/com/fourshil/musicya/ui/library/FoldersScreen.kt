@@ -25,62 +25,87 @@ import com.fourshil.musicya.ui.components.PlaylistArtGrid
 import com.fourshil.musicya.ui.theme.MangaRed
 import com.fourshil.musicya.ui.theme.PureBlack
 
+import com.fourshil.musicya.ui.components.TopNavItem
+import com.fourshil.musicya.ui.components.TopNavigationChips
+import com.fourshil.musicya.ui.navigation.Screen
+
 @Composable
 fun FoldersScreen(
     viewModel: LibraryViewModel = hiltViewModel(),
-    onFolderClick: (String) -> Unit = {}
+    onFolderClick: (String) -> Unit = {},
+    currentRoute: String? = null,
+    onNavigate: (String) -> Unit = {}
 ) {
     val folders by viewModel.folders.collectAsState()
     val songs by viewModel.songs.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 24.dp)
-            .statusBarsPadding()
+            .statusBarsPadding(),
+        contentPadding = PaddingValues(bottom = 160.dp)
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
-         // Header
-        Text(
-            text = "FILE",
-            style = MaterialTheme.typography.displayMedium.copy(
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Black
-            )
-        )
-        Text(
-            text = "SYSTEM",
-             style = MaterialTheme.typography.displayMedium.copy(
-                fontSize = 64.sp,
-                fontWeight = FontWeight.Black,
-                fontStyle = FontStyle.Italic,
-                color = MangaRed
-            ),
-             modifier = Modifier.padding(bottom = 32.dp)
-        )
+        item {
+             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+                Spacer(modifier = Modifier.height(24.dp))
+                 // Header
+                Text(
+                    text = "FILE",
+                    style = MaterialTheme.typography.displayMedium.copy(
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Black
+                    ),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text = "SYSTEM",
+                     style = MaterialTheme.typography.displayMedium.copy(
+                        fontSize = 64.sp,
+                        fontWeight = FontWeight.Black,
+                        fontStyle = FontStyle.Italic,
+                        color = MangaRed
+                    ),
+                     modifier = Modifier.padding(bottom = 32.dp)
+                )
+
+                TopNavigationChips(
+                    items = listOf(
+                        TopNavItem(Screen.Songs.route, "Gallery"),
+                        TopNavItem(Screen.Favorites.route, "Hearts"),
+                        TopNavItem(Screen.Folders.route, "Files"),
+                        TopNavItem(Screen.Playlists.route, "Assets"),
+                        TopNavItem(Screen.Albums.route, "Ink"),
+                        TopNavItem(Screen.Artists.route, "Muses")
+                    ),
+                    currentRoute = currentRoute,
+                    onItemClick = onNavigate,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+             }
+        }
 
         if (isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = PureBlack)
-            }
+             item {
+                Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
+                }
+             }
         } else if (folders.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("EMPTY DRIVE", style = MaterialTheme.typography.headlineLarge)
-            }
+             item {
+                Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
+                    Text("EMPTY DRIVE", style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.onBackground)
+                }
+             }
         } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = 160.dp),
-                 verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                items(folders, key = { it.path }) { folder ->
-                    // Find songs in this folder for the artwork grid
-                    val folderSongs = songs.filter { 
-                        val parent = java.io.File(it.path).parent ?: ""
-                        parent == folder.path 
-                    }
-                    
+            items(folders, key = { it.path }) { folder ->
+                // Find songs in this folder for the artwork grid
+                val folderSongs = songs.filter { 
+                    val parent = java.io.File(it.path).parent ?: ""
+                    parent == folder.path 
+                }
+                
+                Box(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)) {
                     FolderArtisticItem(
                         folder = folder,
                         artUris = folderSongs.map { it.albumArtUri },

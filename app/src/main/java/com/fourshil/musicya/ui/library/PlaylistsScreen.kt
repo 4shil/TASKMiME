@@ -39,71 +39,85 @@ fun PlaylistsScreen(
     var showDeleteDialog by remember { mutableStateOf<Playlist?>(null) }
     var showRenameDialog by remember { mutableStateOf<Playlist?>(null) }
     
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp)
-                .statusBarsPadding()
-        ) {
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            // Header: ASSETS
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                 Text(
-                    text = "ASSETS",
-                    style = MaterialTheme.typography.displayMedium.copy(
-                        fontSize = 48.sp,
-                        fontWeight = FontWeight.Black,
-                        fontStyle = FontStyle.Italic,
-                        letterSpacing = (-2).sp
-                    ),
-                    color = PureBlack
-                )
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding(),
+        contentPadding = PaddingValues(bottom = 160.dp)
+    ) {
+        item {
+             Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+                Spacer(modifier = Modifier.height(24.dp))
                 
-                // Add Button
-                ArtisticButton(
-                    onClick = { showCreateDialog = true },
-                    icon = { Icon(Icons.Default.Add, null, tint = PureBlack) },
-                    modifier = Modifier.size(56.dp),
-                    backgroundColor = MangaYellow
-                )
-            }
-            
-            Spacer(modifier = Modifier.height(32.dp))
+                // Header: ASSETS
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                     Text(
+                        text = "ASSETS",
+                        style = MaterialTheme.typography.displayMedium.copy(
+                            fontSize = 48.sp,
+                            fontWeight = FontWeight.Black,
+                            fontStyle = FontStyle.Italic,
+                            letterSpacing = (-2).sp
+                        ),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                    
+                    // Add Button
+                    ArtisticButton(
+                        onClick = { showCreateDialog = true },
+                        icon = { Icon(Icons.Default.Add, null, tint = PureBlack) },
+                        modifier = Modifier.size(56.dp),
+                        backgroundColor = MangaYellow
+                    )
+                }
+                
+                Spacer(modifier = Modifier.height(32.dp))
+             }
 
-            if (playlists.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+             TopNavigationChips(
+                items = listOf(
+                    TopNavItem(Screen.Songs.route, "Gallery"),
+                    TopNavItem(Screen.Favorites.route, "Hearts"),
+                    TopNavItem(Screen.Folders.route, "Files"),
+                    TopNavItem(Screen.Playlists.route, "Assets"),
+                    TopNavItem(Screen.Albums.route, "Ink"),
+                    TopNavItem(Screen.Artists.route, "Muses")
+                ),
+                currentRoute = currentRoute,
+                onItemClick = onNavigate,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+        }
+
+        if (playlists.isEmpty()) {
+             item {
+                Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
                      Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("EMPTY ARCHIVE", style = MaterialTheme.typography.headlineLarge)
+                        Text("EMPTY ARCHIVE", style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.onBackground)
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("create new asset +", style = MaterialTheme.typography.bodyLarge)
+                        Text("create new asset +", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onBackground)
                      }
                 }
-            } else {
-                 LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = 160.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(playlists, key = { it.id }) { playlist ->
-                         val playlistSongs by viewModel.getPlaylistSongs(playlist.id)
-                            .collectAsState(initial = emptyList())
-                        
-                        PlaylistArtisticItem(
-                            playlist = playlist,
-                            songCount = playlistSongs.size,
-                            artUris = playlistSongs.map { it.albumArtUri },
-                            onClick = { onPlaylistClick(playlist.id) },
-                            onLongClick = { showDeleteDialog = playlist },
-                            onRename = { showRenameDialog = playlist }
-                        )
-                    }
-                }
+             }
+        } else {
+             items(playlists, key = { it.id }) { playlist ->
+                 Box(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)) {
+                     val playlistSongs by viewModel.getPlaylistSongs(playlist.id)
+                        .collectAsState(initial = emptyList())
+                    
+                    PlaylistArtisticItem(
+                        playlist = playlist,
+                        songCount = playlistSongs.size,
+                        artUris = playlistSongs.map { it.albumArtUri },
+                        onClick = { onPlaylistClick(playlist.id) },
+                        onLongClick = { showDeleteDialog = playlist },
+                        onRename = { showRenameDialog = playlist }
+                    )
+                 }
             }
         }
     }
