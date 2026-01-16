@@ -81,6 +81,13 @@ fun SongsScreen(
             viewModel.loadLibrary()
         }
     }
+
+    // Force load on entry if permission is granted but list is empty (e.g. returning from settings)
+    LaunchedEffect(Unit) {
+        if (permissionsState.allPermissionsGranted && songs.isEmpty()) {
+            viewModel.loadLibrary()
+        }
+    }
     
     Scaffold(
         containerColor = Color.Transparent,

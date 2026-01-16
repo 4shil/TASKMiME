@@ -42,7 +42,11 @@ fun SettingsScreen(
     val scrollState = rememberScrollState()
 
     // Determine content color based on theme
-    val isDark = isSystemInDarkTheme() || currentTheme == ThemeMode.DARK
+    val isDark = when (currentTheme) {
+        ThemeMode.SYSTEM -> isSystemInDarkTheme()
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+    }
     val contentColor = if (isDark) Color.White else PureBlack
     val surfaceColor = if (isDark) PureBlack else Color.White
 
@@ -63,7 +67,7 @@ fun SettingsScreen(
                     icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = contentColor) },
                     modifier = Modifier.size(56.dp),
                     backgroundColor = surfaceColor,
-                    borderColor = contentColor
+
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(

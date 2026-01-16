@@ -5,16 +5,15 @@ import androidx.compose.ui.graphics.Color
 // Neo-Brutalist / Manga Palette
 val PureBlack = Color(0xFF000000)
 val PureWhite = Color(0xFFFFFFFF)
+val OffWhite = Color(0xFFF8F8F8) // background-light
+val OffBlack = Color(0xFF121212) // background-dark
 
 val MangaRed = Color(0xFFFF0000)
 val MangaYellow = Color(0xFFFACC15) // Yellow-400 equivalent
 val MangaDarkRed = Color(0xFF991B1B) 
 
-// Now Playing Design System (HTML Reference)
-val MustardYellow = Color(0xFFEAB308) // Primary accent for Artist Badge
-val AccentRed = Color(0xFFEF4444)     // Progress head, active toggles
-val OffWhite = Color(0xFFF8F8F8)      // Light mode background
-val DeepBlack = Color(0xFF121212)     // Dark mode background
+val MustardYellow = Color(0xFFEAB308) // Yellow-500
+val AccentRed = Color(0xFFEF4444) // Red-500 
 
 val Zinc50 = Color(0xFFFAFAFA)
 val Zinc100 = Color(0xFFF4F4F5)
@@ -32,4 +31,3 @@ val LightSurface = PureWhite
 val DarkSurface = Zinc800
 val PrimaryText = PureBlack
 val DarkPrimaryText = PureWhite
-

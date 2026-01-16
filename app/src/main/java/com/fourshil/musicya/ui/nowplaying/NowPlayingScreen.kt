@@ -1,33 +1,51 @@
 package com.fourshil.musicya.ui.nowplaying
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.SkipNext
+import androidx.compose.material.icons.filled.SkipPrevious
+import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material.icons.filled.Repeat
+import androidx.compose.material.icons.filled.RepeatOne
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.QueueMusic
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.fourshil.musicya.ui.components.ArtisticButton
 import com.fourshil.musicya.ui.components.MarqueeText
 import com.fourshil.musicya.ui.theme.*
 
@@ -45,40 +63,22 @@ fun NowPlayingScreen(
     val repeatMode by viewModel.repeatMode.collectAsState()
     val isFavorite by viewModel.isFavorite.collectAsState()
 
-    // Theme-aware colors
-    val isDark = isSystemInDarkTheme()
-    val bgColor = if (isDark) DeepBlack else OffWhite
-    val contentColor = if (isDark) PureWhite else PureBlack
-    val surfaceColor = if (isDark) PureBlack else PureWhite
+    // Helper to format time
+    fun formatTime(ms: Long): String {
+        val totalSeconds = ms / 1000
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return "%02d:%02d".format(minutes, seconds)
+    }
 
-    // Progress calculation
-    val progress = if (duration > 0) position.toFloat() / duration else 0f
-    val animatedProgress by animateFloatAsState(
-        targetValue = progress,
-        animationSpec = tween(durationMillis = 300),
-        label = "progress"
-    )
+    Box(modifier = Modifier.fillMaxSize().background(Zinc50)) {
+        // Dot Grid Background
+        DotGridBackground(
+            modifier = Modifier.fillMaxSize().alpha(0.08f),
+            dotColor = PureBlack
+        )
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(bgColor)
-            .drawBehind {
-                // Dot grid background pattern
-                val dotSpacing = 24.dp.toPx()
-                val dotRadius = 1.2f
-                val dotColor = contentColor.copy(alpha = 0.08f)
-                for (x in 0 until (size.width / dotSpacing).toInt() + 1) {
-                    for (y in 0 until (size.height / dotSpacing).toInt() + 1) {
-                        drawCircle(
-                            color = dotColor,
-                            radius = dotRadius,
-                            center = Offset(x * dotSpacing, y * dotSpacing)
-                        )
-                    }
-                }
-            }
-    ) {
+        // Main Vertical Layout
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -87,267 +87,318 @@ fun NowPlayingScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // --- HEADER ---
-            Spacer(modifier = Modifier.height(16.dp))
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = "ACTIVE CANVAS",
                     style = MaterialTheme.typography.labelSmall.copy(
+                        fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                        fontSize = 10.sp,
                         letterSpacing = 4.sp,
                         fontWeight = FontWeight.Bold
                     ),
-                    color = contentColor.copy(alpha = 0.5f)
+                    color = PureBlack.copy(alpha = 0.6f)
                 )
+                Spacer(modifier = Modifier.height(4.dp))
                 MarqueeText(
                     text = currentSong?.title ?: "UNTITLED",
                     style = MaterialTheme.typography.displayMedium.copy(
-                        fontSize = 42.sp,
+                        fontFamily = androidx.compose.ui.text.font.FontFamily.Serif,
+                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
                         fontWeight = FontWeight.Black,
-                        fontStyle = FontStyle.Italic,
-                        letterSpacing = (-2).sp
+                        fontSize = 56.sp, // Responsive title simulation
+                        letterSpacing = (-2).sp,
+                        lineHeight = 56.sp
                     ),
-                    color = contentColor,
+                    color = PureBlack,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
 
-            Spacer(modifier = Modifier.weight(0.08f))
+            Spacer(modifier = Modifier.weight(0.1f))
 
-            // --- ALBUM ART ---
+            // --- ALBUM ARTWORK ---
+            // 1:1 Representation: Border 3px, Offset Shadow, No Filters
             Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .widthIn(max = 340.dp),
-                contentAlignment = Alignment.Center
+                    .size(340.dp) // Max width from HTML was 340px
+                    .padding(bottom = 32.dp)
             ) {
-                // Shadow layer
+                // Background Shadow (translate-x-1 translate-y-1 -> approx 4dp)
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .matchParentSize()
                         .offset(x = 4.dp, y = 4.dp)
-                        .background(contentColor)
+                        .background(PureBlack)
                 )
-                // Art container
+
+                // Main Image Container
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .border(3.dp, contentColor)
+                        .border(3.dp, PureBlack)
                         .background(PureBlack)
                 ) {
                     AsyncImage(
                         model = currentSong?.albumArtUri,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize(),
-                        colorFilter = ColorFilter.colorMatrix(
-                            ColorMatrix().apply { setToSaturation(0f) } // Grayscale
-                        )
-                    )
-                    // Red overlay
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(AccentRed.copy(alpha = 0.2f))
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.weight(0.06f))
-
             // --- ARTIST ROW ---
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .widthIn(max = 340.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    .width(340.dp)
+                    .height(48.dp)
+                    .padding(bottom = 32.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // Favorite Button
-                ArtisticButton(
+                // Heart Button
+                NeoSquareButton(
                     onClick = { viewModel.toggleFavorite() },
-                    modifier = Modifier.size(48.dp),
-                    backgroundColor = surfaceColor,
-                    icon = {
-                        Icon(
-                            if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            null,
-                            tint = if (isFavorite) AccentRed else contentColor
-                        )
-                    }
+                    icon = if (isFavorite) Icons.Default.Favorite else Icons.Filled.FavoriteBorder,
+                    size = 48.dp
                 )
 
-                // Artist Badge
-                Box(modifier = Modifier.weight(1f)) {
+                Spacer(modifier = Modifier.width(12.dp))
+
+                // Artist Badge (Flex-1)
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                ) {
                     // Shadow
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxSize()
                             .offset(x = 4.dp, y = 4.dp)
-                            .height(48.dp)
-                            .background(contentColor)
+                            .background(PureBlack)
                     )
                     // Badge
                     Box(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                            .border(3.dp, contentColor)
+                            .fillMaxSize()
+                            .border(3.dp, PureBlack)
                             .background(MustardYellow),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = currentSong?.artist?.uppercase() ?: "UNKNOWN",
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                fontWeight = FontWeight.Black,
-                                letterSpacing = 1.sp
+                            style = MaterialTheme.typography.bodyLarge.copy(
+                                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = (-0.5).sp
                             ),
                             color = PureBlack,
-                            maxLines = 1
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
 
-                // Add to Playlist Button
-                ArtisticButton(
-                    onClick = { /* TODO: Add to playlist */ },
-                    modifier = Modifier.size(48.dp),
-                    backgroundColor = surfaceColor,
-                    icon = { Icon(Icons.Default.Add, null, tint = contentColor) }
+                Spacer(modifier = Modifier.width(12.dp))
+
+                // Add Button
+                NeoSquareButton(
+                    onClick = { /* TODO */ },
+                    icon = Icons.Default.Add,
+                    size = 48.dp
                 )
             }
 
-            Spacer(modifier = Modifier.weight(0.08f))
-
             // --- PROGRESS BAR ---
-            Column(modifier = Modifier.fillMaxWidth().widthIn(max = 340.dp)) {
+            Column(
+                modifier = Modifier.width(340.dp).padding(bottom = 40.dp)
+            ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(32.dp)
-                        .border(3.dp, contentColor)
-                        .background(surfaceColor)
+                        .border(3.dp, PureBlack)
+                        .background(OffWhite)
+                        .pointerInput(Unit) {
+                            detectTapGestures { offset ->
+                                val p = (offset.x / size.width).coerceIn(0f, 1f)
+                                viewModel.seekTo((p * duration).toLong())
+                            }
+                        }
                 ) {
-                    // Progress fill
+                    val progressFraction = if (duration > 0) position.toFloat() / duration else 0f
+                    
+                    // Black Fill
                     Box(
                         modifier = Modifier
+                            .fillMaxWidth(progressFraction)
                             .fillMaxHeight()
-                            .fillMaxWidth(animatedProgress)
-                            .background(contentColor)
+                            .background(PureBlack)
+                    )
+                    
+                    // Red Head
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(progressFraction)
+                            .fillMaxHeight(),
+                        contentAlignment = Alignment.CenterEnd
                     ) {
-                        // Red head
                         Box(
                             modifier = Modifier
-                                .align(Alignment.CenterEnd)
                                 .width(8.dp)
                                 .fillMaxHeight()
                                 .background(AccentRed)
-                                .border(width = 3.dp, color = contentColor)
-                        )
+                                .border(width = 0.dp, color = Color.Transparent)
+                        ) {
+                             // Left border simulator
+                             Box(
+                                 modifier = Modifier
+                                     .width(3.dp)
+                                     .fillMaxHeight()
+                                     .background(PureBlack)
+                                     .align(Alignment.CenterStart)
+                             )
+                        }
                     }
                 }
-                // Time labels
+                
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                // Time Labels
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
-                        text = formatTime(position),
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        ),
-                        color = contentColor
+                    val timeStyle = MaterialTheme.typography.labelSmall.copy(
+                        fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 2.sp,
+                        fontSize = 10.sp
                     )
-                    Text(
-                        text = formatTime(duration),
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        ),
-                        color = contentColor
-                    )
+                    Text(text = formatTime(position), style = timeStyle, color = PureBlack)
+                    Text(text = formatTime(duration), style = timeStyle, color = PureBlack)
                 }
             }
 
-            Spacer(modifier = Modifier.weight(0.1f))
-
-            // --- PLAYBACK CONTROLS ---
+            // --- CONTROLS ---
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .widthIn(max = 340.dp)
-                    .padding(bottom = 32.dp),
+                    .width(340.dp)
+                    .padding(bottom = 24.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Shuffle
-                ArtisticButton(
+                NeoSquareButton(
                     onClick = { viewModel.toggleShuffle() },
-                    modifier = Modifier.size(48.dp),
-                    backgroundColor = surfaceColor,
-                    icon = {
-                        Icon(
-                            Icons.Default.Shuffle, null,
-                            tint = if (shuffleEnabled) AccentRed else contentColor
-                        )
-                    }
+                    icon = Icons.Default.Shuffle,
+                    size = 48.dp,
+                    tint = if(shuffleEnabled) MangaRed else PureBlack
                 )
-
-                // Skip Previous (No border)
+                
                 Icon(
                     Icons.Default.SkipPrevious, null,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clickable { viewModel.skipToPrevious() },
-                    tint = contentColor
+                    modifier = Modifier.size(48.dp).clickable { viewModel.skipToPrevious() },
+                    tint = PureBlack
                 )
-
-                // Play/Pause (Largest)
-                ArtisticButton(
+                
+                NeoSquareButton(
                     onClick = { viewModel.togglePlayPause() },
-                    modifier = Modifier.size(80.dp),
-                    backgroundColor = surfaceColor,
-                    icon = {
-                        Icon(
-                            if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                            null,
-                            modifier = Modifier.size(48.dp),
-                            tint = contentColor
-                        )
-                    }
+                    icon = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                    size = 80.dp,
+                    borderWidth = 4.dp,
+                    isLarge = true,
+                    iconSize = 48.dp
                 )
 
-                // Skip Next (No border)
                 Icon(
                     Icons.Default.SkipNext, null,
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clickable { viewModel.skipToNext() },
-                    tint = contentColor
+                    modifier = Modifier.size(48.dp).clickable { viewModel.skipToNext() },
+                    tint = PureBlack
                 )
-
-                // Repeat
-                ArtisticButton(
+                
+                NeoSquareButton(
                     onClick = { viewModel.toggleRepeat() },
-                    modifier = Modifier.size(48.dp),
-                    backgroundColor = surfaceColor,
-                    icon = {
-                        Icon(
-                            if (repeatMode == 2) Icons.Default.RepeatOne else Icons.Default.Repeat,
-                            null,
-                            tint = if (repeatMode != 0) AccentRed else contentColor
-                        )
-                    }
+                    icon = if(repeatMode == 1) Icons.Default.RepeatOne else Icons.Default.Repeat,
+                    size = 48.dp,
+                    tint = if(repeatMode!=0) MangaRed else PureBlack
+                )
+            }
+            
+            Spacer(modifier = Modifier.weight(0.1f))
+        }
+    }
+}
+
+@Composable
+fun NeoSquareButton(
+    onClick: () -> Unit,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    size: Dp,
+    borderWidth: Dp = 3.dp,
+    tint: Color = PureBlack,
+    isLarge: Boolean = false,
+    iconSize: Dp = 24.dp
+) {
+    Box(
+        modifier = Modifier
+            .size(size)
+            .clickable(onClick = onClick)
+    ) {
+        // Shadow (4px)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .offset(x = 4.dp, y = 4.dp)
+                .background(PureBlack)
+        )
+        // Button
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .border(borderWidth, PureBlack)
+                .background(OffWhite),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = tint,
+                modifier = Modifier.size(iconSize)
+            )
+        }
+    }
+}
+
+@Composable
+fun DotGridBackground(
+    modifier: Modifier = Modifier,
+    dotColor: Color = Color.Black,
+    spacing: Dp = 20.dp,
+    radius: Dp = 2.dp
+) {
+    Canvas(modifier = modifier) {
+        val spacingPx = spacing.toPx()
+        val radiusPx = radius.toPx()
+        
+        // Fill the rest of the canvas
+        val width = size.width
+        val height = size.height
+        
+        val cols = (width / spacingPx).toInt() + 1
+        val rows = (height / spacingPx).toInt() + 1
+        
+        for (i in 0..cols) {
+            for (j in 0..rows) {
+                drawCircle(
+                    color = dotColor,
+                    radius = radiusPx,
+                    center = Offset(i * spacingPx, j * spacingPx)
                 )
             }
         }
     }
 }
-
-private fun formatTime(ms: Long): String {
-    val totalSeconds = ms / 1000
-    val minutes = totalSeconds / 60
-    val seconds = totalSeconds % 60
-    return "%02d:%02d".format(minutes, seconds)
-}
-

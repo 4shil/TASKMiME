@@ -59,6 +59,9 @@ class MusicService : MediaSessionService() {
         mediaSession = MediaSession.Builder(this, player!!)
             .setSessionActivity(pendingIntent)
             .build()
+            
+        // Essential: Set notification provider to ensure Foreground Service behavior
+        setMediaNotificationProvider(androidx.media3.session.DefaultMediaNotificationProvider(this))
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {
