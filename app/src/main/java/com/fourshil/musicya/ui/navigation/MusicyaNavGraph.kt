@@ -35,10 +35,9 @@ fun MusicyaNavGraph() {
     val nowPlayingViewModel: NowPlayingViewModel = hiltViewModel()
     
     // Song state
+    // Song state
     val currentSong by nowPlayingViewModel.currentSong.collectAsState()
-    val isPlaying by nowPlayingViewModel.isPlaying.collectAsState()
-    val position by nowPlayingViewModel.position.collectAsState()
-    val duration by nowPlayingViewModel.duration.collectAsState()
+    // position and duration moved to ConnectedMiniPlayer to avoid root recomposition over overhead
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -193,12 +192,13 @@ fun MusicyaNavGraph() {
                 ) {
                     // Mini Player (Only if not in now playing screen and song exists)
                     if (currentSong != null && currentRoute != Screen.NowPlaying.route) {
-                        MiniPlayer(
-                            song = currentSong,
-                            isPlaying = isPlaying,
-                            progress = if (duration > 0) position.toFloat() / duration else 0f,
-                            onPlayPauseClick = { nowPlayingViewModel.togglePlayPause() },
-                            onNextClick = { nowPlayingViewModel.skipToNext() },
+                        // Pass ViewModel or Lambda to avoid reading frequent state at this level
+                        // However, since we already read `position` above, we need to remove THAT reading.
+                        // But wait, removing the reading above affects `MiniPlayer` passing.
+                        // We will inline the connection here for now or delegate to a wrapper.
+                        
+                        ConnectedMiniPlayer(
+                            viewModel = nowPlayingViewModel,
                             onClick = { navController.navigate(Screen.NowPlaying.route) },
                             modifier = Modifier
                                 .padding(horizontal = 24.dp)

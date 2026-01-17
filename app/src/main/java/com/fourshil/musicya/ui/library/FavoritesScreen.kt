@@ -99,7 +99,11 @@ fun FavoritesScreen(
                 }
              }
         } else {
-             itemsIndexed(songs, key = { _, song -> song.id }) { index, song ->
+             itemsIndexed(
+                 items = songs,
+                 key = { _, song -> song.id },
+                 contentType = { _, _ -> "favorite_item" }
+             ) { index, song ->
                 Box(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)) {
                      SongListItem(
                         song = song,

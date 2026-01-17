@@ -105,7 +105,11 @@ fun ArtistsScreen(
                 }
              }
         } else {
-            items(artists, key = { it.id }) { artist ->
+            items(
+                items = artists,
+                key = { it.id },
+                contentType = { "artist_item" }
+            ) { artist ->
                  val artistSongs = songs.filter { it.artist == artist.name }
                  Box(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)) {
                     ArtistArtisticItem(
@@ -127,7 +131,8 @@ fun ArtistArtisticItem(
 ) {
     ArtisticCard(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        showHalftone = false // Performance optimization
     ) {
         Row(
             modifier = Modifier.padding(16.dp),

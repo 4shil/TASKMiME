@@ -110,7 +110,11 @@ fun PlaylistsScreen(
                 }
              }
         } else {
-             items(playlists, key = { it.id }) { playlist ->
+             items(
+                 items = playlists,
+                 key = { it.id },
+                 contentType = { "playlist_item" }
+             ) { playlist ->
                  Box(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)) {
                      val playlistSongs by viewModel.getPlaylistSongs(playlist.id)
                         .collectAsState(initial = emptyList())
@@ -206,7 +210,8 @@ fun PlaylistArtisticItem(
 ) {
     ArtisticCard(
         onClick = onClick,
-         modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        showHalftone = false // Performance optimization
     ) {
          Row(
             modifier = Modifier.padding(16.dp),

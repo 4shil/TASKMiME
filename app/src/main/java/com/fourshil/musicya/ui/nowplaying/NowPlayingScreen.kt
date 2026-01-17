@@ -1,53 +1,46 @@
 package com.fourshil.musicya.ui.nowplaying
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.SkipNext
-import androidx.compose.material.icons.filled.SkipPrevious
-import androidx.compose.material.icons.filled.Shuffle
-import androidx.compose.material.icons.filled.Repeat
-import androidx.compose.material.icons.filled.RepeatOne
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.QueueMusic
+import androidx.compose.material.icons.automirrored.filled.QueueMusic
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.fourshil.musicya.ui.components.HalftoneBackground
 import com.fourshil.musicya.ui.components.MarqueeText
 import com.fourshil.musicya.ui.theme.*
+import kotlin.math.coerceIn
 
 @Composable
 fun NowPlayingScreen(
@@ -63,6 +56,10 @@ fun NowPlayingScreen(
     val repeatMode by viewModel.repeatMode.collectAsState()
     val isFavorite by viewModel.isFavorite.collectAsState()
 
+    val isDark = isSystemInDarkTheme()
+    val bg = if (isDark) Color(0xFF100D21) else Color(0xFFfaf9fb)
+    val text = if (isDark) Color.White else Color.Black
+
     // Helper to format time
     fun formatTime(ms: Long): String {
         val totalSeconds = ms / 1000
@@ -71,14 +68,15 @@ fun NowPlayingScreen(
         return "%02d:%02d".format(minutes, seconds)
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(Zinc50)) {
-        // Dot Grid Background
-        DotGridBackground(
-            modifier = Modifier.fillMaxSize().alpha(0.08f),
-            dotColor = PureBlack
+    Box(modifier = Modifier.fillMaxSize().background(bg)) {
+        // Halftone Background Effect
+        HalftoneBackground(
+            modifier = Modifier.fillMaxSize().alpha(0.1f),
+            color = text,
+            dotSize = 2f,
+            spacing = 20f
         )
 
-        // Main Vertical Layout
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -87,142 +85,201 @@ fun NowPlayingScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // --- HEADER ---
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "ACTIVE CANVAS",
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
-                        fontSize = 10.sp,
-                        letterSpacing = 4.sp,
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = PureBlack.copy(alpha = 0.6f)
+                NeoButton(
+                    onClick = onBack,
+                    icon = Icons.Default.ArrowBack,
+                    size = 56.dp,
+                    backgroundColor = if(isDark) Color(0xFF2E2E40) else Color.White
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                MarqueeText(
-                    text = currentSong?.title ?: "UNTITLED",
-                    style = MaterialTheme.typography.displayMedium.copy(
-                        fontFamily = androidx.compose.ui.text.font.FontFamily.Serif,
-                        fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
-                        fontWeight = FontWeight.Black,
-                        fontSize = 56.sp, // Responsive title simulation
-                        letterSpacing = (-2).sp,
-                        lineHeight = 56.sp
-                    ),
-                    color = PureBlack,
-                    modifier = Modifier.fillMaxWidth()
+                
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        "SKETCHBOOK // 004",
+                        style = MaterialTheme.typography.labelSmall.copy(
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Black,
+                            fontSize = 10.sp,
+                            letterSpacing = 4.sp
+                        ),
+                        color = text.copy(alpha = 0.4f)
+                    )
+                    Text(
+                        "ACTIVE CANVAS",
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Black,
+                            fontStyle = FontStyle.Italic
+                        ),
+                        color = text
+                    )
+                }
+
+                NeoButton(
+                    onClick = onQueueClick,
+                    icon = Icons.AutoMirrored.Filled.QueueMusic,
+                    size = 56.dp,
+                    backgroundColor = if(isDark) Color(0xFF2E2E40) else Color.White
                 )
             }
 
-            Spacer(modifier = Modifier.weight(0.1f))
+            Spacer(modifier = Modifier.weight(0.5f))
 
             // --- ALBUM ARTWORK ---
-            // 1:1 Representation: Border 3px, Offset Shadow, No Filters
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .size(340.dp) // Max width from HTML was 340px
+                    .size(340.dp)
                     .padding(bottom = 32.dp)
             ) {
-                // Background Shadow (translate-x-1 translate-y-1 -> approx 4dp)
+                // Large Background Disc Decoration (Rotates if playing)
+                Icon(
+                    Icons.Default.Album, null,
+                    modifier = Modifier
+                        .size(300.dp)
+                        .alpha(0.05f)
+                        .graphicsLayer { rotationZ = if(isPlaying) (position.toFloat() / 100) % 360f else 0f },
+                    tint = text
+                )
+
+                // RAW TAG (Manga style)
+                Box(
+                    modifier = Modifier
+                        .offset(x = 130.dp, y = (-160).dp)
+                        .rotate(12f)
+                        .zIndex(2f)
+                        .background(MangaRed, RoundedCornerShape(4.dp))
+                        .border(4.dp, Color.Black, RoundedCornerShape(4.dp))
+                        .padding(horizontal = 12.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        "RAW", 
+                        color = Color.White, 
+                        fontWeight = FontWeight.Black,
+                        fontSize = 14.sp
+                    )
+                }
+
+                // Brutalist Shadow
                 Box(
                     modifier = Modifier
                         .matchParentSize()
-                        .offset(x = 4.dp, y = 4.dp)
-                        .background(PureBlack)
+                        .offset(x = 10.dp, y = 10.dp)
+                        .background(Color.Black)
                 )
 
                 // Main Image Container
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .border(3.dp, PureBlack)
-                        .background(PureBlack)
+                        .border(6.dp, Color.Black)
+                        .background(Color.White)
                 ) {
                     AsyncImage(
                         model = currentSong?.albumArtUri,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize().alpha(0.95f)
+                    )
+                    
+                    // SFX Label
+                    Text(
+                        "VIBE!", 
+                        color = MangaRed, 
+                        style = MaterialTheme.typography.displayMedium.copy(
+                            fontSize = 48.sp,
+                            fontWeight = FontWeight.Black,
+                            fontStyle = FontStyle.Italic
+                        ), 
+                        modifier = Modifier.align(Alignment.BottomStart).padding(16.dp).rotate(-12f)
                     )
                 }
             }
 
-            // --- ARTIST ROW ---
-            Row(
+            // --- SONG TITLE (CENTERED & MARQUEE) ---
+            MarqueeText(
+                isActive = true,
+                text = currentSong?.title?.uppercase() ?: "UNTITLED",
+                style = MaterialTheme.typography.displayLarge.copy(
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.Black,
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 48.sp, // Slightly reduced for responsiveness
+                    letterSpacing = (-2).sp,
+                    lineHeight = 52.sp,
+                    textAlign = TextAlign.Center
+                ),
+                color = text,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // --- ARTIST BADGE (RESPONSIVE & MARQUEE) ---
+            Box(
                 modifier = Modifier
                     .width(340.dp)
-                    .height(48.dp)
-                    .padding(bottom = 32.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .height(56.dp)
             ) {
-                // Heart Button
-                NeoSquareButton(
-                    onClick = { viewModel.toggleFavorite() },
-                    icon = if (isFavorite) Icons.Default.Favorite else Icons.Filled.FavoriteBorder,
-                    size = 48.dp
-                )
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                // Artist Badge (Flex-1)
+                // Brutalist Shadow
                 Box(
                     modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight()
-                ) {
-                    // Shadow
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .offset(x = 4.dp, y = 4.dp)
-                            .background(PureBlack)
-                    )
-                    // Badge
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .border(3.dp, PureBlack)
-                            .background(MustardYellow),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = currentSong?.artist?.uppercase() ?: "UNKNOWN",
-                            style = MaterialTheme.typography.bodyLarge.copy(
-                                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = (-0.5).sp
-                            ),
-                            color = PureBlack,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.width(12.dp))
-
-                // Add Button
-                NeoSquareButton(
-                    onClick = { /* TODO */ },
-                    icon = Icons.Default.Add,
-                    size = 48.dp
+                        .fillMaxSize()
+                        .offset(x = 6.dp, y = 6.dp)
+                        .background(Color.Black)
                 )
+                // Badge
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .border(4.dp, Color.Black)
+                        .background(MangaYellow),
+                    contentAlignment = Alignment.Center
+                ) {
+                    MarqueeText(
+                        isActive = true,
+                        text = currentSong?.artist?.uppercase() ?: "UNKNOWN ARTIST",
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.Black,
+                            fontSize = 24.sp,
+                            textAlign = TextAlign.Center
+                        ),
+                        color = Color.Black,
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    )
+                }
             }
 
-            // --- PROGRESS BAR ---
-            Column(
-                modifier = Modifier.width(340.dp).padding(bottom = 40.dp)
-            ) {
+            Spacer(modifier = Modifier.weight(0.5f))
+
+            // --- PROGRESS SECTION ---
+            Column(modifier = Modifier.width(340.dp).padding(bottom = 24.dp)) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text("RENDERING...", style = MaterialTheme.typography.labelSmall, color = text.copy(0.6f))
+                    Text(
+                        "MASTER-EDIT", 
+                        style = MaterialTheme.typography.labelSmall, 
+                        color = MangaRed,
+                        modifier = Modifier.drawBehind { 
+                            val stroke = 2.dp.toPx()
+                            drawLine(MangaRed, Offset(0f, size.height + 4.dp.toPx()), Offset(size.width, size.height + 4.dp.toPx()), stroke)
+                        }
+                    )
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                
+                // Blocky Progress Bar
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(32.dp)
-                        .border(3.dp, PureBlack)
-                        .background(OffWhite)
+                        .height(48.dp)
+                        .border(6.dp, Color.Black)
+                        .background(Color.White)
                         .pointerInput(Unit) {
                             detectTapGestures { offset ->
                                 val p = (offset.x / size.width).coerceIn(0f, 1f)
@@ -231,174 +288,117 @@ fun NowPlayingScreen(
                         }
                 ) {
                     val progressFraction = if (duration > 0) position.toFloat() / duration else 0f
-                    
-                    // Black Fill
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(progressFraction)
-                            .fillMaxHeight()
-                            .background(PureBlack)
-                    )
-                    
-                    // Red Head
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth(progressFraction)
-                            .fillMaxHeight(),
-                        contentAlignment = Alignment.CenterEnd
-                    ) {
+                    Box(modifier = Modifier.fillMaxHeight().fillMaxWidth(progressFraction).background(Color.Black)) {
+                        // Progress Block Head
                         Box(
                             modifier = Modifier
-                                .width(8.dp)
+                                .align(Alignment.CenterEnd)
+                                .width(12.dp)
                                 .fillMaxHeight()
-                                .background(AccentRed)
-                                .border(width = 0.dp, color = Color.Transparent)
-                        ) {
-                             // Left border simulator
-                             Box(
-                                 modifier = Modifier
-                                     .width(3.dp)
-                                     .fillMaxHeight()
-                                     .background(PureBlack)
-                                     .align(Alignment.CenterStart)
-                             )
-                        }
+                                .background(MangaRed)
+                                .border(start = 4.dp, color = Color.Black)
+                        )
                     }
                 }
-                
                 Spacer(modifier = Modifier.height(8.dp))
-                
-                // Time Labels
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    val timeStyle = MaterialTheme.typography.labelSmall.copy(
-                        fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 2.sp,
-                        fontSize = 10.sp
-                    )
-                    Text(text = formatTime(position), style = timeStyle, color = PureBlack)
-                    Text(text = formatTime(duration), style = timeStyle, color = PureBlack)
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    val timeStyle = MaterialTheme.typography.labelSmall.copy(fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
+                    Text(formatTime(position), style = timeStyle, color = text)
+                    Text(formatTime(duration), style = timeStyle, color = text)
                 }
             }
+
+            Spacer(modifier = Modifier.weight(0.5f))
 
             // --- CONTROLS ---
             Row(
-                modifier = Modifier
-                    .width(340.dp)
-                    .padding(bottom = 24.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth().padding(bottom = 32.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                NeoSquareButton(
-                    onClick = { viewModel.toggleShuffle() },
-                    icon = Icons.Default.Shuffle,
-                    size = 48.dp,
-                    tint = if(shuffleEnabled) MangaRed else PureBlack
-                )
+                IconButton(onClick = { viewModel.toggleShuffle() }) {
+                    Icon(Icons.Default.Shuffle, null, tint = if(shuffleEnabled) MangaRed else text, modifier = Modifier.rotate(-12f))
+                }
                 
                 Icon(
-                    Icons.Default.SkipPrevious, null,
-                    modifier = Modifier.size(48.dp).clickable { viewModel.skipToPrevious() },
-                    tint = PureBlack
+                    Icons.Default.SkipPrevious, null, 
+                    modifier = Modifier.size(48.dp).clickable { viewModel.skipToPrevious() }, 
+                    tint = text
                 )
                 
-                NeoSquareButton(
+                // Play/Pause (Neo-Brutalist Block)
+                Surface(
                     onClick = { viewModel.togglePlayPause() },
-                    icon = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                    size = 80.dp,
-                    borderWidth = 4.dp,
-                    isLarge = true,
-                    iconSize = 48.dp
-                )
+                    shape = RoundedCornerShape(8.dp),
+                    color = Color.White,
+                    border = androidx.compose.foundation.BorderStroke(6.dp, Color.Black),
+                    shadowElevation = 12.dp,
+                    modifier = Modifier.size(100.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Crossfade(targetState = isPlaying, label = "PlayPause") { playing ->
+                            Icon(
+                                if (playing) Icons.Default.Pause else Icons.Default.PlayArrow, 
+                                null, modifier = Modifier.size(64.dp), tint = Color.Black
+                            )
+                        }
+                    }
+                }
 
                 Icon(
-                    Icons.Default.SkipNext, null,
-                    modifier = Modifier.size(48.dp).clickable { viewModel.skipToNext() },
-                    tint = PureBlack
+                    Icons.Default.SkipNext, null, 
+                    modifier = Modifier.size(48.dp).clickable { viewModel.skipToNext() }, 
+                    tint = text
                 )
-                
-                NeoSquareButton(
-                    onClick = { viewModel.toggleRepeat() },
-                    icon = if(repeatMode == 1) Icons.Default.RepeatOne else Icons.Default.Repeat,
-                    size = 48.dp,
-                    tint = if(repeatMode!=0) MangaRed else PureBlack
-                )
+
+                IconButton(onClick = { viewModel.toggleRepeat() }) {
+                    Icon(
+                        if(repeatMode == 1) Icons.Default.RepeatOne else Icons.Default.Repeat, 
+                        null, 
+                        tint = if(repeatMode != 0) MangaRed else text, 
+                        modifier = Modifier.rotate(12f)
+                    )
+                }
             }
-            
-            Spacer(modifier = Modifier.weight(0.1f))
         }
     }
 }
 
 @Composable
-fun NeoSquareButton(
+fun NeoButton(
     onClick: () -> Unit,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     size: Dp,
-    borderWidth: Dp = 3.dp,
-    tint: Color = PureBlack,
-    isLarge: Boolean = false,
-    iconSize: Dp = 24.dp
+    backgroundColor: Color = Color.White,
+    iconSize: Dp = 24.dp,
+    borderWidth: Dp = 4.dp
 ) {
     Box(
         modifier = Modifier
             .size(size)
             .clickable(onClick = onClick)
     ) {
-        // Shadow (4px)
+        // Shadow
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .offset(x = 4.dp, y = 4.dp)
-                .background(PureBlack)
+                .background(Color.Black, RoundedCornerShape(4.dp))
         )
         // Button
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .border(borderWidth, PureBlack)
-                .background(OffWhite),
+                .background(backgroundColor, RoundedCornerShape(4.dp))
+                .border(borderWidth, Color.Black, RoundedCornerShape(4.dp)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = tint,
-                modifier = Modifier.size(iconSize)
+                modifier = Modifier.size(iconSize),
+                tint = Color.Black
             )
-        }
-    }
-}
-
-@Composable
-fun DotGridBackground(
-    modifier: Modifier = Modifier,
-    dotColor: Color = Color.Black,
-    spacing: Dp = 20.dp,
-    radius: Dp = 2.dp
-) {
-    Canvas(modifier = modifier) {
-        val spacingPx = spacing.toPx()
-        val radiusPx = radius.toPx()
-        
-        // Fill the rest of the canvas
-        val width = size.width
-        val height = size.height
-        
-        val cols = (width / spacingPx).toInt() + 1
-        val rows = (height / spacingPx).toInt() + 1
-        
-        for (i in 0..cols) {
-            for (j in 0..rows) {
-                drawCircle(
-                    color = dotColor,
-                    radius = radiusPx,
-                    center = Offset(i * spacingPx, j * spacingPx)
-                )
-            }
         }
     }
 }

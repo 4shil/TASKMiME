@@ -223,7 +223,11 @@ fun SearchArtisticCard(
     artUri: List<android.net.Uri>,
     onClick: () -> Unit
 ) {
-    ArtisticCard(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+    ArtisticCard(
+        onClick = onClick, 
+        modifier = Modifier.fillMaxWidth(),
+        showHalftone = false // Performance optimization
+    ) {
         Row(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically

@@ -90,7 +90,11 @@ fun FoldersScreen(
                 }
              }
         } else {
-            items(folders, key = { it.path }) { folder ->
+            items(
+                items = folders,
+                key = { it.path },
+                contentType = { "folder_item" }
+            ) { folder ->
                 // Find songs in this folder for the artwork grid
                 val folderSongs = songs.filter { 
                     val parent = java.io.File(it.path).parent ?: ""
@@ -117,7 +121,8 @@ fun FolderArtisticItem(
 ) {
     ArtisticCard(
         onClick = onClick,
-         modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        showHalftone = false // Performance optimization
     ) {
          Row(
             modifier = Modifier.padding(16.dp),

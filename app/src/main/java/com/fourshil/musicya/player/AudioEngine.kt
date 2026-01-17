@@ -7,6 +7,8 @@ import android.media.audiofx.Virtualizer
 import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -44,8 +46,8 @@ class AudioEngine @Inject constructor() {
     private val _isEnabled = MutableStateFlow(false)
     val isEnabled = _isEnabled.asStateFlow()
 
-    fun attach(sessionId: Int) {
-        if (sessionId == 0 || sessionId == currentSessionId) return
+    suspend fun attach(sessionId: Int) = withContext(Dispatchers.Default) {
+        if (sessionId == 0 || sessionId == currentSessionId) return@withContext
         
         Log.d("AudioEngine", "Attaching to session: $sessionId")
         release() // Release previous session effects

@@ -50,6 +50,7 @@ fun SongListItem(
         onClick = onClick,
         borderColor = borderColor,
         shadowColor = shadowColor,
+        showHalftone = false, // Performance optimization
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
@@ -84,6 +85,7 @@ fun SongListItem(
             Column(modifier = Modifier.weight(1f)) {
                 MarqueeText(
                     text = song.title.uppercase(),
+                    isActive = isSelected,
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontSize = 20.sp,
                         letterSpacing = (-1).sp

@@ -133,7 +133,8 @@ fun AlbumArtisticCard(
     // "Ink" Card Style
     ArtisticCard(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth().aspectRatio(0.8f) // Taller card for text
+        modifier = Modifier.fillMaxWidth().aspectRatio(0.8f), // Taller card for text
+        showHalftone = false // Performance optimization
     ) {
         Column {
              // Art Box

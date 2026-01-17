@@ -93,7 +93,11 @@ fun QueueScreen(
                 contentPadding = PaddingValues(bottom = 160.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                itemsIndexed(queue, key = { index, song -> "${song.id}_$index" }) { index, song ->
+                itemsIndexed(
+                    items = queue,
+                    key = { index, song -> "${song.id}_$index" },
+                    contentType = { _, _ -> "queue_item" }
+                ) { index, song ->
                     QueueArtisticItem(
                         song = song,
                         isPlaying = index == currentIndex,
@@ -117,7 +121,8 @@ fun QueueArtisticItem(
         onClick = if (!isPlaying) onPlay else null,
         modifier = Modifier.fillMaxWidth(),
         borderColor = if (isPlaying) MangaRed else PureBlack,
-        backgroundColor = if (isPlaying) MangaRed.copy(alpha = 0.1f) else Color.White
+        backgroundColor = if (isPlaying) MangaRed.copy(alpha = 0.1f) else Color.White,
+        showHalftone = false // Performance optimization
     ) {
         Row(
             modifier = Modifier.padding(12.dp),

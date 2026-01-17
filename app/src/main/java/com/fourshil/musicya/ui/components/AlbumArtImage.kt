@@ -41,6 +41,8 @@ fun AlbumArtImage(
             model = ImageRequest.Builder(context)
                 .data(uri)
                 .crossfade(true)
+                .diskCachePolicy(coil.request.CachePolicy.ENABLED)
+                .memoryCachePolicy(coil.request.CachePolicy.ENABLED)
                 .build(),
             contentDescription = contentDescription,
             contentScale = ContentScale.Crop,
@@ -77,6 +79,8 @@ fun LargeAlbumArt(
             model = ImageRequest.Builder(context)
                 .data(uri)
                 .crossfade(true)
+                .diskCachePolicy(coil.request.CachePolicy.ENABLED)
+                .memoryCachePolicy(coil.request.CachePolicy.ENABLED)
                 .build(),
             contentDescription = contentDescription,
             contentScale = ContentScale.Crop,

@@ -37,46 +37,14 @@ import com.fourshil.musicya.ui.theme.MangaRed
 import com.fourshil.musicya.ui.theme.PureBlack
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.graphics.PointMode
-import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.Canvas
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.ShaderBrush
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.TileMode.Companion.Repeated
 
-@Composable
-fun HalftoneBackground(
-    color: Color = MaterialTheme.colorScheme.onBackground,
-    dotSize: Float = 2f,
-    spacing: Float = 12f,
-    modifier: Modifier = Modifier
-) {
-    val paintColor = color.copy(alpha = 0.15f)
 
-    androidx.compose.foundation.layout.Spacer(
-        modifier = modifier
-            .fillMaxSize()
-            .drawWithCache {
-                val width = size.width
-                val height = size.height
-                
-                // Detailed optimization: Pre-calculate points only when size changes
-                // This removes the O(width*height) complexity from the drawing phase
-                val points = ArrayList<Offset>((width / spacing * height / spacing).toInt())
-                for (x in 0 until width.toInt() step spacing.toInt()) {
-                    for (y in 0 until height.toInt() step spacing.toInt()) {
-                        points.add(Offset(x.toFloat(), y.toFloat()))
-                    }
-                }
-
-                onDrawBehind {
-                    drawPoints(
-                        points = points,
-                        pointMode = PointMode.Points,
-                        color = paintColor,
-                        strokeWidth = dotSize,
-                        cap = StrokeCap.Round
-                    )
-                }
-            }
-    )
-}
 
 @Composable
 fun ArtisticCard(
@@ -85,6 +53,7 @@ fun ArtisticCard(
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     borderColor: Color = PureBlack,
     shadowColor: Color = PureBlack,
+    showHalftone: Boolean = true,
     content: @Composable BoxScope.() -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -132,7 +101,9 @@ fun ArtisticCard(
                 .padding(4.dp)
         ) {
            content() 
-           HalftoneBackground(modifier = Modifier.matchParentSize())
+           if (showHalftone) {
+               HalftoneBackground(modifier = Modifier.matchParentSize())
+           }
         }
     }
 }

@@ -89,7 +89,9 @@ private fun ArtImage(uri: Uri, modifier: Modifier = Modifier) {
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
             .data(uri)
-            .crossfade(true)
+            .crossfade(false)
+            .diskCachePolicy(coil.request.CachePolicy.ENABLED)
+            .memoryCachePolicy(coil.request.CachePolicy.ENABLED)
             .build(),
         contentDescription = null,
         contentScale = ContentScale.Crop,

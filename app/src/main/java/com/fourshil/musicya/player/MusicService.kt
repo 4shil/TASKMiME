@@ -12,11 +12,18 @@ import androidx.media3.session.MediaSessionService
 import com.fourshil.musicya.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MusicService : MediaSessionService() {
 
     @Inject lateinit var audioEngine: AudioEngine
+
+    private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     private var mediaSession: MediaSession? = null
     private var player: ExoPlayer? = null
@@ -38,12 +45,16 @@ class MusicService : MediaSessionService() {
             
         // Attach Audio Engine to the player's session
         player?.let {
-            audioEngine.attach(it.audioSessionId)
+            serviceScope.launch {
+                audioEngine.attach(it.audioSessionId)
+            }
             
             // Re-attach if session ID changes (rare but possible)
             it.addListener(object : Player.Listener {
                 override fun onAudioSessionIdChanged(audioSessionId: Int) {
-                    audioEngine.attach(audioSessionId)
+                    serviceScope.launch {
+                        audioEngine.attach(audioSessionId)
+                    }
                 }
             })
         }
@@ -81,6 +92,7 @@ class MusicService : MediaSessionService() {
             release()
             mediaSession = null
         }
+        serviceScope.cancel()
         audioEngine.release() // Release effects
         super.onDestroy()
     }

@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextOverflow
 @Composable
 fun MarqueeText(
     text: String,
+    isActive: Boolean = false,
     modifier: Modifier = Modifier,
     color: Color = Color.Unspecified,
     fontSize: androidx.compose.ui.unit.TextUnit = androidx.compose.ui.unit.TextUnit.Unspecified,
@@ -31,7 +32,7 @@ fun MarqueeText(
 ) {
     Text(
         text = text,
-        modifier = modifier.basicMarquee(),
+        modifier = if (isActive) modifier.basicMarquee() else modifier,
         color = color,
         fontSize = fontSize,
         fontStyle = fontStyle,
