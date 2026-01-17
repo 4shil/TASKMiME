@@ -57,6 +57,22 @@
             </intent-filter>
         </service>
 
+        <!-- Home Screen Widget -->
+        <receiver
+            android:name="com.fourshil.musicya.ui.widget.MusicWidgetProvider"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.fourshil.musicya.WIDGET_PLAY_PAUSE" />
+                <action android:name="com.fourshil.musicya.WIDGET_NEXT" />
+                <action android:name="com.fourshil.musicya.WIDGET_PREV" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="com.fourshil.musicya.androidx-startup"

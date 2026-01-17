@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:2:1-45:12
-INJECTED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:2:1-45:12
-INJECTED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:2:1-45:12
-INJECTED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:2:1-45:12
+ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:2:1-60:12
+INJECTED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:2:1-60:12
+INJECTED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:2:1-60:12
+INJECTED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:2:1-60:12
 MERGED from [androidx.media3:media3-session:1.2.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\dd9148dd3eefb687ac120be8d3b15564\transformed\media3-session-1.2.1\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.media3:media3-ui:1.2.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\698846bdedb986128a58e6761bc39488\transformed\media3-ui-1.2.1\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.media3:media3-extractor:1.2.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\08e6837cfe70ddd210529413d2b2d4d6\transformed\media3-extractor-1.2.1\AndroidManifest.xml:17:1-22:12
@@ -130,8 +130,8 @@ ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:10:5-77
 	android:name
 		ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:10:22-74
 application
-ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:12:5-43:19
-INJECTED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:12:5-43:19
+ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:12:5-58:19
+INJECTED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:12:5-58:19
 MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\9ab390fb727e9be01a3692abd1916a1c\transformed\emoji2-1.3.0\AndroidManifest.xml:23:5-33:19
 MERGED from [androidx.emoji2:emoji2:1.3.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\9ab390fb727e9be01a3692abd1916a1c\transformed\emoji2-1.3.0\AndroidManifest.xml:23:5-33:19
 MERGED from [androidx.lifecycle:lifecycle-process:2.7.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\48fe793b4f12abb0f49d66db970eca0d\transformed\lifecycle-process-2.7.0\AndroidManifest.xml:23:5-33:19
@@ -206,6 +206,36 @@ action#androidx.media3.session.MediaSessionService
 ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:39:17-85
 	android:name
 		ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:39:25-83
+receiver#com.fourshil.musicya.ui.widget.MusicWidgetProvider
+ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:44:9-56:20
+	android:exported
+		ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:46:13-37
+	android:name
+		ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:45:13-58
+intent-filter#action:name:android.appwidget.action.APPWIDGET_UPDATE+action:name:com.fourshil.musicya.WIDGET_NEXT+action:name:com.fourshil.musicya.WIDGET_PLAY_PAUSE+action:name:com.fourshil.musicya.WIDGET_PREV
+ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:47:13-52:29
+action#android.appwidget.action.APPWIDGET_UPDATE
+ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:48:17-84
+	android:name
+		ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:48:25-81
+action#com.fourshil.musicya.WIDGET_PLAY_PAUSE
+ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:49:17-81
+	android:name
+		ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:49:25-78
+action#com.fourshil.musicya.WIDGET_NEXT
+ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:50:17-75
+	android:name
+		ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:50:25-72
+action#com.fourshil.musicya.WIDGET_PREV
+ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:51:17-75
+	android:name
+		ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:51:25-72
+meta-data#android.appwidget.provider
+ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:53:13-55:55
+	android:resource
+		ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:55:17-52
+	android:name
+		ADDED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml:54:17-58
 uses-sdk
 INJECTED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from D:\Editing\Musicya\app\src\main\AndroidManifest.xml
