@@ -604,6 +604,7 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
     @CanIgnoreReturnValue
     private MusicService injectMusicService2(MusicService instance) {
       MusicService_MembersInjector.injectAudioEngine(instance, singletonCImpl.audioEngineProvider.get());
+      MusicService_MembersInjector.injectMusicDao(instance, singletonCImpl.provideMusicDaoProvider.get());
       return instance;
     }
   }

@@ -10,6 +10,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.fourshil.musicya.MainActivity
+import com.fourshil.musicya.data.db.MusicDao
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 class MusicService : MediaSessionService() {
 
     @Inject lateinit var audioEngine: AudioEngine
+    @Inject lateinit var musicDao: MusicDao
 
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
@@ -49,11 +51,23 @@ class MusicService : MediaSessionService() {
                 audioEngine.attach(it.audioSessionId)
             }
             
-            // Re-attach if session ID changes (rare but possible)
+            // Player listener for audio session changes and play tracking
             it.addListener(object : Player.Listener {
                 override fun onAudioSessionIdChanged(audioSessionId: Int) {
                     serviceScope.launch {
                         audioEngine.attach(audioSessionId)
+                    }
+                }
+                
+                // Track song plays when media transitions
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    if (mediaItem != null && reason != Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED) {
+                        val songId = mediaItem.mediaId.toLongOrNull()
+                        if (songId != null) {
+                            serviceScope.launch(Dispatchers.IO) {
+                                musicDao.recordPlay(songId)
+                            }
+                        }
                     }
                 }
             })

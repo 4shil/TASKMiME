@@ -43,7 +43,11 @@ public final class MusicDao_Impl implements MusicDao {
 
   private final EntityInsertionAdapter<PlaylistSong> __insertionAdapterOfPlaylistSong;
 
+  private final EntityInsertionAdapter<SongPlayHistory> __insertionAdapterOfSongPlayHistory;
+
   private final EntityDeletionOrUpdateAdapter<Playlist> __updateAdapterOfPlaylist;
+
+  private final EntityDeletionOrUpdateAdapter<SongPlayHistory> __updateAdapterOfSongPlayHistory;
 
   private final SharedSQLiteStatement __preparedStmtOfRemoveFavorite;
 
@@ -103,6 +107,21 @@ public final class MusicDao_Impl implements MusicDao {
         statement.bindLong(4, entity.getSortOrder());
       }
     };
+    this.__insertionAdapterOfSongPlayHistory = new EntityInsertionAdapter<SongPlayHistory>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "INSERT OR REPLACE INTO `song_play_history` (`songId`,`playCount`,`lastPlayedAt`) VALUES (?,?,?)";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final SongPlayHistory entity) {
+        statement.bindLong(1, entity.getSongId());
+        statement.bindLong(2, entity.getPlayCount());
+        statement.bindLong(3, entity.getLastPlayedAt());
+      }
+    };
     this.__updateAdapterOfPlaylist = new EntityDeletionOrUpdateAdapter<Playlist>(__db) {
       @Override
       @NonNull
@@ -118,6 +137,22 @@ public final class MusicDao_Impl implements MusicDao {
         statement.bindLong(3, entity.getCreatedAt());
         statement.bindLong(4, entity.getUpdatedAt());
         statement.bindLong(5, entity.getId());
+      }
+    };
+    this.__updateAdapterOfSongPlayHistory = new EntityDeletionOrUpdateAdapter<SongPlayHistory>(__db) {
+      @Override
+      @NonNull
+      protected String createQuery() {
+        return "UPDATE OR ABORT `song_play_history` SET `songId` = ?,`playCount` = ?,`lastPlayedAt` = ? WHERE `songId` = ?";
+      }
+
+      @Override
+      protected void bind(@NonNull final SupportSQLiteStatement statement,
+          @NonNull final SongPlayHistory entity) {
+        statement.bindLong(1, entity.getSongId());
+        statement.bindLong(2, entity.getPlayCount());
+        statement.bindLong(3, entity.getLastPlayedAt());
+        statement.bindLong(4, entity.getSongId());
       }
     };
     this.__preparedStmtOfRemoveFavorite = new SharedSQLiteStatement(__db) {
@@ -220,6 +255,25 @@ public final class MusicDao_Impl implements MusicDao {
   }
 
   @Override
+  public Object insertPlayHistory(final SongPlayHistory history,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __insertionAdapterOfSongPlayHistory.insert(history);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
   public Object updatePlaylist(final Playlist playlist,
       final Continuation<? super Unit> $completion) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
@@ -239,6 +293,25 @@ public final class MusicDao_Impl implements MusicDao {
   }
 
   @Override
+  public Object updatePlayHistory(final SongPlayHistory history,
+      final Continuation<? super Unit> $completion) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      @NonNull
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __updateAdapterOfSongPlayHistory.handle(history);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
   public Object toggleFavorite(final long songId, final Continuation<? super Unit> $completion) {
     return RoomDatabaseKt.withTransaction(__db, (__cont) -> MusicDao.DefaultImpls.toggleFavorite(MusicDao_Impl.this, songId, __cont), $completion);
   }
@@ -247,6 +320,11 @@ public final class MusicDao_Impl implements MusicDao {
   public Object addSongsToPlaylist(final long playlistId, final List<Long> songIds,
       final Continuation<? super Unit> $completion) {
     return RoomDatabaseKt.withTransaction(__db, (__cont) -> MusicDao.DefaultImpls.addSongsToPlaylist(MusicDao_Impl.this, playlistId, songIds, __cont), $completion);
+  }
+
+  @Override
+  public Object recordPlay(final long songId, final Continuation<? super Unit> $completion) {
+    return RoomDatabaseKt.withTransaction(__db, (__cont) -> MusicDao.DefaultImpls.recordPlay(MusicDao_Impl.this, songId, __cont), $completion);
   }
 
   @Override
@@ -685,6 +763,141 @@ public final class MusicDao_Impl implements MusicDao {
             _result = _tmp;
           } else {
             _result = 0;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Object getPlayHistory(final long songId,
+      final Continuation<? super SongPlayHistory> $completion) {
+    final String _sql = "SELECT * FROM song_play_history WHERE songId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, songId);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<SongPlayHistory>() {
+      @Override
+      @Nullable
+      public SongPlayHistory call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfSongId = CursorUtil.getColumnIndexOrThrow(_cursor, "songId");
+          final int _cursorIndexOfPlayCount = CursorUtil.getColumnIndexOrThrow(_cursor, "playCount");
+          final int _cursorIndexOfLastPlayedAt = CursorUtil.getColumnIndexOrThrow(_cursor, "lastPlayedAt");
+          final SongPlayHistory _result;
+          if (_cursor.moveToFirst()) {
+            final long _tmpSongId;
+            _tmpSongId = _cursor.getLong(_cursorIndexOfSongId);
+            final int _tmpPlayCount;
+            _tmpPlayCount = _cursor.getInt(_cursorIndexOfPlayCount);
+            final long _tmpLastPlayedAt;
+            _tmpLastPlayedAt = _cursor.getLong(_cursorIndexOfLastPlayedAt);
+            _result = new SongPlayHistory(_tmpSongId,_tmpPlayCount,_tmpLastPlayedAt);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Flow<List<Long>> getMostPlayedSongIds(final int limit) {
+    final String _sql = "SELECT songId FROM song_play_history WHERE playCount > 0 ORDER BY playCount DESC LIMIT ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, limit);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"song_play_history"}, new Callable<List<Long>>() {
+      @Override
+      @NonNull
+      public List<Long> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final List<Long> _result = new ArrayList<Long>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final Long _item;
+            _item = _cursor.getLong(0);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Flow<List<Long>> getRecentlyPlayedSongIds(final int limit) {
+    final String _sql = "SELECT songId FROM song_play_history WHERE lastPlayedAt > 0 ORDER BY lastPlayedAt DESC LIMIT ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, limit);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"song_play_history"}, new Callable<List<Long>>() {
+      @Override
+      @NonNull
+      public List<Long> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final List<Long> _result = new ArrayList<Long>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final Long _item;
+            _item = _cursor.getLong(0);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Flow<Integer> getPlayCount(final long songId) {
+    final String _sql = "SELECT playCount FROM song_play_history WHERE songId = ?";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, songId);
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"song_play_history"}, new Callable<Integer>() {
+      @Override
+      @Nullable
+      public Integer call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final Integer _result;
+          if (_cursor.moveToFirst()) {
+            if (_cursor.isNull(0)) {
+              _result = null;
+            } else {
+              _result = _cursor.getInt(0);
+            }
+          } else {
+            _result = null;
           }
           return _result;
         } finally {
