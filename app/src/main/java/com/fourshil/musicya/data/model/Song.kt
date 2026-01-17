@@ -41,13 +41,6 @@ data class Artist(
     val albumCount: Int
 )
 
-data class Playlist(
-    val id: Long,
-    val name: String,
-    val songCount: Int,
-    val isSystem: Boolean = false // For "Recently Added", "Most Played" etc.
-)
-
 data class Folder(
     val path: String,
     val name: String,

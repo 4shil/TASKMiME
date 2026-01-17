@@ -11,8 +11,15 @@ import com.fourshil.musicya.data.model.Song
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.common.util.concurrent.MoreExecutors
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,6 +27,8 @@ import javax.inject.Singleton
 class PlayerController @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
+    private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
+    private var positionUpdateJob: Job? = null
     private var controllerFuture: ListenableFuture<MediaController>? = null
     
     private val _isPlaying = MutableStateFlow(false)
@@ -57,6 +66,8 @@ class PlayerController @Inject constructor(
             controller.addListener(object : Player.Listener {
                 override fun onIsPlayingChanged(isPlaying: Boolean) {
                     _isPlaying.value = isPlaying
+                    // Start/stop position updates based on playback state
+                    if (isPlaying) startPositionUpdates() else stopPositionUpdates()
                 }
                 
                 override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
@@ -154,6 +165,36 @@ class PlayerController @Inject constructor(
     
     fun seekTo(position: Long) {
         controller?.seekTo(position)
+        _currentPosition.value = position
+    }
+    
+    /**
+     * Get current playback position immediately (for one-time reads).
+     */
+    fun getCurrentPosition(): Long = controller?.currentPosition ?: 0L
+    
+    /**
+     * Start polling position updates. Call from UI when NowPlaying is visible.
+     */
+    fun startPositionUpdates() {
+        if (positionUpdateJob?.isActive == true) return
+        positionUpdateJob = scope.launch {
+            while (isActive) {
+                controller?.let {
+                    _currentPosition.value = it.currentPosition
+                    _duration.value = it.duration.coerceAtLeast(0L)
+                }
+                delay(250) // Update 4x per second for smooth progress bar
+            }
+        }
+    }
+    
+    /**
+     * Stop polling position updates. Call when NowPlaying screen is dismissed.
+     */
+    fun stopPositionUpdates() {
+        positionUpdateJob?.cancel()
+        positionUpdateJob = null
     }
     
     fun skipToNext() {
@@ -225,6 +266,7 @@ class PlayerController @Inject constructor(
     }
     
     fun release() {
+        stopPositionUpdates()
         controllerFuture?.let { MediaController.releaseFuture(it) }
         controllerFuture = null
     }

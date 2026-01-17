@@ -5,10 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.fourshil.musicya.data.db.MusicDao
 import com.fourshil.musicya.player.PlayerController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,36 +19,19 @@ class NowPlayingViewModel @Inject constructor(
     val isPlaying = playerController.isPlaying
     val shuffleEnabled = playerController.shuffleEnabled
     val repeatMode = playerController.repeatMode
-
-    private val _position = MutableStateFlow(0L)
-    val position = _position.asStateFlow()
-
-    private val _duration = MutableStateFlow(0L)
-    val duration = _duration.asStateFlow()
+    
+    // Use PlayerController's position/duration directly
+    val position = playerController.currentPosition
+    val duration = playerController.duration
 
     val isFavorite = currentSong.flatMapLatest { song ->
         if (song != null) musicDao.isFavorite(song.id) else flowOf(false)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
-    private var positionUpdateJob: Job? = null
-
     init {
         playerController.connect()
-        startPositionUpdater()
-    }
-
-    private fun startPositionUpdater() {
-        positionUpdateJob?.cancel()
-        positionUpdateJob = viewModelScope.launch {
-            while (isActive) {
-                val controller = playerController.controller
-                if (controller != null) {
-                    _position.value = controller.currentPosition
-                    _duration.value = if (controller.duration > 0) controller.duration else 0L
-                }
-                delay(200) 
-            }
-        }
+        // Start position updates when ViewModel is created
+        playerController.startPositionUpdates()
     }
 
     fun togglePlayPause() = playerController.togglePlayPause()
@@ -62,7 +42,6 @@ class NowPlayingViewModel @Inject constructor(
     
     fun seekTo(positionMs: Long) {
         playerController.seekTo(positionMs)
-        _position.value = positionMs
     }
 
     fun toggleFavorite() {
@@ -74,6 +53,8 @@ class NowPlayingViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        positionUpdateJob?.cancel()
+        // Stop updates when NowPlaying is not visible
+        playerController.stopPositionUpdates()
     }
 }
+
