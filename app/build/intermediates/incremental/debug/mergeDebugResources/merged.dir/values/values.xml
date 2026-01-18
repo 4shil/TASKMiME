@@ -336,8 +336,12 @@
     <item quantity="one">Rewind <ns1:g example="1" id="rewind_amount">%d</ns1:g> second</item>
     <item quantity="other">Rewind <ns1:g example="30" id="rewind_amount">%d</ns1:g> seconds</item>
   </plurals>
+    <string name="about">About</string>
+    <string name="add_to_favorites">Add to Favorites</string>
+    <string name="add_to_playlist">Add to Playlist</string>
+    <string name="add_to_queue">Add to Queue</string>
     <string name="androidx_startup" translatable="false">androidx.startup</string>
-    <string name="app_name">LYRA</string>
+    <string name="app_name">Musicya</string>
     <string name="authentication_required">Authentication required</string>
     <string name="call_notification_answer_action">Answer</string>
     <string name="call_notification_answer_video_action">Video</string>
@@ -346,12 +350,23 @@
     <string name="call_notification_incoming_text">Incoming call</string>
     <string name="call_notification_ongoing_text">Ongoing call</string>
     <string name="call_notification_screening_text">Screening an incoming call</string>
+    <string name="cd_album_art">Album artwork</string>
+    <string name="cd_back">Go back</string>
+    <string name="cd_close">Close</string>
+    <string name="cd_menu">Menu</string>
+    <string name="cd_more_options">More options</string>
+    <string name="cd_search">Search</string>
     <string name="close_drawer">"Close navigation menu"</string>
     <string name="close_sheet">"Close sheet"</string>
+    <string name="create_playlist">Create Playlist</string>
     <string name="default_error_message">"Invalid input"</string>
     <string name="default_notification_channel_name">Now playing</string>
     <string name="default_popup_window_title" ns2:ignore="ExtraTranslation">"Pop-Up Window"</string>
+    <string name="delete">Delete</string>
+    <string name="delete_playlist">Delete Playlist</string>
+    <string name="details">Details</string>
     <string name="dropdown_menu">"Dropdown menu"</string>
+    <string name="equalizer">Equalizer</string>
     <string name="exo_controls_cc_disabled_description">Enable subtitles</string>
     <string name="exo_controls_cc_enabled_description">Disable subtitles</string>
     <string name="exo_controls_custom_playback_speed" translatable="false"><ns1:g example="1.05" id="playback_speed">%1$.2f</ns1:g>x</string>
@@ -405,6 +420,7 @@
     <string name="exo_track_surround_5_point_1">5.1 surround sound</string>
     <string name="exo_track_surround_7_point_1">7.1 surround sound</string>
     <string name="exo_track_unknown">Unknown</string>
+    <string name="grant_permission">Grant Permission</string>
     <string name="in_progress">In progress</string>
     <string name="indeterminate">Partially checked</string>
     <string name="m3c_bottom_sheet_collapse_description">Collapse bottom sheet</string>
@@ -473,19 +489,55 @@
     <string name="media3_controls_seek_forward_description">Seek forward</string>
     <string name="media3_controls_seek_to_next_description">Seek to next item</string>
     <string name="media3_controls_seek_to_previous_description">Seek to previous item</string>
+    <string name="nav_albums">Albums</string>
+    <string name="nav_artists">Artists</string>
+    <string name="nav_favorites">Favorites</string>
+    <string name="nav_folders">Folders</string>
+    <string name="nav_playlists">Playlists</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_songs">Songs</string>
     <string name="navigation_menu">"Navigation menu"</string>
+    <string name="next">Next</string>
+    <string name="no_songs">No songs found</string>
+    <string name="no_songs_in_queue">No songs in queue</string>
     <string name="not_selected">Not selected</string>
+    <string name="now_playing">Now Playing</string>
     <string name="off">Off</string>
     <string name="on">On</string>
+    <string name="pause">Pause</string>
+    <string name="permission_music_rationale">Musicya needs access to your music files to play them.</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="play">Play</string>
+    <string name="play_next">Play Next</string>
+    <string name="playlist_name">Playlist name</string>
+    <string name="previous">Previous</string>
+    <string name="queue">Queue</string>
     <string name="range_end">"Range end"</string>
     <string name="range_start">"Range start"</string>
+    <string name="refresh_library">Refresh Library</string>
+    <string name="remove_from_favorites">Remove from Favorites</string>
+    <string name="rename_playlist">Rename Playlist</string>
+    <string name="repeat">Repeat</string>
+    <string name="repeat_one">Repeat One</string>
+    <string name="select_a_song">Select a song</string>
     <string name="selected">Selected</string>
+    <string name="share">Share</string>
+    <string name="shuffle">Shuffle</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <string name="switch_role">Switch</string>
     <string name="tab">Tab</string>
+    <string name="tap_to_open">Tap to open</string>
     <string name="template_percent"><ns1:g id="percentage">%1$d</ns1:g> percent.</string>
+    <string name="theme">Theme</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_system">System</string>
     <string name="tooltip_description">tooltip</string>
     <string name="tooltip_label">show tooltip</string>
+    <string name="unknown">Unknown</string>
+    <string name="unknown_album">Unknown Album</string>
+    <string name="unknown_artist">Unknown Artist</string>
+    <string name="widget_name">Musicya Player</string>
     <style name="DialogWindowTheme">
         <item name="android:windowClipToOutline">false</item>
     </style>
@@ -769,23 +821,14 @@
         <attr format="reference" name="fontProviderCerts"/>
         
         <attr name="fontProviderFetchStrategy">
-            <!-- The blocking font fetch works as follows.
-              First, check the local cache, then if the requested font is not cached, request the
-              font from the provider and wait until it is finished.  You can change the length of
-              the timeout by modifying fontProviderFetchTimeout.  If the timeout happens, the
-              default typeface will be used instead. -->
+            
             <enum name="blocking" value="0"/>
-            <!-- The async font fetch works as follows.
-              First, check the local cache, then if the requeted font is not cached, trigger a
-              request the font and continue with layout inflation. Once the font fetch succeeds, the
-              target text view will be refreshed with the downloaded font data. The
-              fontProviderFetchTimeout will be ignored if async loading is specified. -->
+            
             <enum name="async" value="1"/>
         </attr>
         
         <attr format="integer" name="fontProviderFetchTimeout">
-            <!-- A special value for the timeout. In this case, the blocking font fetching will not
-              timeout and wait until a reply is received from the font provider. -->
+            
             <enum name="forever" value="-1"/>
         </attr>
         

@@ -29,7 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material3.ripple
+@Suppress("DEPRECATION")
+import androidx.compose.material.ripple.rememberRipple
 import com.fourshil.musicya.ui.theme.NeoCoral
 import com.fourshil.musicya.ui.theme.NeoShadowLight
 import com.fourshil.musicya.ui.theme.Slate700
@@ -76,7 +77,7 @@ fun ArtisticCard(
     val currentModifier = if (onClick != null) {
         Modifier.clickable(
             interactionSource = interactionSource,
-            indication = ripple(),
+            indication = rememberRipple(bounded = true),
             onClick = onClick
         )
     } else Modifier
@@ -170,7 +171,7 @@ fun ArtisticButton(
             .alpha(if (enabled) 1f else 0.6f)
             .clickable(
                 interactionSource = interactionSource,
-                indication = ripple(),
+                indication = rememberRipple(bounded = true),
                 enabled = enabled,
                 onClick = onClick
             )
