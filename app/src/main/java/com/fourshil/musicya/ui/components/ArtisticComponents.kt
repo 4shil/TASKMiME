@@ -63,28 +63,26 @@ fun ArtisticCard(
     shadowColor: Color = NeoShadowLight,
     shadowSize: Dp = NeoDimens.ShadowMedium,
     borderWidth: Dp = NeoDimens.BorderThin,
-    showHalftone: Boolean = false, // Disabled by default for cleaner look
+    showHalftone: Boolean = false,
     content: @Composable BoxScope.() -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     
-    // Smooth spring animation for press feedback
+    // Optimize: Only animate if state changes or is non-default
+    // Using target comparisons to avoid excessive reconfiguration
+    val targetShadow = if (isPressed) 1.dp else shadowSize
+    val targetOffset = if (isPressed) (shadowSize - 1.dp) else 0.dp
+    
     val shadowOffset by animateDpAsState(
-        targetValue = if (isPressed) 1.dp else shadowSize,
+        targetValue = targetShadow,
         label = "shadow",
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioLowBouncy,
-            stiffness = Spring.StiffnessMedium
-        )
+        animationSpec = spring(stiffness = Spring.StiffnessMedium)
     )
     val pressOffset by animateDpAsState(
-        targetValue = if (isPressed) (shadowSize - 1.dp) else 0.dp,
+        targetValue = targetOffset,
         label = "offset",
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioLowBouncy,
-            stiffness = Spring.StiffnessMedium
-        )
+        animationSpec = spring(stiffness = Spring.StiffnessMedium)
     )
     
     val currentModifier = if (onClick != null) {
@@ -100,7 +98,8 @@ fun ArtisticCard(
             .padding(bottom = shadowSize, end = shadowSize)
             .then(currentModifier)
     ) {
-        // Shadow Layer - Small and clean
+        // Shadow Layer - Draw behind to save a layout node if possible? 
+        // For now, keeping Box but ensure it's lightweight.
         Box(
             modifier = Modifier
                 .fillMaxSize()

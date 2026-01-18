@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "com.fourshil.musicya.app-mergeDebugResources-67:/values-v21/values-v21.xml",
+            "outputFile": "com.fourshil.musicya.app-mergeDebugResources-70:/values-v21/values-v21.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\ashil\\.gradle\\caches\\9.0-milestone-1\\transforms\\128a22f4ab5cc16559eb56a332cc5776\\transformed\\media-1.6.0\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\ashil\\.gradle\\caches\\9.0-milestone-1\\transforms\\5b0fbc112d603c6f3c6a341680553054\\transformed\\media-1.6.0\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,5,8,11",
                         "startColumns": "4,4,4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\ashil\\.gradle\\caches\\9.0-milestone-1\\transforms\\698846bdedb986128a58e6761bc39488\\transformed\\media3-ui-1.2.1\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\ashil\\.gradle\\caches\\9.0-milestone-1\\transforms\\fc3edcfb683dcb4ae2b3f48c4075a197\\transformed\\media3-ui-1.2.1\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
@@ -42,7 +42,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\ashil\\.gradle\\caches\\9.0-milestone-1\\transforms\\6b3b204242da84c12b0c463f33e4f9f1\\transformed\\core-1.12.0\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\ashil\\.gradle\\caches\\9.0-milestone-1\\transforms\\3aea0e8bd39e7bce78dd567f91fc5f6e\\transformed\\core-1.12.0\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",

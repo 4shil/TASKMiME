@@ -39,6 +39,11 @@ import com.fourshil.musicya.ui.components.TopNavItem
 import com.fourshil.musicya.ui.components.TopNavigationChips
 import com.fourshil.musicya.ui.navigation.Screen
 
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
+import androidx.paging.compose.itemContentType
+
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SongsScreen(
@@ -48,7 +53,12 @@ fun SongsScreen(
     currentRoute: String? = null,
     onNavigate: (String) -> Unit = {}
 ) {
-    val songs by viewModel.songs.collectAsState()
+    // Collect Paging Data
+    val pagedSongs = viewModel.pagedSongs.collectAsLazyPagingItems()
+    
+    // Keep full list for logic (Selection, Player)
+    val fullSongs by viewModel.songs.collectAsState()
+    
     val isLoading by viewModel.isLoading.collectAsState()
     val favoriteIds by viewModel.favoriteIds.collectAsState()
     val playlists by viewModel.playlists.collectAsState()
@@ -83,9 +93,9 @@ fun SongsScreen(
         }
     }
 
-    // Force load on entry if permission is granted but list is empty (e.g. returning from settings)
+    // Force load on entry if permission is granted but list is empty
     LaunchedEffect(Unit) {
-        if (permissionsState.allPermissionsGranted && songs.isEmpty()) {
+        if (permissionsState.allPermissionsGranted && fullSongs.isEmpty()) {
             viewModel.loadLibrary()
         }
     }
@@ -97,7 +107,7 @@ fun SongsScreen(
                 SelectionTopBar(
                     selectedCount = selectionState.selectedCount,
                     onClose = { selectionState.clearSelection() },
-                    onSelectAll = { selectionState.selectAll(songs.map { it.id }) },
+                    onSelectAll = { selectionState.selectAll(fullSongs.map { it.id }) },
                     onActions = { showBulkActionsSheet = true }
                 )
             }
@@ -109,18 +119,18 @@ fun SongsScreen(
                 .padding(padding)
                 .padding(horizontal = 24.dp)
         ) {
-
                 
             when {
                 !permissionsState.allPermissionsGranted -> {
                     PermissionRequiredView { permissionsState.launchMultiplePermissionRequest() }
                 }
-                isLoading -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                // Initial Loading of Pager
+                pagedSongs.loadState.refresh is LoadState.Loading -> {
+                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                     }
                 }
-                songs.isEmpty() -> {
+                pagedSongs.itemCount == 0 && pagedSongs.loadState.refresh !is LoadState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text("NULL ARCHIVE", style = MaterialTheme.typography.headlineLarge)
                     }
@@ -137,36 +147,42 @@ fun SongsScreen(
                               }
                         }
 
-                        itemsIndexed(
-                            items = songs,
-                            key = { _, song -> song.id },
-                            contentType = { _, _ -> "song" }
-                        ) { index, song ->
-                            val isFavorite = song.id in favoriteIds
+                        items(
+                            count = pagedSongs.itemCount,
+                            key = pagedSongs.itemKey { it.id },
+                            contentType = pagedSongs.itemContentType { "song" }
+                        ) { index ->
+                            val song = pagedSongs[index]
                             
-                            SongListItem(
-                                song = song,
-                                isFavorite = isFavorite,
-                                isSelected = selectionState.isSelected(song.id),
-                                isSelectionMode = selectionState.isSelectionMode,
-                                onClick = {
-                                    if (selectionState.isSelectionMode) {
-                                        selectionState.toggleSelection(song.id)
-                                    } else {
-                                        viewModel.playSongAt(index)
-                                        onSongClick(index)
+                            if (song != null) {
+                                val isFavorite = song.id in favoriteIds
+                                val isSelected = selectionState.isSelected(song.id)
+                                
+                                SongListItem(
+                                    song = song,
+                                    isFavorite = isFavorite,
+                                    isSelected = isSelected,
+                                    isSelectionMode = selectionState.isSelectionMode,
+                                    onClick = {
+                                        if (selectionState.isSelectionMode) {
+                                            selectionState.toggleSelection(song.id)
+                                        } else {
+                                            // Play using global index (assuming sort order consistency)
+                                            viewModel.playSongAt(index)
+                                            onSongClick(index)
+                                        }
+                                    },
+                                    onLongClick = {
+                                        if (!selectionState.isSelectionMode) {
+                                            selectionState.startSelection(song.id)
+                                        }
+                                    },
+                                    onMoreClick = {
+                                        selectedSong = song
+                                        showActionsSheet = true
                                     }
-                                },
-                                onLongClick = {
-                                    if (!selectionState.isSelectionMode) {
-                                        selectionState.startSelection(song.id)
-                                    }
-                                },
-                                onMoreClick = {
-                                    selectedSong = song
-                                    showActionsSheet = true
-                                }
-                            )
+                                )
+                            }
                         }
                     }
                 }

@@ -101,4 +101,8 @@ dependencies {
     
     // Tag Editor
     implementation(libs.jaudiotagger)
+
+    // Paging
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
 }

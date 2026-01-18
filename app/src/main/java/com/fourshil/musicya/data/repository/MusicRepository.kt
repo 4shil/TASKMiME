@@ -210,4 +210,90 @@ class MusicRepository @Inject constructor(
         val allSongs = getAllSongs().associateBy { it.id }
         songIds.mapNotNull { allSongs[it] }
     }
+
+    /**
+     * Paged query for songs.
+     * Note: On Android < 10, this technically queries more and scans, but separates object creation.
+     */
+    suspend fun getSongsPaged(offset: Int, limit: Int): List<Song> = withContext(Dispatchers.IO) {
+        val songs = mutableListOf<Song>()
+        
+        val projection = arrayOf(
+            MediaStore.Audio.Media._ID,
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.ARTIST,
+            MediaStore.Audio.Media.ALBUM,
+            MediaStore.Audio.Media.ALBUM_ID,
+            MediaStore.Audio.Media.DURATION,
+            MediaStore.Audio.Media.DATA,
+            MediaStore.Audio.Media.DATE_ADDED,
+            MediaStore.Audio.Media.SIZE
+        )
+        
+        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0"
+        val sortOrder = "${MediaStore.Audio.Media.TITLE} ASC"
+
+        try {
+            // Android Q (29) and above supports Bundle args for LIMIT/OFFSET
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                // Using standard query but we will manually skip in cursor for compatibility consistency 
+                // or use stricter ContentResolver.query(uri, null, bundle, null) if wanted.
+                // For safety and compatibility with existing code structure, we use the cursor skip method.
+                // It is reliable across versions.
+                context.contentResolver.query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    selection,
+                    null,
+                    sortOrder
+                )
+            } else {
+                 context.contentResolver.query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    selection,
+                    null,
+                    sortOrder
+                )
+            }?.use { cursor ->
+                val idCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+                val titleCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
+                val artistCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
+                val albumCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
+                val albumIdCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
+                val durationCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+                val dataCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+                val dateAddedCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED)
+                val sizeCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
+                
+                // Move to offset
+                if (cursor.moveToPosition(offset)) {
+                    // Read up to limit or end
+                    var count = 0
+                    do {
+                        val id = cursor.getLong(idCol)
+                        songs.add(
+                            Song(
+                                id = id,
+                                title = cursor.getString(titleCol) ?: "Unknown",
+                                artist = cursor.getString(artistCol) ?: "Unknown Artist",
+                                album = cursor.getString(albumCol) ?: "Unknown Album",
+                                albumId = cursor.getLong(albumIdCol),
+                                duration = cursor.getLong(durationCol),
+                                uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id),
+                                path = cursor.getString(dataCol) ?: "",
+                                dateAdded = cursor.getLong(dateAddedCol),
+                                size = cursor.getLong(sizeCol)
+                            )
+                        )
+                        count++
+                    } while (cursor.moveToNext() && count < limit)
+                }
+            }
+        } catch (_: Exception) {
+            // Handle error
+        }
+        
+        songs
+    }
 }

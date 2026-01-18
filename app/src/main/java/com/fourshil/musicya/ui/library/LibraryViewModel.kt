@@ -20,6 +20,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+
 @HiltViewModel
 class LibraryViewModel @Inject constructor(
     private val repository: MusicRepository,
@@ -27,6 +32,13 @@ class LibraryViewModel @Inject constructor(
     private val musicDao: MusicDao
 ) : ViewModel() {
 
+    // Paging for UI List (Scalability)
+    val pagedSongs: Flow<PagingData<Song>> = Pager(
+        config = PagingConfig(pageSize = 50, enablePlaceholders = false),
+        pagingSourceFactory = { SongsPagingSource(repository) }
+    ).flow.cachedIn(viewModelScope)
+
+    // Full list for Player Queue & Logic
     private val _songs = MutableStateFlow<List<Song>>(emptyList())
     val songs = _songs.asStateFlow()
 
@@ -52,13 +64,17 @@ class LibraryViewModel @Inject constructor(
 
     init {
         playerController.connect()
+        // Load full library in background for player queue
         loadLibrary()
     }
 
     fun loadLibrary() {
         viewModelScope.launch {
             _isLoading.value = true
-            _songs.value = repository.getAllSongs()
+            // Load all songs for player queue (this might take time but Paging shows UI first)
+            val allSongs = repository.getAllSongs()
+            _songs.value = allSongs
+            
             _albums.value = repository.getAllAlbums()
             _artists.value = repository.getAllArtists()
             _folders.value = repository.getFolders()

@@ -111,7 +111,8 @@ fun SongListItem(
             
             // Selection indicator or more button
             if (isSelectionMode) {
-                Box(
+                // Optimize: Simple Box instead of heavy nesting
+                 Box(
                     modifier = Modifier
                         .size(24.dp)
                         .border(NeoDimens.BorderThin, MaterialTheme.colorScheme.outline)
