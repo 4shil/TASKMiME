@@ -142,9 +142,7 @@ fun SongsScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         if (!selectionState.isSelectionMode) {
-                              item {
-                                   Spacer(modifier = Modifier.height(262.dp))
-                              }
+                              // Removed redundant spacer
                         }
 
                         items(
@@ -221,7 +219,7 @@ fun SongsScreen(
             selectedCount = selectionState.selectedCount,
             onDismiss = { showBulkActionsSheet = false },
             onAddToQueue = {
-                val selectedSongs = songs.filter { it.id in selectionState.selectedIds }
+                val selectedSongs = fullSongs.filter { it.id in selectionState.selectedIds }
                 viewModel.addToQueue(selectedSongs)
                 selectionState.clearSelection()
             },

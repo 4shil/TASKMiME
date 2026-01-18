@@ -100,9 +100,10 @@ fun ArtisticCard(
     ) {
         // Shadow Layer - Draw behind to save a layout node if possible? 
         // For now, keeping Box but ensure it's lightweight.
+        // Shadow Layer
         Box(
             modifier = Modifier
-                .fillMaxSize()
+                .matchParentSize()
                 .offset(x = shadowOffset, y = shadowOffset)
                 .background(shadowColor)
         )
@@ -110,7 +111,6 @@ fun ArtisticCard(
         // Main Content Layer
         Box(
             modifier = Modifier
-                .fillMaxSize()
                 .offset(x = pressOffset, y = pressOffset)
                 .border(borderWidth, borderColor)
                 .background(backgroundColor)

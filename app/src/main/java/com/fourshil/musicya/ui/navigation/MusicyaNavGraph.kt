@@ -1,6 +1,7 @@
 package com.fourshil.musicya.ui.navigation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -75,6 +76,7 @@ fun MusicyaNavGraph(
     }
 
     // Halftone Overlay for the entire app
+    val isDark = isSystemInDarkTheme()
     Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         HalftoneBackground(
             color = if (isDark) Color.White else PureBlack,
