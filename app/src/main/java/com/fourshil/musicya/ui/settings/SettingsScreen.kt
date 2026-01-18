@@ -148,27 +148,13 @@ fun SettingsScreen(
             
             // Crossfade Dialog
             if (showCrossfadeDialog) {
-                NeoDialogWrapper(
-                    title = "CROSSFADE",
-                    onDismiss = { showCrossfadeDialog = false },
+                CrossfadeDialog(
+                    currentDuration = crossfadeDuration,
                     contentColor = contentColor,
-                    surfaceColor = surfaceColor
-                ) {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        listOf(0, 2, 5, 8, 10, 12).forEach { seconds ->
-                            NeoSelectionItem(
-                                text = if (seconds == 0) "OFF" else "$seconds SECONDS",
-                                selected = crossfadeDuration == seconds,
-                                contentColor = contentColor,
-                                surfaceColor = surfaceColor,
-                                onClick = {
-                                    viewModel.setCrossfadeDuration(seconds)
-                                    showCrossfadeDialog = false
-                                }
-                            )
-                        }
-                    }
-                }
+                    surfaceColor = surfaceColor,
+                    onDismiss = { showCrossfadeDialog = false },
+                    onDurationSelected = { duration -> viewModel.setCrossfadeDuration(duration) }
+                )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -230,66 +216,25 @@ fun SettingsScreen(
 
         // --- CUSTOM DIALOGS ---
         if (showSleepTimerDialog) {
-            NeoDialogWrapper(
-                title = "SLEEP TIMER",
-                onDismiss = { showSleepTimerDialog = false },
+            SleepTimerDialog(
+                sleepTimerActive = sleepTimerActive,
+                sleepTimerMinutes = sleepTimerMinutes,
                 contentColor = contentColor,
-                surfaceColor = surfaceColor
-            ) {
-                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf(5, 10, 15, 30, 45, 60).forEach { minutes ->
-                        NeoSelectionItem(
-                            text = if (minutes == 60) "1 HOUR" else "$minutes MINUTES",
-                            selected = sleepTimerActive && sleepTimerMinutes == minutes,
-                            contentColor = contentColor,
-                            surfaceColor = surfaceColor,
-                            onClick = {
-                                playerController.setSleepTimer(minutes)
-                                showSleepTimerDialog = false
-                            }
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                     ArtisticButton(
-                        onClick = { 
-                            playerController.cancelSleepTimer()
-                            showSleepTimerDialog = false 
-                        },
-                        text = if (sleepTimerActive) "CANCEL TIMER" else "CLOSE",
-                        backgroundColor = contentColor,
-                        contentColor = surfaceColor,
-                         modifier = Modifier.fillMaxWidth()
-                    )
-                 }
-            }
+                surfaceColor = surfaceColor,
+                onDismiss = { showSleepTimerDialog = false },
+                onSetTimer = { playerController.setSleepTimer(it) },
+                onCancelTimer = { playerController.cancelSleepTimer() }
+            )
         }
         
         if (showThemeDialog) {
-             NeoDialogWrapper(
-                title = "SELECT THEME",
-                onDismiss = { showThemeDialog = false },
+            ThemeSelectionDialog(
+                currentTheme = currentTheme,
                 contentColor = contentColor,
-                surfaceColor = surfaceColor
-            ) {
-                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    ThemeMode.entries.forEach { mode ->
-                         NeoSelectionItem(
-                            text = when (mode) {
-                                ThemeMode.SYSTEM -> "SYSTEM DEFAULT"
-                                ThemeMode.LIGHT -> "LIGHT MODE"
-                                ThemeMode.DARK -> "DARK MODE"
-                            },
-                            selected = currentTheme == mode,
-                            contentColor = contentColor,
-                            surfaceColor = surfaceColor,
-                            onClick = {
-                                viewModel.setThemeMode(mode)
-                                showThemeDialog = false
-                            }
-                        )
-                    }
-                 }
-            }
+                surfaceColor = surfaceColor,
+                onDismiss = { showThemeDialog = false },
+                onThemeSelected = { viewModel.setThemeMode(it) }
+            )
         }
     }
 }
@@ -360,87 +305,6 @@ fun SettingsItem(
                 trailingContent()
             }
         }
-    }
-}
-
-@Composable
-fun NeoDialogWrapper(
-    title: String,
-    onDismiss: () -> Unit,
-    contentColor: Color = Slate900,
-    surfaceColor: Color = Color.White,
-    content: @Composable () -> Unit
-) {
-    Dialog(onDismissRequest = onDismiss) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(NeoDimens.BorderMedium, contentColor)
-                .background(surfaceColor)
-                .padding(24.dp)
-        ) {
-            Column {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                     Text(
-                        text = title,
-                        style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Black),
-                        color = contentColor
-                    )
-                    Icon(
-                        Icons.Default.Close, 
-                        null, 
-                        modifier = Modifier
-                            .clickable(onClick = onDismiss)
-                            .size(24.dp),
-                        tint = contentColor
-                    )
-                }
-                HorizontalDivider(
-                    thickness = 4.dp, 
-                    color = contentColor,
-                    modifier = Modifier.padding(vertical = 16.dp)
-                )
-                content()
-            }
-        }
-    }
-}
-
-@Composable
-fun NeoSelectionItem(
-    text: String,
-    selected: Boolean,
-    contentColor: Color,
-    surfaceColor: Color,
-    onClick: () -> Unit
-) {
-    // If selected, we INVERT the colors (Background = ContentColor, Text = SurfaceColor)
-    val bgColor = if (selected) contentColor else Color.Transparent
-    val textColor = if (selected) surfaceColor else contentColor
-    val borderW = if (selected) 2.dp else 0.dp
-    
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(borderW, contentColor)
-            .background(bgColor)
-            .clickable(onClick = onClick)
-            .padding(12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        if (selected) {
-             Icon(Icons.Default.Check, null, tint = textColor, modifier = Modifier.size(20.dp))
-             Spacer(modifier = Modifier.width(8.dp))
-        }
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-             color = textColor
-        )
     }
 }
 
