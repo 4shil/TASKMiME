@@ -52,11 +52,11 @@ fun PlaylistsScreen(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding(),
-        contentPadding = PaddingValues(bottom = 160.dp)
+        contentPadding = PaddingValues(bottom = NeoDimens.ListBottomPadding)
     ) {
         item {
              Column(modifier = Modifier.padding(horizontal = NeoDimens.ScreenPadding)) {
-                Spacer(modifier = Modifier.height(262.dp))
+                Spacer(modifier = Modifier.height(NeoDimens.HeaderHeight))
              }
         }
 
@@ -175,7 +175,7 @@ fun PlaylistArtisticItem(
         showHalftone = false // Performance optimization
     ) {
          Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(NeoDimens.SpacingL),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
@@ -192,13 +192,14 @@ fun PlaylistArtisticItem(
                 }
             }
             
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
             
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = playlist.name,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-                    maxLines = 1
+                    maxLines = 1,
+                    color = MaterialTheme.colorScheme.onSurface // Added explicit color
                 )
                 Text(
                     text = "$songCount songs",

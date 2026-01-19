@@ -52,13 +52,9 @@ fun SettingsScreen(
     val sleepTimerActive = sleepTimerRemaining > 0
 
     // Determine content color based on theme
-    val isDark = when (currentTheme) {
-        ThemeMode.SYSTEM -> isSystemInDarkTheme()
-        ThemeMode.LIGHT -> false
-        ThemeMode.DARK -> true
-    }
-    val contentColor = if (isDark) Slate50 else Slate900
-    val surfaceColor = if (isDark) Slate900 else Color.White
+    // Use MaterialTheme directly for consistency
+    val contentColor = MaterialTheme.colorScheme.onBackground
+    val surfaceColor = MaterialTheme.colorScheme.background
 
     Box(modifier = Modifier.fillMaxSize().background(surfaceColor)) {
         Column(
@@ -66,25 +62,24 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .statusBarsPadding()
                 .verticalScroll(scrollState)
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = NeoDimens.ScreenPadding)
         ) {
-             Spacer(modifier = Modifier.height(24.dp))
+             Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
             
             // --- HEADER ---
             Row(verticalAlignment = Alignment.CenterVertically) {
                  ArtisticButton(
                     onClick = onBack,
                     icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Go back", tint = contentColor) },
-                    modifier = Modifier.size(56.dp),
+                    modifier = Modifier.size(NeoDimens.ButtonHeightMedium), // Was 56.dp
                     backgroundColor = surfaceColor,
 
                 )
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
                 Text(
                     text = "Settings",
-                    style = MaterialTheme.typography.headlineLarge.copy(
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = (-0.5).sp
+                    style = MaterialTheme.typography.displaySmall.copy( // Was headlineLarge
+                        fontWeight = FontWeight.Bold
                     ),
                     color = contentColor
                 )

@@ -37,6 +37,7 @@ import com.fourshil.musicya.ui.components.HalftoneBackground
 import com.fourshil.musicya.ui.theme.MangaRed
 import com.fourshil.musicya.ui.theme.PureBlack
 import com.fourshil.musicya.ui.theme.PureWhite
+import com.fourshil.musicya.ui.theme.NeoDimens
 
 @Composable
 fun AlbumsScreen(
@@ -55,20 +56,20 @@ fun AlbumsScreen(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
-            .padding(horizontal = 24.dp),
-        contentPadding = PaddingValues(bottom = 160.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp)
+            .padding(horizontal = NeoDimens.ScreenPadding),
+        contentPadding = PaddingValues(bottom = NeoDimens.ListBottomPadding),
+        horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingL),
+        verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingXL)
     ) {
         // Header & Nav (Span All)
         item(span = { GridItemSpan(maxLineSpan) }) {
-            Spacer(modifier = Modifier.height(262.dp))
+            Spacer(modifier = Modifier.height(NeoDimens.HeaderHeight))
         }
 
         if (isLoading) {
              item(span = { GridItemSpan(maxLineSpan) }) {
                 Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = PureBlack)
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
                 }
              }
         } else if (albums.isEmpty()) {
@@ -105,7 +106,7 @@ fun AlbumArtisticCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .border(3.dp, PureBlack)
+                    .border(NeoDimens.BorderMedium, MaterialTheme.colorScheme.onSurface)
                     .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 // Background Pattern
@@ -124,20 +125,20 @@ fun AlbumArtisticCard(
                 // Code Tag
                 Box(
                     modifier = Modifier
-                        .padding(8.dp)
-                        .background(PureBlack)
+                        .padding(NeoDimens.SpacingS)
+                        .background(MaterialTheme.colorScheme.onSurface)
                         .padding(horizontal = 6.dp, vertical = 2.dp)
                         .align(Alignment.TopStart)
                 ) {
                     Text(
                         text = "ART-${album.id % 99}",
                         style = MaterialTheme.typography.labelSmall,
-                        color = PureWhite
+                        color = MaterialTheme.colorScheme.surface
                     )
                 }
             }
             
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(NeoDimens.SpacingS))
             
             Text(
                 text = album.name.uppercase(),
@@ -155,7 +156,7 @@ fun AlbumArtisticCard(
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 1.sp
                 ),
-                color = PureBlack.copy(alpha = 0.6f),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )

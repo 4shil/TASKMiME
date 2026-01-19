@@ -24,3 +24,13 @@ This task focused on resolving critical internal bugs, optimizing rendering perf
 1. **Songs List**: Scroll through the list. It should feel smoother due to reduced layout depth.
 2. **Player**: Click a song. It should play immediately. Ensure "Play" generic action works. (Note: "Play All" or bulk actions are temporarily disabled pending Repository-level implementation).
 3. **Navigation**: Open "Now Playing", then press the device Back button. It should correctly return to the Library.
+
+### 5. Visual Consistency Polish
+- **Standardized**: `UnifiedLibraryHeader` and `TopNavigationChips` now use centralized `NeoDimens` for spacing and padding, removing "magic numbers" (e.g., replaced hardcoded `24.dp` container padding with `ScreenPadding`).
+- **Theming**: Replaced hardcoded `Slate900` colors in navigation chips with `MaterialTheme.colorScheme.primary` to ensure better support for future theme variations or dark mode adjustments.
+- **Typography**: Fixed font size overrides in Headers to align with the global Type system.
+
+### 6. Library Consistency
+- **Standardized Padding**: Applied `NeoDimens.ListBottomPadding`, `NeoDimens.ScreenPadding`, and `NeoDimens.HeaderHeight` across `ArtistsScreen`, `AlbumsScreen`, and `PlaylistsScreen` to ensure identical layout geometry.
+- **Removed Magic Numbers**: Centralized the `160.dp` bottom padding and `262.dp` header spacer into `Dimens.kt`.
+- **Theme Usage**: Replaced direct usages of `PureBlack`/`PureWhite` in library cards with `MaterialTheme` tokens to improve Dark Mode support.

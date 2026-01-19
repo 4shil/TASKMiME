@@ -56,6 +56,12 @@ object NeoDimens {
 
     val MiniPlayerHeight = 72.dp
     val BottomNavHeight = 64.dp
+    
+    // Combined bottom padding for lists (Nav + Play + Spacing)
+    val ListBottomPadding = 160.dp 
+    
+    // Top Header Space (Title + Chips + Search)
+    val HeaderHeight = 262.dp
 
     // ═══════════════════════════════════════════════════════════════════════════
     // Corner Radius - Subtle rounding (Neo-Brutalism is typically sharp)

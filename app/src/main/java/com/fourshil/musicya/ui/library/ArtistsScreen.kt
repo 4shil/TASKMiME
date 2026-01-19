@@ -26,6 +26,7 @@ import com.fourshil.musicya.ui.components.ArtisticCard
 import com.fourshil.musicya.ui.components.PlaylistArtGrid
 import com.fourshil.musicya.ui.theme.MangaRed
 import com.fourshil.musicya.ui.theme.PureBlack
+import com.fourshil.musicya.ui.theme.NeoDimens
 
 import com.fourshil.musicya.ui.components.TopNavItem
 import com.fourshil.musicya.ui.components.TopNavigationChips
@@ -47,10 +48,10 @@ fun ArtistsScreen(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding(),
-        contentPadding = PaddingValues(bottom = 160.dp)
+        contentPadding = PaddingValues(bottom = NeoDimens.ListBottomPadding)
     ) {
         item {
-             Spacer(modifier = Modifier.height(262.dp))
+             Spacer(modifier = Modifier.height(NeoDimens.HeaderHeight))
         }
 
         if (isLoading) {
@@ -72,7 +73,7 @@ fun ArtistsScreen(
                 contentType = { "artist_item" }
             ) { artist ->
                  val artistSongs = songs.filter { it.artist == artist.name }
-                 Box(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)) {
+                 Box(modifier = Modifier.padding(horizontal = NeoDimens.ScreenPadding, vertical = NeoDimens.SpacingS)) {
                     ArtistArtisticItem(
                         artist = artist,
                         artUris = artistSongs.map { it.albumArtUri },
@@ -96,15 +97,16 @@ fun ArtistArtisticItem(
         showHalftone = false // Performance optimization
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(NeoDimens.SpacingL),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Art Grid
             Box(
                 modifier = Modifier
                     .size(64.dp)
-                    .border(3.dp, PureBlack)
-                    .background(PureBlack)
+                    .border(NeoDimens.BorderMedium, MaterialTheme.colorScheme.onSurface)
+                    .background(MaterialTheme.colorScheme.surface),
+                contentAlignment = Alignment.Center
             ) {
                  PlaylistArtGrid(uris = artUris, size = 64.dp)
             }
