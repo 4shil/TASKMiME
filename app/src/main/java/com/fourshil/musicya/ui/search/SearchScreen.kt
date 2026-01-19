@@ -50,54 +50,53 @@ fun SearchScreen(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = NeoDimens.ScreenPadding)
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
         
         // Header: SEARCH
         Row(verticalAlignment = Alignment.CenterVertically) {
              ArtisticButton(
                 onClick = onBack,
-                icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = PureBlack) },
-                modifier = Modifier.size(56.dp)
+                icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = MaterialTheme.colorScheme.onBackground) },
+                modifier = Modifier.size(NeoDimens.ButtonHeightMedium)
             )
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
             Column {
                 Text(
                     text = "LIBRARY",
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                    color = PureBlack.copy(alpha=0.6f)
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha=0.6f)
                 )
                 Text(
                     text = "SEARCH",
-                    style = MaterialTheme.typography.displayMedium.copy(
-                        fontSize = 42.sp,
+                    style = MaterialTheme.typography.displayMedium.copy( // Remove hardcoded 42.sp override if possible, or define in Type
                         fontWeight = FontWeight.Black,
                         fontStyle = FontStyle.Italic
                     ),
-                    color = PureBlack
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }
         
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
         
         // Search Bar
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .border(4.dp, PureBlack)
-                .background(Color.White)
-                .padding(16.dp)
+                .border(4.dp, MaterialTheme.colorScheme.onBackground)
+                .background(MaterialTheme.colorScheme.surface)
+                .padding(NeoDimens.SpacingL)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Icons.Default.Search, null, tint = MangaRed, modifier = Modifier.size(24.dp))
-                Spacer(modifier = Modifier.width(16.dp))
+                Icon(Icons.Default.Search, null, tint = MangaRed, modifier = Modifier.size(NeoDimens.IconMedium))
+                Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
                 BasicTextField(
                     value = query,
                     onValueChange = { viewModel.onQueryChange(it) },
                     textStyle = MaterialTheme.typography.bodyLarge.copy(
-                        color = PureBlack,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
                     ),
@@ -108,7 +107,7 @@ fun SearchScreen(
                             Text(
                                 "ENTER QUERY...",
                                 style = MaterialTheme.typography.bodyLarge.copy(
-                                    color = PureBlack.copy(alpha = 0.4f),
+                                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
                                     fontWeight = FontWeight.Bold
                                 )
                             )
@@ -120,29 +119,29 @@ fun SearchScreen(
                     Icon(
                         Icons.Default.Close, 
                         null, 
-                        tint = PureBlack, 
+                        tint = MaterialTheme.colorScheme.onSurface, 
                         modifier = Modifier.clickable { viewModel.onQueryChange("") }
                     )
                 }
             }
         }
         
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(NeoDimens.SpacingL))
 
         if (isSearching) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = PureBlack)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
             }
         } else if (query.isEmpty()) {
              // Empty State
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = 160.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                contentPadding = PaddingValues(bottom = NeoDimens.ListBottomPadding),
+                verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingL)
             ) {
                  // Songs
                 if (songs.isNotEmpty()) {
@@ -194,10 +193,10 @@ fun SearchScreen(
                 if (songs.isEmpty() && albums.isEmpty() && artists.isEmpty()) {
                      item {
                         Box(
-                            modifier = Modifier.fillMaxWidth().padding(32.dp),
+                            modifier = Modifier.fillMaxWidth().padding(NeoDimens.SpacingXXL),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text("NO DATA FOUND", style = MaterialTheme.typography.headlineSmall, color = PureBlack.copy(0.5f))
+                            Text("NO DATA FOUND", style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onBackground.copy(0.5f))
                         }
                     }
                 }
@@ -212,7 +211,7 @@ fun SectionHeader(title: String) {
         text = title,
         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
         color = MangaRed,
-        modifier = Modifier.padding(vertical = 8.dp)
+        modifier = Modifier.padding(vertical = NeoDimens.SpacingS)
     )
 }
 
@@ -229,22 +228,25 @@ fun SearchArtisticCard(
         showHalftone = false // Performance optimization
     ) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(NeoDimens.SpacingL), // 16.dp -> SpacingL (12.dp was used) -> SpacingL is 16.dp? Check. Using SpacingL (16.dp) for standard.
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
-                modifier = Modifier.size(48.dp).border(2.dp, PureBlack).background(Color.White)
+                modifier = Modifier
+                    .size(NeoDimens.AlbumArtSmall)
+                    .border(NeoDimens.BorderThin, MaterialTheme.colorScheme.onSurface)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
                  if (artUri.isNotEmpty()) {
-                     PlaylistArtGrid(uris = artUri, size = 48.dp)
+                     PlaylistArtGrid(uris = artUri, size = NeoDimens.AlbumArtSmall)
                  } else {
-                     Box(modifier = Modifier.fillMaxSize().background(Color.LightGray))
+                     Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surfaceVariant)) // simplified placeholder
                  }
             }
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
             Column {
-                Text(title.uppercase(), style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold), maxLines = 1)
-                Text(subtitle.uppercase(), style = MaterialTheme.typography.labelSmall, color = PureBlack.copy(0.6f))
+                Text(title.uppercase(), style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold), maxLines = 1, color = MaterialTheme.colorScheme.onSurface)
+                Text(subtitle.uppercase(), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurface.copy(0.6f))
             }
         }
     }

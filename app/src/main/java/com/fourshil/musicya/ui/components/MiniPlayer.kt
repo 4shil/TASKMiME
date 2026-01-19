@@ -52,11 +52,9 @@ fun MiniPlayer(
 ) {
     if (song == null) return
 
-    // Fixed dark mode detection - using luminance() instead of checking red component
-    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val cardBg = MaterialTheme.colorScheme.surface
     val contentColor = MaterialTheme.colorScheme.onSurface
-    val borderColor = if (isDark) Slate700 else Slate700
+    val borderColor = MaterialTheme.colorScheme.outline
     val shadowColor = NeoShadowLight
 
     Box(
@@ -87,7 +85,7 @@ fun MiniPlayer(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 8.dp),
+                    .padding(start = NeoDimens.SpacingL, end = NeoDimens.SpacingM, top = NeoDimens.SpacingM, bottom = NeoDimens.SpacingM),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Album Art Box
@@ -104,7 +102,7 @@ fun MiniPlayer(
                     )
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
 
                 // Track Info
                 Column(modifier = Modifier.weight(1f)) {
@@ -134,14 +132,14 @@ fun MiniPlayer(
                     modifier = Modifier
                         .size(44.dp)
                         .border(NeoDimens.BorderThin, borderColor)
-                        .background(Slate900)
+                        .background(MaterialTheme.colorScheme.primary)
                         .clickable { onPlayPauseClick() },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                         contentDescription = if (isPlaying) "Pause" else "Play",
-                        tint = Slate50,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(NeoDimens.IconMedium)
                     )
                 }

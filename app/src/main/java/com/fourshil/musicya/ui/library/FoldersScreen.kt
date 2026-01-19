@@ -45,10 +45,10 @@ fun FoldersScreen(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding(),
-        contentPadding = PaddingValues(bottom = 160.dp)
+        contentPadding = PaddingValues(bottom = NeoDimens.ListBottomPadding)
     ) {
         item {
-             Spacer(modifier = Modifier.height(262.dp))
+             Spacer(modifier = Modifier.height(NeoDimens.HeaderHeight))
         }
 
         if (isLoading) {
@@ -75,7 +75,7 @@ fun FoldersScreen(
                     parent == folder.path 
                 }
                 
-                Box(modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)) {
+                Box(modifier = Modifier.padding(horizontal = NeoDimens.ScreenPadding, vertical = NeoDimens.SpacingS)) {
                     FolderArtisticItem(
                         folder = folder,
                         artUris = folderSongs.map { it.albumArtUri },
@@ -99,7 +99,7 @@ fun FolderArtisticItem(
         showHalftone = false // Performance optimization
     ) {
          Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(NeoDimens.SpacingL),
             verticalAlignment = Alignment.CenterVertically
         ) {
              Box(
@@ -109,26 +109,27 @@ fun FolderArtisticItem(
                  if (artUris.isNotEmpty()) {
                      PlaylistArtGrid(uris = artUris, size = 56.dp)
                  } else {
-                     Icon(Icons.Default.Folder, null, tint = PureBlack, modifier = Modifier.size(32.dp))
+                     Icon(Icons.Default.Folder, null, tint = MaterialTheme.colorScheme.onSurface, modifier = Modifier.size(NeoDimens.IconLarge))
                  }
              }
 
-             Spacer(modifier = Modifier.width(16.dp))
+             Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
 
              Column(modifier = Modifier.weight(1f)) {
                  Text(
                     text = folder.name,
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
-                    maxLines = 1
+                    maxLines = 1,
+                    color = MaterialTheme.colorScheme.onSurface
                  )
                  Text(
                     text = "${folder.songCount} FILES",
                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                    color = PureBlack.copy(alpha=0.6f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha=0.6f)
                  )
              }
              
-             Icon(Icons.Default.ChevronRight, null, tint = PureBlack)
+             Icon(Icons.Default.ChevronRight, null, tint = MaterialTheme.colorScheme.onSurface)
         }
     }
 }

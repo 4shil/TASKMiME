@@ -45,7 +45,7 @@ fun QueueScreen(
             .statusBarsPadding()
             .padding(horizontal = NeoDimens.ScreenPadding)
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
         
         // Header
         Row(
@@ -56,17 +56,17 @@ fun QueueScreen(
             ArtisticButton(
                 onClick = onBack,
                 icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = MaterialTheme.colorScheme.onSurface) },
-                modifier = Modifier.size(52.dp)
+                modifier = Modifier.size(NeoDimens.ButtonHeightMedium)
             )
             ArtisticButton(
                 onClick = { viewModel.clearQueue() },
-                icon = { Icon(Icons.Default.ClearAll, null, tint = Slate50) },
-                modifier = Modifier.size(52.dp),
-                backgroundColor = NeoCoral
+                icon = { Icon(Icons.Default.ClearAll, null, tint = MaterialTheme.colorScheme.onPrimary) },
+                modifier = Modifier.size(NeoDimens.ButtonHeightMedium),
+                backgroundColor = MaterialTheme.colorScheme.primary
             )
         }
         
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
         
         Text(
             text = "Queue",
@@ -76,7 +76,7 @@ fun QueueScreen(
             color = MaterialTheme.colorScheme.onBackground
         )
         
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(NeoDimens.SpacingL))
         
         if (queue.isEmpty()) {
             Box(
@@ -92,8 +92,8 @@ fun QueueScreen(
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = 160.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                contentPadding = PaddingValues(bottom = NeoDimens.ListBottomPadding),
+                verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingM)
             ) {
                 itemsIndexed(
                     items = queue,
@@ -119,8 +119,8 @@ fun QueueArtisticItem(
     onPlay: () -> Unit,
     onRemove: () -> Unit
 ) {
-    val borderColor = if (isPlaying) NeoCoral else MaterialTheme.colorScheme.outline
-    val backgroundColor = if (isPlaying) NeoCoral.copy(alpha = 0.1f) else MaterialTheme.colorScheme.surface
+    val borderColor = if (isPlaying) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
+    val backgroundColor = if (isPlaying) MaterialTheme.colorScheme.primary.copy(alpha = 0.1f) else MaterialTheme.colorScheme.surface
     
     ArtisticCard(
         onClick = if (!isPlaying) onPlay else null,
@@ -130,19 +130,19 @@ fun QueueArtisticItem(
         showHalftone = false
     ) {
         Row(
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(NeoDimens.SpacingL), // Standard 16.dp
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(NeoDimens.AlbumArtSmall)
                     .border(NeoDimens.BorderThin, MaterialTheme.colorScheme.outline)
                     .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
-                PlaylistArtGrid(uris = listOf(song.albumArtUri), size = 48.dp)
+                PlaylistArtGrid(uris = listOf(song.albumArtUri), size = NeoDimens.AlbumArtSmall)
             }
             
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(NeoDimens.SpacingM))
             
             Column(modifier = Modifier.weight(1f)) {
                 if (isPlaying) {

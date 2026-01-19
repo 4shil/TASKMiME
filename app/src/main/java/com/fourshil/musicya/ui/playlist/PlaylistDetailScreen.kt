@@ -44,16 +44,17 @@ fun PlaylistDetailScreen(
     ) {
         // Simple Back Header
          Row(
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
+            modifier = Modifier.padding(horizontal = NeoDimens.ScreenPadding, vertical = NeoDimens.SpacingL),
             verticalAlignment = Alignment.CenterVertically
         ) {
              ArtisticButton(
                 onClick = onBack,
-                icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = PureBlack) },
-                modifier = Modifier.size(48.dp)
+                icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = MaterialTheme.colorScheme.onBackground) },
+                modifier = Modifier.size(NeoDimens.ButtonHeightSmall) // 48.dp matches ButtonHeightSmall? Or Medium? Main Headers use Medium. Let's use Medium for consistent hit target. 
+                // Ah, previous code used 48.dp. Medium is usually ~52-56. Let's stick to NeoDimens.ButtonHeightMedium (52.dp usually) for consistency.
             )
-             Spacer(modifier = Modifier.width(16.dp))
-             Text("RETURN", style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Black))
+             Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
+             Text("RETURN", style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Black), color = MaterialTheme.colorScheme.onBackground)
         }
 
         if (isLoading) {
@@ -61,25 +62,25 @@ fun PlaylistDetailScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = PureBlack)
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
             }
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(start = 24.dp, end = 24.dp, bottom = 160.dp)
+                contentPadding = PaddingValues(start = NeoDimens.ScreenPadding, end = NeoDimens.ScreenPadding, bottom = NeoDimens.ListBottomPadding)
             ) {
                 // Large Header
                 item {
                      Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 24.dp),
+                            .padding(bottom = NeoDimens.SpacingXL),
                          contentAlignment = Alignment.Center
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                              ArtisticCard(
                                 onClick = null,
-                                modifier = Modifier.size(200.dp)
+                                modifier = Modifier.size(200.dp) // Large art, keep 200 or add NeoDimens.ArtLarge? 200 is fine as singular hero.
                             ) {
                                 LargeAlbumArt(
                                      uri = if (!artUri.isNullOrEmpty()) Uri.parse(artUri!!) else null,
@@ -87,12 +88,13 @@ fun PlaylistDetailScreen(
                                     modifier = Modifier.fillMaxSize()
                                 )
                             }
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(NeoDimens.SpacingL))
                             Text(
                                 text = title.uppercase(),
                                 style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Black),
                                 maxLines = 2,
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                              Text(
                                 text = subtitle.uppercase(),
@@ -100,10 +102,10 @@ fun PlaylistDetailScreen(
                                 color = MangaRed
                             )
                             
-                            Spacer(modifier = Modifier.height(24.dp))
+                            Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
                             
                             // Actions
-                             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                             Row(horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingL)) {
                                  ArtisticButton(
                                     onClick = { viewModel.playAll() },
                                     text = "PLAY ALL",
@@ -112,7 +114,7 @@ fun PlaylistDetailScreen(
                                   ArtisticButton(
                                     onClick = { viewModel.shufflePlay() },
                                     icon = { Icon(Icons.Default.Shuffle, null) },
-                                    modifier = Modifier.size(56.dp)
+                                    modifier = Modifier.size(NeoDimens.ButtonHeightMedium)
                                  )
                              }
                         }
@@ -130,7 +132,7 @@ fun PlaylistDetailScreen(
                         onLongClick = {},
                         onMoreClick = {} // Reduced complexity for detail view
                      )
-                     Spacer(modifier = Modifier.height(16.dp))
+                     Spacer(modifier = Modifier.height(NeoDimens.SpacingL))
                 }
             }
         }
