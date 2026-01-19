@@ -85,7 +85,7 @@ fun SettingsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(NeoDimens.SpacingXXL)) // Was 32.dp
 
             // --- AUDIO SECTION ---
             SettingsSectionHeader("Audio", contentColor)
@@ -98,7 +98,7 @@ fun SettingsScreen(
                 borderColor = contentColor
             )
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(NeoDimens.SpacingL))
             
             // Playback Speed
             val currentSpeed by playerController.playbackSpeed.collectAsState()
@@ -118,7 +118,7 @@ fun SettingsScreen(
                 }
             )
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(NeoDimens.SpacingL))
             
             // Crossfade
             var showCrossfadeDialog by remember { mutableStateOf(false) }
@@ -152,7 +152,7 @@ fun SettingsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
 
             // --- PREFERENCES SECTION ---
             SettingsSectionHeader("Preferences", contentColor)
@@ -171,13 +171,13 @@ fun SettingsScreen(
                             Icons.Default.CheckCircle,
                             contentDescription = "Timer active",
                             tint = NeoCoral,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(NeoDimens.IconMedium)
                         )
                     }
                 } else null
             )
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(NeoDimens.SpacingL))
 
             // Theme
             SettingsItem(
@@ -193,7 +193,7 @@ fun SettingsScreen(
                 borderColor = contentColor
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
 
             // --- INFO SECTION ---
             SettingsSectionHeader("Info", contentColor)
@@ -206,7 +206,7 @@ fun SettingsScreen(
                 borderColor = contentColor
             )
              
-             Spacer(modifier = Modifier.height(48.dp))
+             Spacer(modifier = Modifier.height(NeoDimens.SpacingHuge))
         }
 
         // --- CUSTOM DIALOGS ---
