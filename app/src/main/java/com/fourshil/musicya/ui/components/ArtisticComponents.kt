@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -54,7 +55,6 @@ import com.fourshil.musicya.ui.theme.NeoDimens
  * Neo-Brutalism Card Component
  * Features small shadows (3dp), clean borders, and smooth 60fps animations
  */
-@Composable
 @Composable
 fun ArtisticCard(
     modifier: Modifier = Modifier,
