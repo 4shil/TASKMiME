@@ -26,6 +26,7 @@ object NeoDimens {
     // ═══════════════════════════════════════════════════════════════════════════
     // Spacing - Consistent padding and margins
     // ═══════════════════════════════════════════════════════════════════════════
+    val SpacingNone = 0.dp
     val SpacingXXS = 2.dp
     val SpacingXS = 4.dp
     val SpacingS = 8.dp
