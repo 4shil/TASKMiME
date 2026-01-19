@@ -55,6 +55,7 @@ import com.fourshil.musicya.ui.theme.NeoDimens
  * Features small shadows (3dp), clean borders, and smooth 60fps animations
  */
 @Composable
+@Composable
 fun ArtisticCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
@@ -69,22 +70,17 @@ fun ArtisticCard(
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     
-    // Optimize: Only animate if state changes or is non-default
-    // Using target comparisons to avoid excessive reconfiguration
-    val targetShadow = if (isPressed) 1.dp else shadowSize
-    val targetOffset = if (isPressed) (shadowSize - 1.dp) else 0.dp
+    // Animate offset of the MAIN content (shadow stays fixed or shrinks)
+    // Actually, in Neo-Brutalism, usually the card moves DOWN to meet the shadow.
+    val targetOffset = if (isPressed) shadowSize else 0.dp
     
-    val shadowOffset by animateDpAsState(
-        targetValue = targetShadow,
-        label = "shadow",
-        animationSpec = spring(stiffness = Spring.StiffnessMedium)
-    )
-    val pressOffset by animateDpAsState(
+    // We animate the Translation of the content
+    val offsetAnim by animateDpAsState(
         targetValue = targetOffset,
         label = "offset",
         animationSpec = spring(stiffness = Spring.StiffnessMedium)
     )
-    
+
     val currentModifier = if (onClick != null) {
         Modifier.clickable(
             interactionSource = interactionSource,
@@ -95,23 +91,36 @@ fun ArtisticCard(
 
     Box(
         modifier = modifier
-            .padding(bottom = shadowSize, end = shadowSize)
+            // Outer container reserves space for the max shadow
+            .padding(bottom = shadowSize, end = shadowSize) 
             .then(currentModifier)
+            .drawBehind {
+                // Draw Shadow at full size (bottom-right)
+                // The shadow is static in this simplified version to save perf
+                // effectively acting as the "hole" the card falls into
+                drawRect(
+                    color = shadowColor,
+                    topLeft = androidx.compose.ui.geometry.Offset(
+                        x = shadowSize.toPx(), 
+                        y = shadowSize.toPx()
+                    ),
+                    size = size
+                )
+            }
     ) {
-        // Shadow Layer - Draw behind to save a layout node if possible? 
-        // For now, keeping Box but ensure it's lightweight.
-        // Shadow Layer
-        Box(
-            modifier = Modifier
-                .matchParentSize()
-                .offset(x = shadowOffset, y = shadowOffset)
-                .background(shadowColor)
-        )
-        
         // Main Content Layer
         Box(
             modifier = Modifier
-                .offset(x = pressOffset, y = pressOffset)
+                .offset(x = offsetAnim, y = offsetAnim)
+                // We fake the "movement" by translating. 
+                // However, the shadow is drawn by the PARENT. 
+                // But wait, if parent draws shadow at (0,0) -> (W,H) shifted by shadowSize...
+                // And child translates from (0,0) to (shadowSize, shadowSize)...
+                // That creates the press effect.
+                 
+                // Border and Background
+                .fillMaxWidth() // Assuming Card fills available width usually? No, let it wrap content or be defined by parent.
+                // Revert fillMaxWidth, rely on matchParentSize logic or propagation
                 .border(borderWidth, borderColor)
                 .background(backgroundColor)
         ) {

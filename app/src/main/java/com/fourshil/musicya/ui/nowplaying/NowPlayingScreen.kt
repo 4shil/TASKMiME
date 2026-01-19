@@ -53,6 +53,8 @@ fun NowPlayingScreen(
     onBack: () -> Unit = {},
     onQueueClick: () -> Unit = {}
 ) {
+    androidx.activity.compose.BackHandler(onBack = onBack)
+
     val currentSong by viewModel.currentSong.collectAsState()
     val isPlaying by viewModel.isPlaying.collectAsState()
     val position by viewModel.position.collectAsState()

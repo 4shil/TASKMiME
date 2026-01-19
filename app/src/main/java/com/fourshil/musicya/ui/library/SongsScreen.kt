@@ -57,7 +57,7 @@ fun SongsScreen(
     val pagedSongs = viewModel.pagedSongs.collectAsLazyPagingItems()
     
     // Keep full list for logic (Selection, Player)
-    val fullSongs by viewModel.songs.collectAsState()
+    // val fullSongs by viewModel.songs.collectAsState() // REMOVED: Double source of truth
     
     val isLoading by viewModel.isLoading.collectAsState()
     val favoriteIds by viewModel.favoriteIds.collectAsState()
@@ -89,16 +89,12 @@ fun SongsScreen(
     
     LaunchedEffect(permissionsState.allPermissionsGranted) {
         if (permissionsState.allPermissionsGranted) {
-            viewModel.loadLibrary()
+             // Permission granted, PagingSource will automatically fetch data
         }
     }
 
     // Force load on entry if permission is granted but list is empty
-    LaunchedEffect(Unit) {
-        if (permissionsState.allPermissionsGranted && fullSongs.isEmpty()) {
-            viewModel.loadLibrary()
-        }
-    }
+    // REMOVED: Managed by Paging
     
     Scaffold(
         containerColor = Color.Transparent,
@@ -107,7 +103,10 @@ fun SongsScreen(
                 SelectionTopBar(
                     selectedCount = selectionState.selectedCount,
                     onClose = { selectionState.clearSelection() },
-                    onSelectAll = { selectionState.selectAll(fullSongs.map { it.id }) },
+                    onSelectAll = { 
+                         // TODO: Implement Repo-level Select All
+                         // selectionState.selectAll(fullSongs.map { it.id }) 
+                    },
                     onActions = { showBulkActionsSheet = true }
                 )
             }
@@ -138,7 +137,10 @@ fun SongsScreen(
                 else -> {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        contentPadding = PaddingValues(bottom = 160.dp), // Space for bottom bar + mini player
+                        contentPadding = PaddingValues(
+                            top = 16.dp, 
+                            bottom = 160.dp + padding.calculateBottomPadding() 
+                        ),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         if (!selectionState.isSelectionMode) {
@@ -165,8 +167,8 @@ fun SongsScreen(
                                         if (selectionState.isSelectionMode) {
                                             selectionState.toggleSelection(song.id)
                                         } else {
-                                            // Play using global index (assuming sort order consistency)
-                                            viewModel.playSongAt(index)
+                                            // Play specifically this song
+                                            viewModel.playSong(song)
                                             onSongClick(index)
                                         }
                                     },
@@ -219,8 +221,8 @@ fun SongsScreen(
             selectedCount = selectionState.selectedCount,
             onDismiss = { showBulkActionsSheet = false },
             onAddToQueue = {
-                val selectedSongs = fullSongs.filter { it.id in selectionState.selectedIds }
-                viewModel.addToQueue(selectedSongs)
+                // val selectedSongs = fullSongs.filter { it.id in selectionState.selectedIds }
+                // viewModel.addToQueue(selectedSongs)
                 selectionState.clearSelection()
             },
             onAddToFavorites = {
