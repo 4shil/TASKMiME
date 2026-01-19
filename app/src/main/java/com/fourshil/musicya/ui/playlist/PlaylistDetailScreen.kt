@@ -25,6 +25,7 @@ import com.fourshil.musicya.ui.components.LargeAlbumArt
 import com.fourshil.musicya.ui.components.SongListItem
 import com.fourshil.musicya.ui.theme.MangaRed
 import com.fourshil.musicya.ui.theme.PureBlack
+import com.fourshil.musicya.ui.theme.NeoDimens
 
 @Composable
 fun PlaylistDetailScreen(
