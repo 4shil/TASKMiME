@@ -40,8 +40,8 @@ fun TopNavigationChips(
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(horizontal = 0.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
+        contentPadding = PaddingValues(horizontal = NeoDimens.SpacingNone), // Or 0.dp
+        horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingS)
     ) {
         items(items) { item ->
             val isSelected = currentRoute == item.route
@@ -60,16 +60,17 @@ private fun TopNavChip(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val backgroundColor = if (isSelected) Slate900 else MaterialTheme.colorScheme.surface
-    val contentColor = if (isSelected) Slate50 else MaterialTheme.colorScheme.onSurface
-    val borderColor = if (isSelected) Slate900 else MaterialTheme.colorScheme.outline
+    // In our theme, Primary is Slate900 (Light) and Slate50 (Dark), so we use Primary/OnPrimary
+    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
+    val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
 
     Box(
         modifier = Modifier
             .clickable(onClick = onClick)
             .border(NeoDimens.BorderThin, borderColor, RoundedCornerShape(50))
             .background(backgroundColor, RoundedCornerShape(50))
-            .padding(horizontal = 18.dp, vertical = 10.dp),
+            .padding(horizontal = NeoDimens.SpacingL, vertical = NeoDimens.SpacingS),
         contentAlignment = Alignment.Center
     ) {
         Text(

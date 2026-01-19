@@ -34,9 +34,9 @@ fun UnifiedLibraryHeader(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding()
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = NeoDimens.ScreenPadding)
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
         
         // Header: Title + Menu
         Row(
@@ -47,7 +47,6 @@ fun UnifiedLibraryHeader(
             Text(
                 text = title.uppercase(),
                 style = MaterialTheme.typography.displayMedium.copy(
-                    fontSize = 48.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = (-1).sp
                 ),
@@ -57,11 +56,11 @@ fun UnifiedLibraryHeader(
             ArtisticButton(
                 onClick = onMenuClick,
                 icon = { Icon(Icons.Default.Menu, null, tint = MaterialTheme.colorScheme.onSurface) },
-                modifier = Modifier.size(52.dp)
+                modifier = Modifier.size(NeoDimens.ButtonHeightMedium)
             )
         }
         
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
         
         // Search Bar (Visual only for now, can be clickable to go to search screen)
         ArtisticCard(
@@ -73,16 +72,16 @@ fun UnifiedLibraryHeader(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                    .padding(horizontal = NeoDimens.SpacingL, vertical = NeoDimens.SpacingM),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     Icons.Default.Search,
                     contentDescription = "Search",
                     tint = NeoCoral,
-                    modifier = Modifier.size(22.dp)
+                    modifier = Modifier.size(NeoDimens.IconMedium) // Was 22.dp close to 24.dp
                 )
-                Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(NeoDimens.SpacingM))
                 Text(
                     text = "Search...",
                     style = MaterialTheme.typography.bodyLarge.copy(
@@ -93,13 +92,13 @@ fun UnifiedLibraryHeader(
             }
         }
         
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
 
         TopNavigationChips(
             items = NavigationUtils.LibraryTabs,
             currentRoute = currentRoute,
             onItemClick = onNavigate,
-            modifier = Modifier.padding(bottom = 24.dp)
+            modifier = Modifier.padding(bottom = NeoDimens.SpacingXL)
         )
     }
 }
