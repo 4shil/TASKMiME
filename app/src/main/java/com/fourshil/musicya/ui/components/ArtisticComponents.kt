@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.platform.LocalDensity
 import com.fourshil.musicya.ui.theme.NeoCoral
 import com.fourshil.musicya.ui.theme.NeoShadowLight
 import com.fourshil.musicya.ui.theme.Slate700
@@ -70,11 +71,11 @@ fun ArtisticCard(
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     
-    // Animate offset of the MAIN content (shadow stays fixed or shrinks)
-    // Actually, in Neo-Brutalism, usually the card moves DOWN to meet the shadow.
-    val targetOffset = if (isPressed) shadowSize else 0.dp
+    val density = LocalDensity.current
+    val shadowPx = with(density) { shadowSize.toPx() }
     
-    // We animate the Translation of the content
+    // Animate offset of the MAIN content
+    val targetOffset = if (isPressed) shadowSize else 0.dp
     val offsetAnim by animateDpAsState(
         targetValue = targetOffset,
         label = "offset",
@@ -96,15 +97,13 @@ fun ArtisticCard(
             .then(currentModifier)
             .drawBehind {
                 // Draw Shadow at full size (bottom-right)
-                // The shadow is static in this simplified version to save perf
-                // effectively acting as the "hole" the card falls into
                 drawRect(
                     color = shadowColor,
                     topLeft = androidx.compose.ui.geometry.Offset(
-                        x = shadowSize.toPx(), 
-                        y = shadowSize.toPx()
+                        x = shadowPx, 
+                        y = shadowPx
                     ),
-                    size = size
+                    size = this.size
                 )
             }
     ) {
