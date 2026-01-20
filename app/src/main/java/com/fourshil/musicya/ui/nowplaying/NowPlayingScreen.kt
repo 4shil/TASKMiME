@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.QueueMusic
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -66,7 +67,7 @@ fun NowPlayingScreen(
     // Lyrics state
     var showLyrics by remember { mutableStateOf(false) }
 
-    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+
     val backgroundColor = MaterialTheme.colorScheme.background
     val contentColor = MaterialTheme.colorScheme.onBackground
     val surfaceColor = MaterialTheme.colorScheme.surface
@@ -101,7 +102,8 @@ fun NowPlayingScreen(
             ) {
                 NeoIconButton(
                     onClick = onBack,
-                    icon = Icons.Default.ArrowBack,
+                    icon = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Go back",
                     backgroundColor = surfaceColor
                 )
 
@@ -116,6 +118,7 @@ fun NowPlayingScreen(
                 NeoIconButton(
                     onClick = onQueueClick,
                     icon = Icons.AutoMirrored.Filled.QueueMusic,
+                    contentDescription = "View queue",
                     backgroundColor = surfaceColor
                 )
             }
@@ -128,6 +131,7 @@ fun NowPlayingScreen(
                 NeoIconButton(
                     onClick = { showLyrics = true },
                     icon = Icons.Default.Lyrics,
+                    contentDescription = "Show lyrics",
                     backgroundColor = surfaceColor,
                     size = 40.dp,
                     iconSize = 20.dp
@@ -358,6 +362,7 @@ fun NowPlayingScreen(
 private fun NeoIconButton(
     onClick: () -> Unit,
     icon: ImageVector,
+    contentDescription: String? = null,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     size: Dp = 48.dp,
     iconSize: Dp = 24.dp
@@ -384,7 +389,7 @@ private fun NeoIconButton(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = contentDescription,
                 modifier = Modifier.size(iconSize),
                 tint = MaterialTheme.colorScheme.onSurface
             )

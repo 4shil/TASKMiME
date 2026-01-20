@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
@@ -100,12 +101,15 @@ fun SongsScreen(
         containerColor = Color.Transparent,
         topBar = {
             if (selectionState.isSelectionMode) {
+                val scope = rememberCoroutineScope()
                 SelectionTopBar(
                     selectedCount = selectionState.selectedCount,
                     onClose = { selectionState.clearSelection() },
                     onSelectAll = { 
-                         // TODO: Implement Repo-level Select All
-                         // selectionState.selectAll(fullSongs.map { it.id }) 
+                         scope.launch {
+                             val allIds = viewModel.getAllSongIds()
+                             selectionState.selectAll(allIds)
+                         }
                     },
                     onActions = { showBulkActionsSheet = true }
                 )
@@ -274,11 +278,18 @@ fun SongsScreen(
     
     if (showDeleteDialog) {
         val count = if (selectionState.isSelectionMode) selectionState.selectedCount else 1
+        val idsToDelete = if (selectionState.isSelectionMode) {
+            selectionState.selectedIds.toList()
+        } else {
+            selectedSong?.let { listOf(it.id) } ?: emptyList()
+        }
+        
         DeleteConfirmDialog(
             songCount = count,
             onConfirm = {
+                viewModel.deleteSongs(idsToDelete)
                 selectionState.clearSelection()
-                // viewmodel delete logic
+                showDeleteDialog = false
             },
             onDismiss = { showDeleteDialog = false }
         )

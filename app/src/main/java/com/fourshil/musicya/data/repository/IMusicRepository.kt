@@ -55,4 +55,15 @@ interface IMusicRepository {
      * Clear the song cache to force a refresh on next load.
      */
     fun clearCache()
+    
+    /**
+     * Get all song IDs efficiently (for Select All functionality).
+     */
+    suspend fun getAllSongIds(): List<Long>
+    
+    /**
+     * Delete songs from the device storage.
+     * @return Number of songs successfully deleted
+     */
+    suspend fun deleteSongs(songIds: List<Long>): Int
 }

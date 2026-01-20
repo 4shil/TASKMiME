@@ -172,5 +172,30 @@ class LibraryViewModel @Inject constructor(
             musicDao.addSongsToPlaylist(playlistId, songIds)
         }
     }
+    
+    // ============ Delete Songs ============
+    
+    /**
+     * Delete songs from device storage.
+     */
+    fun deleteSongs(songIds: List<Long>, onComplete: (Int) -> Unit = {}) {
+        viewModelScope.launch {
+            val deletedCount = repository.deleteSongs(songIds)
+            if (deletedCount > 0) {
+                // Refresh the library after deletion
+                loadLibrary()
+            }
+            onComplete(deletedCount)
+        }
+    }
+    
+    // ============ Select All ============
+    
+    /**
+     * Get all song IDs for Select All functionality.
+     */
+    suspend fun getAllSongIds(): List<Long> {
+        return repository.getAllSongIds()
+    }
 }
 

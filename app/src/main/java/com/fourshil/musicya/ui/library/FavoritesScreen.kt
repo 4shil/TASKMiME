@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fourshil.musicya.data.model.Song
+import com.fourshil.musicya.ui.components.AddToPlaylistBottomSheet
+import com.fourshil.musicya.ui.components.CreatePlaylistDialog
 import com.fourshil.musicya.ui.components.SongActionsBottomSheet
 import com.fourshil.musicya.ui.components.SongDetailsDialog
 import com.fourshil.musicya.ui.components.SongListItem
@@ -33,21 +35,24 @@ fun FavoritesScreen(
 ) {
     val songs by viewModel.favoriteSongs.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val playlists by viewModel.playlists.collectAsState()
     
     // Dialog states
     var showActionsSheet by remember { mutableStateOf(false) }
     var selectedSong by remember { mutableStateOf<Song?>(null) }
     var showDetailsDialog by remember { mutableStateOf(false) }
+    var showAddToPlaylistSheet by remember { mutableStateOf(false) }
+    var showCreatePlaylistDialog by remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding(),
-        contentPadding = PaddingValues(bottom = 160.dp)
+        contentPadding = PaddingValues(bottom = NeoDimens.ListBottomPadding)
     ) {
         item {
              Column(modifier = Modifier.padding(horizontal = NeoDimens.ScreenPadding)) {
-                Spacer(modifier = Modifier.height(262.dp))
+                Spacer(modifier = Modifier.height(NeoDimens.HeaderHeight))
              }
         }
 
@@ -100,7 +105,10 @@ fun FavoritesScreen(
             onPlayNext = { viewModel.playNext(selectedSong!!) },
             onAddToQueue = { viewModel.addToQueue(selectedSong!!) },
             onToggleFavorite = { viewModel.toggleFavorite(selectedSong!!.id) }, 
-            onAddToPlaylist = { /* Todo */ },
+            onAddToPlaylist = { 
+                showActionsSheet = false
+                showAddToPlaylistSheet = true 
+            },
             onViewDetails = { showDetailsDialog = true },
             onDelete = { /* Favorites doesn't delete file usually */ }
         )
@@ -112,4 +120,32 @@ fun FavoritesScreen(
             onDismiss = { showDetailsDialog = false }
         )
     }
+    
+    // Add to Playlist Sheet
+    if (showAddToPlaylistSheet) {
+        AddToPlaylistBottomSheet(
+            playlists = playlists,
+            onDismiss = { showAddToPlaylistSheet = false },
+            onPlaylistSelected = { playlistId ->
+                selectedSong?.let { viewModel.addToPlaylist(playlistId, it.id) }
+                showAddToPlaylistSheet = false
+            },
+            onCreateNew = { 
+                showAddToPlaylistSheet = false
+                showCreatePlaylistDialog = true 
+            }
+        )
+    }
+    
+    // Create Playlist Dialog
+    if (showCreatePlaylistDialog) {
+        CreatePlaylistDialog(
+            onDismiss = { showCreatePlaylistDialog = false },
+            onCreate = { name ->
+                viewModel.createPlaylist(name)
+                showCreatePlaylistDialog = false
+            }
+        )
+    }
 }
+

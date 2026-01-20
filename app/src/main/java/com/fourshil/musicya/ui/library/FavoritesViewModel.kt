@@ -28,6 +28,10 @@ class FavoritesViewModel @Inject constructor(
     val favoriteIds = musicDao.getFavoriteIds()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
     
+    // Playlists  
+    val playlists = musicDao.getAllPlaylists()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    
     init {
         loadFavorites()
     }
@@ -65,5 +69,19 @@ class FavoritesViewModel @Inject constructor(
     
     fun addToQueue(song: Song) {
         playerController.addToQueue(song)
+    }
+    
+    // ============ Playlists ============
+    
+    fun createPlaylist(name: String) {
+        viewModelScope.launch {
+            musicDao.createPlaylist(com.fourshil.musicya.data.db.Playlist(name = name))
+        }
+    }
+    
+    fun addToPlaylist(playlistId: Long, songId: Long) {
+        viewModelScope.launch {
+            musicDao.addSongToPlaylist(com.fourshil.musicya.data.db.PlaylistSong(playlistId, songId))
+        }
     }
 }

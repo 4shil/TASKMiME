@@ -1,3 +1,4 @@
+
 # Refactoring & Bug Fixes Walkthrough
 
 ## Overview
@@ -29,13 +30,3 @@ This task focused on resolving critical internal bugs, optimizing rendering perf
 - **Standardized**: `UnifiedLibraryHeader` and `TopNavigationChips` now use centralized `NeoDimens` for spacing and padding, removing "magic numbers" (e.g., replaced hardcoded `24.dp` container padding with `ScreenPadding`).
 - **Theming**: Replaced hardcoded `Slate900` colors in navigation chips with `MaterialTheme.colorScheme.primary` to ensure better support for future theme variations or dark mode adjustments.
 - **Typography**: Fixed font size overrides in Headers to align with the global Type system.
-
-### 6. Library Consistency
-- **Standardized Padding**: Applied `NeoDimens.ListBottomPadding`, `NeoDimens.ScreenPadding`, and `NeoDimens.HeaderHeight` across `ArtistsScreen`, `AlbumsScreen`, and `PlaylistsScreen` to ensure identical layout geometry.
-- **Removed Magic Numbers**: Centralized the `160.dp` bottom padding and `262.dp` header spacer into `Dimens.kt`.
-- **Theme Usage**: Replaced direct usages of `PureBlack`/`PureWhite` in library cards with `MaterialTheme` tokens to improve Dark Mode support.
-
-### 7. Settings & Queue Polish
-- **Settings Screen**: Removed manual theme logic (`isSystemInDarkTheme()`) and replaced it with `MaterialTheme.colorScheme` tokens. Replaced all spacer heights (`32.dp`, `24.dp`) with `NeoDimens`.
-- **Queue Screen**: Standardized internal item padding and container padding.
-- **Button Sizing**: Fixed inconsistent button sizes in Headers, ensuring all use `NeoDimens.ButtonHeightMedium`.

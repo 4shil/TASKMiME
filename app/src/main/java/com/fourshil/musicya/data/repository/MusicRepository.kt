@@ -296,4 +296,59 @@ class MusicRepository @Inject constructor(
         
         songs
     }
+    
+    /**
+     * Get all song IDs efficiently (for Select All functionality).
+     */
+    override suspend fun getAllSongIds(): List<Long> = withContext(Dispatchers.IO) {
+        val ids = mutableListOf<Long>()
+        val projection = arrayOf(MediaStore.Audio.Media._ID)
+        val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0"
+        
+        try {
+            context.contentResolver.query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                selection,
+                null,
+                null
+            )?.use { cursor ->
+                val idCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+                while (cursor.moveToNext()) {
+                    ids.add(cursor.getLong(idCol))
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("MusicRepository", "Error getting song IDs", e)
+        }
+        
+        ids
+    }
+    
+    /**
+     * Delete songs from the device storage.
+     * @return Number of songs successfully deleted
+     */
+    override suspend fun deleteSongs(songIds: List<Long>): Int = withContext(Dispatchers.IO) {
+        var deletedCount = 0
+        
+        for (songId in songIds) {
+            try {
+                val uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songId)
+                val deleted = context.contentResolver.delete(uri, null, null)
+                if (deleted > 0) {
+                    deletedCount++
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("MusicRepository", "Error deleting song $songId", e)
+            }
+        }
+        
+        // Clear cache after deletion
+        if (deletedCount > 0) {
+            clearCache()
+        }
+        
+        deletedCount
+    }
 }

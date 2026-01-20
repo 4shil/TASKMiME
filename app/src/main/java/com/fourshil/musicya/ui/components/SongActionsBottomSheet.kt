@@ -133,7 +133,7 @@ private fun ActionItem(
             Text(text = text, color = tint)
         },
         leadingContent = {
-            Icon(icon, contentDescription = null, tint = tint)
+            Icon(icon, contentDescription = text, tint = tint)
         },
         colors = ListItemDefaults.colors(
             containerColor = MaterialTheme.colorScheme.surface

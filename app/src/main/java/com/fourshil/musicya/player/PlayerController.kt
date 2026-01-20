@@ -59,6 +59,10 @@ class PlayerController @Inject constructor(
     private val _playbackSpeed = MutableStateFlow(1.0f)
     val playbackSpeed = _playbackSpeed.asStateFlow()
     
+    // Crossfade Duration (seconds, 0 = disabled)
+    private val _crossfadeDuration = MutableStateFlow(0)
+    val crossfadeDuration = _crossfadeDuration.asStateFlow()
+    
     val controller: MediaController?
         get() = if (controllerFuture?.isDone == true) {
             try { controllerFuture?.get() } catch (e: Exception) { null }
@@ -339,6 +343,18 @@ class PlayerController @Inject constructor(
      */
     fun resetPlaybackSpeed() {
         setPlaybackSpeed(1.0f)
+    }
+    
+    /**
+     * Set crossfade duration for track transitions.
+     * @param seconds Duration in seconds (0 = disabled)
+     * Note: Media3 does not natively support crossfade. 
+     * Full implementation requires manual volume ducking.
+     */
+    fun setCrossfadeDuration(seconds: Int) {
+        _crossfadeDuration.value = seconds.coerceIn(0, 12)
+        android.util.Log.d("PlayerController", "Crossfade set to ${_crossfadeDuration.value}s")
+        // TODO: Implement actual crossfade using volume ducking on track transition
     }
     
     fun release() {

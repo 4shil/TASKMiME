@@ -78,7 +78,7 @@ fun SongListItem(
                 } else {
                     Icon(
                         imageVector = Icons.Default.MusicNote,
-                        contentDescription = null,
+                        contentDescription = "No album art",
                         modifier = Modifier.size(28.dp),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )

@@ -40,11 +40,11 @@ fun NeverPlayedScreen(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding(),
-        contentPadding = PaddingValues(bottom = 160.dp)
+        contentPadding = PaddingValues(bottom = NeoDimens.ListBottomPadding)
     ) {
         item {
             Column(modifier = Modifier.padding(horizontal = NeoDimens.ScreenPadding)) {
-                Spacer(modifier = Modifier.height(262.dp))
+                Spacer(modifier = Modifier.height(NeoDimens.HeaderHeight))
             }
         }
 
