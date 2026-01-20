@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.fourshil.musicya.player.PlaybackSpeedManagerTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-01-20T16:05:16.395Z" hostname="ASHF4" time="0.003">
+  <properties/>
+  <testcase name="valid speed is not modified" classname="com.fourshil.musicya.player.PlaybackSpeedManagerTest" time="0.0"/>
+  <testcase name="speed cycle wraps around from last to first" classname="com.fourshil.musicya.player.PlaybackSpeedManagerTest" time="0.0"/>
+  <testcase name="normal speed constant is correct" classname="com.fourshil.musicya.player.PlaybackSpeedManagerTest" time="0.0"/>
+  <testcase name="min speed constant is correct" classname="com.fourshil.musicya.player.PlaybackSpeedManagerTest" time="0.0"/>
+  <testcase name="unknown speed cycles to first preset" classname="com.fourshil.musicya.player.PlaybackSpeedManagerTest" time="0.001"/>
+  <testcase name="speed cycle follows preset order" classname="com.fourshil.musicya.player.PlaybackSpeedManagerTest" time="0.0"/>
+  <testcase name="speed is clamped to maximum" classname="com.fourshil.musicya.player.PlaybackSpeedManagerTest" time="0.0"/>
+  <testcase name="speed is clamped to minimum" classname="com.fourshil.musicya.player.PlaybackSpeedManagerTest" time="0.001"/>
+  <testcase name="max speed constant is correct" classname="com.fourshil.musicya.player.PlaybackSpeedManagerTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

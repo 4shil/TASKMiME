@@ -24,20 +24,31 @@ import javax.inject.Provider;
 public final class PlayerController_Factory implements Factory<PlayerController> {
   private final Provider<Context> contextProvider;
 
-  public PlayerController_Factory(Provider<Context> contextProvider) {
+  private final Provider<SleepTimerManager> sleepTimerManagerProvider;
+
+  private final Provider<PlaybackSpeedManager> speedManagerProvider;
+
+  public PlayerController_Factory(Provider<Context> contextProvider,
+      Provider<SleepTimerManager> sleepTimerManagerProvider,
+      Provider<PlaybackSpeedManager> speedManagerProvider) {
     this.contextProvider = contextProvider;
+    this.sleepTimerManagerProvider = sleepTimerManagerProvider;
+    this.speedManagerProvider = speedManagerProvider;
   }
 
   @Override
   public PlayerController get() {
-    return newInstance(contextProvider.get());
+    return newInstance(contextProvider.get(), sleepTimerManagerProvider.get(), speedManagerProvider.get());
   }
 
-  public static PlayerController_Factory create(Provider<Context> contextProvider) {
-    return new PlayerController_Factory(contextProvider);
+  public static PlayerController_Factory create(Provider<Context> contextProvider,
+      Provider<SleepTimerManager> sleepTimerManagerProvider,
+      Provider<PlaybackSpeedManager> speedManagerProvider) {
+    return new PlayerController_Factory(contextProvider, sleepTimerManagerProvider, speedManagerProvider);
   }
 
-  public static PlayerController newInstance(Context context) {
-    return new PlayerController(context);
+  public static PlayerController newInstance(Context context, SleepTimerManager sleepTimerManager,
+      PlaybackSpeedManager speedManager) {
+    return new PlayerController(context, sleepTimerManager, speedManager);
   }
 }

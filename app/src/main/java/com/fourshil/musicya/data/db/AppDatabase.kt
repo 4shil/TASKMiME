@@ -15,7 +15,7 @@ import androidx.room.RoomDatabase
         SongPlayHistory::class
     ],
     version = 2,
-    exportSchema = true
+    exportSchema = false // Explicit migrations provided in DatabaseModule
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun musicDao(): MusicDao

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.fourshil.musicya.data.repository.MusicRepositoryTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-01-20T16:05:16.371Z" hostname="ASHF4" time="0.021">
+  <properties/>
+  <testcase name="song ID list generation" classname="com.fourshil.musicya.data.repository.MusicRepositoryTest" time="0.008"/>
+  <testcase name="delete returns count of deleted items" classname="com.fourshil.musicya.data.repository.MusicRepositoryTest" time="0.0"/>
+  <testcase name="song filtering by artist name is case-sensitive" classname="com.fourshil.musicya.data.repository.MusicRepositoryTest" time="0.002"/>
+  <testcase name="song grouping by album works correctly" classname="com.fourshil.musicya.data.repository.MusicRepositoryTest" time="0.0"/>
+  <testcase name="paged query offset and limit calculation" classname="com.fourshil.musicya.data.repository.MusicRepositoryTest" time="0.0"/>
+  <testcase name="caching returns same list without re-query" classname="com.fourshil.musicya.data.repository.MusicRepositoryTest" time="0.0"/>
+  <testcase name="folder path extraction from file path" classname="com.fourshil.musicya.data.repository.MusicRepositoryTest" time="0.008"/>
+  <testcase name="folder name from path" classname="com.fourshil.musicya.data.repository.MusicRepositoryTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

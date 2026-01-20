@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.fourshil.musicya.data.SettingsLogicTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-01-18T10:06:09.355Z" hostname="ASHF4" time="0.045">
+<testsuite name="com.fourshil.musicya.data.SettingsLogicTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-01-20T16:05:16.340Z" hostname="ASHF4" time="0.028">
   <properties/>
-  <testcase name="crossfade duration clamping" classname="com.fourshil.musicya.data.SettingsLogicTest" time="0.009"/>
-  <testcase name="theme mode enum values" classname="com.fourshil.musicya.data.SettingsLogicTest" time="0.03"/>
+  <testcase name="crossfade duration clamping" classname="com.fourshil.musicya.data.SettingsLogicTest" time="0.005"/>
+  <testcase name="theme mode enum values" classname="com.fourshil.musicya.data.SettingsLogicTest" time="0.021"/>
   <testcase name="theme mode string mapping" classname="com.fourshil.musicya.data.SettingsLogicTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
