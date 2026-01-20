@@ -19,11 +19,22 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
+/**
+ * Background media playback service using Media3.
+ * 
+ * Features:
+ * - Gapless playback
+ * - Audio focus handling
+ * - Equalizer integration
+ * - Play history tracking
+ * - Crossfade support
+ */
 @AndroidEntryPoint
 class MusicService : MediaSessionService() {
 
     @Inject lateinit var audioEngine: AudioEngine
     @Inject lateinit var musicDao: MusicDao
+    @Inject lateinit var crossfadeManager: CrossfadeManager
 
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
@@ -49,27 +60,35 @@ class MusicService : MediaSessionService() {
                 pauseAtEndOfMediaItems = false
             }
             
-        // Attach Audio Engine to the player's session
-        player?.let {
+        // Attach Audio Engine and Crossfade Manager
+        player?.let { exoPlayer ->
             serviceScope.launch {
-                audioEngine.attach(it.audioSessionId)
+                audioEngine.attach(exoPlayer.audioSessionId)
             }
             
+            // Initialize crossfade manager
+            crossfadeManager.initialize(exoPlayer, serviceScope)
+            
             // Player listener for audio session changes and play tracking
-            it.addListener(object : Player.Listener {
+            exoPlayer.addListener(object : Player.Listener {
                 override fun onAudioSessionIdChanged(audioSessionId: Int) {
                     serviceScope.launch {
                         audioEngine.attach(audioSessionId)
                     }
                 }
                 
-                // Track song plays when media transitions
+                // Track song plays and trigger crossfade fade-in
                 override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                    if (mediaItem != null && reason != Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED) {
-                        val songId = mediaItem.mediaId.toLongOrNull()
-                        if (songId != null) {
-                            serviceScope.launch(Dispatchers.IO) {
-                                musicDao.recordPlay(songId)
+                    if (mediaItem != null) {
+                        // Trigger crossfade fade-in on new track
+                        crossfadeManager.onTrackStarted()
+                        
+                        if (reason != Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED) {
+                            val songId = mediaItem.mediaId.toLongOrNull()
+                            if (songId != null) {
+                                serviceScope.launch(Dispatchers.IO) {
+                                    musicDao.recordPlay(songId)
+                                }
                             }
                         }
                     }
@@ -89,7 +108,7 @@ class MusicService : MediaSessionService() {
             .setSessionActivity(pendingIntent)
             .build()
             
-        // Essential: Set notification provider to ensure Foreground Service behavior
+        // Essential: Set notification provider for Foreground Service
         setMediaNotificationProvider(androidx.media3.session.DefaultMediaNotificationProvider(this))
     }
 
@@ -111,7 +130,9 @@ class MusicService : MediaSessionService() {
             mediaSession = null
         }
         serviceScope.cancel()
-        audioEngine.release() // Release effects
+        crossfadeManager.release()
+        audioEngine.release()
         super.onDestroy()
     }
 }
+
