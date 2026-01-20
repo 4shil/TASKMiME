@@ -14,7 +14,7 @@ import androidx.room.RoomDatabase
         PlaylistSong::class,
         SongPlayHistory::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false // Explicit migrations provided in DatabaseModule
 )
 abstract class AppDatabase : RoomDatabase() {
