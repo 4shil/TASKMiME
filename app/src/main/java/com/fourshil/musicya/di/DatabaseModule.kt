@@ -2,6 +2,8 @@ package com.fourshil.musicya.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.fourshil.musicya.data.db.AppDatabase
 import com.fourshil.musicya.data.db.MusicDao
 import com.fourshil.musicya.data.repository.IMusicRepository
@@ -18,6 +20,25 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
     
+    /**
+     * Migration from version 1 to 2.
+     * v2 added SongPlayHistory table for play tracking.
+     */
+    private val MIGRATION_1_2 = object : Migration(1, 2) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            // Create SongPlayHistory table if it doesn't exist
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS `song_play_history` (
+                    `songId` INTEGER NOT NULL PRIMARY KEY,
+                    `playCount` INTEGER NOT NULL DEFAULT 0,
+                    `lastPlayedAt` INTEGER NOT NULL DEFAULT 0
+                )
+                """.trimIndent()
+            )
+        }
+    }
+    
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
@@ -26,7 +47,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             "lyra_database"
         )
-        .fallbackToDestructiveMigration() // For development - handles schema changes
+        .addMigrations(MIGRATION_1_2)
         .build()
     }
     

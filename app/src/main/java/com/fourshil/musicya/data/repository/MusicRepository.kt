@@ -14,6 +14,28 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Repository for accessing music files from the device's MediaStore.
+ * 
+ * Provides a clean abstraction over Android's MediaStore API for querying
+ * songs, albums, artists, and folders. Implements caching to minimize
+ * redundant queries and supports pagination for large libraries.
+ *
+ * ## Thread Safety
+ * All public methods are suspend functions that run on [Dispatchers.IO].
+ * Safe to call from any coroutine context.
+ *
+ * ## Caching
+ * Songs are cached after the first load. Call [clearCache] to force a refresh.
+ * Other collections (albums, artists, folders) are derived from the songs cache.
+ *
+ * ## Error Handling
+ * All MediaStore queries are wrapped in try-catch. On error, empty lists are
+ * returned and errors are logged. This prevents crashes from permission issues
+ * or corrupted media databases.
+ *
+ * @property context Application context for ContentResolver access
+ */
 @Singleton
 class MusicRepository @Inject constructor(
     @ApplicationContext private val context: Context
