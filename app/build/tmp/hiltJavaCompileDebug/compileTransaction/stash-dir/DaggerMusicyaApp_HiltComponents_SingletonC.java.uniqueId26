@@ -16,7 +16,9 @@ import com.fourshil.musicya.di.DatabaseModule_ProvideMusicDaoFactory;
 import com.fourshil.musicya.player.AudioEngine;
 import com.fourshil.musicya.player.MusicService;
 import com.fourshil.musicya.player.MusicService_MembersInjector;
+import com.fourshil.musicya.player.PlaybackSpeedManager;
 import com.fourshil.musicya.player.PlayerController;
+import com.fourshil.musicya.player.SleepTimerManager;
 import com.fourshil.musicya.ui.library.FavoritesViewModel;
 import com.fourshil.musicya.ui.library.FavoritesViewModel_HiltModules_KeyModule_ProvideFactory;
 import com.fourshil.musicya.ui.library.LibraryViewModel;
@@ -642,6 +644,10 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
 
     private Provider<SettingsPreferences> settingsPreferencesProvider;
 
+    private Provider<SleepTimerManager> sleepTimerManagerProvider;
+
+    private Provider<PlaybackSpeedManager> playbackSpeedManagerProvider;
+
     private Provider<PlayerController> playerControllerProvider;
 
     private Provider<AudioEngine> audioEngineProvider;
@@ -663,12 +669,14 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
     @SuppressWarnings("unchecked")
     private void initialize(final ApplicationContextModule applicationContextModuleParam) {
       this.settingsPreferencesProvider = DoubleCheck.provider(new SwitchingProvider<SettingsPreferences>(singletonCImpl, 0));
+      this.sleepTimerManagerProvider = DoubleCheck.provider(new SwitchingProvider<SleepTimerManager>(singletonCImpl, 2));
+      this.playbackSpeedManagerProvider = DoubleCheck.provider(new SwitchingProvider<PlaybackSpeedManager>(singletonCImpl, 3));
       this.playerControllerProvider = DoubleCheck.provider(new SwitchingProvider<PlayerController>(singletonCImpl, 1));
-      this.audioEngineProvider = DoubleCheck.provider(new SwitchingProvider<AudioEngine>(singletonCImpl, 2));
-      this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 4));
-      this.provideMusicDaoProvider = DoubleCheck.provider(new SwitchingProvider<MusicDao>(singletonCImpl, 3));
-      this.musicRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<MusicRepository>(singletonCImpl, 5));
-      this.lyricsManagerProvider = DoubleCheck.provider(new SwitchingProvider<LyricsManager>(singletonCImpl, 6));
+      this.audioEngineProvider = DoubleCheck.provider(new SwitchingProvider<AudioEngine>(singletonCImpl, 4));
+      this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 6));
+      this.provideMusicDaoProvider = DoubleCheck.provider(new SwitchingProvider<MusicDao>(singletonCImpl, 5));
+      this.musicRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<MusicRepository>(singletonCImpl, 7));
+      this.lyricsManagerProvider = DoubleCheck.provider(new SwitchingProvider<LyricsManager>(singletonCImpl, 8));
     }
 
     @Override
@@ -708,21 +716,27 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
           return (T) new SettingsPreferences(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
           case 1: // com.fourshil.musicya.player.PlayerController 
-          return (T) new PlayerController(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
+          return (T) new PlayerController(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.sleepTimerManagerProvider.get(), singletonCImpl.playbackSpeedManagerProvider.get());
 
-          case 2: // com.fourshil.musicya.player.AudioEngine 
+          case 2: // com.fourshil.musicya.player.SleepTimerManager 
+          return (T) new SleepTimerManager();
+
+          case 3: // com.fourshil.musicya.player.PlaybackSpeedManager 
+          return (T) new PlaybackSpeedManager();
+
+          case 4: // com.fourshil.musicya.player.AudioEngine 
           return (T) new AudioEngine();
 
-          case 3: // com.fourshil.musicya.data.db.MusicDao 
+          case 5: // com.fourshil.musicya.data.db.MusicDao 
           return (T) DatabaseModule_ProvideMusicDaoFactory.provideMusicDao(singletonCImpl.provideAppDatabaseProvider.get());
 
-          case 4: // com.fourshil.musicya.data.db.AppDatabase 
+          case 6: // com.fourshil.musicya.data.db.AppDatabase 
           return (T) DatabaseModule_ProvideAppDatabaseFactory.provideAppDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 5: // com.fourshil.musicya.data.repository.MusicRepository 
+          case 7: // com.fourshil.musicya.data.repository.MusicRepository 
           return (T) new MusicRepository(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 6: // com.fourshil.musicya.util.LyricsManager 
+          case 8: // com.fourshil.musicya.util.LyricsManager 
           return (T) new LyricsManager(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
           default: throw new AssertionError(id);

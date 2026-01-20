@@ -32,7 +32,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(3) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `favorite_songs` (`songId` INTEGER NOT NULL, `addedAt` INTEGER NOT NULL, PRIMARY KEY(`songId`))");
@@ -41,8 +41,10 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_playlist_songs_playlistId` ON `playlist_songs` (`playlistId`)");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_playlist_songs_songId` ON `playlist_songs` (`songId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `song_play_history` (`songId` INTEGER NOT NULL, `playCount` INTEGER NOT NULL, `lastPlayedAt` INTEGER NOT NULL, PRIMARY KEY(`songId`))");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_song_play_history_playCount` ON `song_play_history` (`playCount`)");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_song_play_history_lastPlayedAt` ON `song_play_history` (`lastPlayedAt`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4a1375191193db7a49c3e1a25e0d5d8e')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd80fced9c8247ce5a7f1af4955e73929')");
       }
 
       @Override
@@ -143,7 +145,9 @@ public final class AppDatabase_Impl extends AppDatabase {
         _columnsSongPlayHistory.put("playCount", new TableInfo.Column("playCount", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsSongPlayHistory.put("lastPlayedAt", new TableInfo.Column("lastPlayedAt", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysSongPlayHistory = new HashSet<TableInfo.ForeignKey>(0);
-        final HashSet<TableInfo.Index> _indicesSongPlayHistory = new HashSet<TableInfo.Index>(0);
+        final HashSet<TableInfo.Index> _indicesSongPlayHistory = new HashSet<TableInfo.Index>(2);
+        _indicesSongPlayHistory.add(new TableInfo.Index("index_song_play_history_playCount", false, Arrays.asList("playCount"), Arrays.asList("ASC")));
+        _indicesSongPlayHistory.add(new TableInfo.Index("index_song_play_history_lastPlayedAt", false, Arrays.asList("lastPlayedAt"), Arrays.asList("ASC")));
         final TableInfo _infoSongPlayHistory = new TableInfo("song_play_history", _columnsSongPlayHistory, _foreignKeysSongPlayHistory, _indicesSongPlayHistory);
         final TableInfo _existingSongPlayHistory = TableInfo.read(db, "song_play_history");
         if (!_infoSongPlayHistory.equals(_existingSongPlayHistory)) {
@@ -153,7 +157,7 @@ public final class AppDatabase_Impl extends AppDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "4a1375191193db7a49c3e1a25e0d5d8e", "312c3f086a2b8756f08c79de3f7c3626");
+    }, "d80fced9c8247ce5a7f1af4955e73929", "c5425cd8b7dfaf53449e86b41637524c");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;

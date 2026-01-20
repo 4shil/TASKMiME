@@ -19,8 +19,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
 
 /**
  * Reusable album art composable with proper loading and fallback states.
