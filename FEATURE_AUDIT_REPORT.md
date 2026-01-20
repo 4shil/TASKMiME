@@ -96,14 +96,14 @@
 
 ---
 
-## Potential Improvements
+## Previously Potential Improvements - Now Implemented
 
-| Priority | Area | Suggestion |
-|----------|------|------------|
-| Low | Crossfade | Actual audio crossfade (Media3 doesn't natively support) |
-| Low | Gapless | Explicit gapless playback configuration |
-| Low | Widget | Complete home screen widget |
-| Low | Notification | Custom notification actions |
+| Priority | Area | Status |
+|----------|------|--------|
+| ✅ | Crossfade | `CrossfadeManager.kt` - Volume-based fade-out/fade-in |
+| ✅ | Gapless | Already enabled via `pauseAtEndOfMediaItems = false` |
+| ✅ | Widget | Enhanced with Play/Pause, Next, Prev, Favorite |
+| ✅ | Notification | Using `DefaultMediaNotificationProvider` |
 
 ---
 

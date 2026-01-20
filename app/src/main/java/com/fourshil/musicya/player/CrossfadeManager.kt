@@ -141,7 +141,7 @@ class CrossfadeManager @Inject constructor() {
         val stepDelay = crossfadeMs / steps
         
         for (i in 0..steps) {
-            if (!isActive) break
+            if (crossfadeJob?.isActive != true) break
             val volume = i.toFloat() / steps
             p.volume = volume
             delay(stepDelay)

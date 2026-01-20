@@ -25,21 +25,25 @@ public final class MusicService_MembersInjector implements MembersInjector<Music
 
   private final Provider<MusicDao> musicDaoProvider;
 
+  private final Provider<CrossfadeManager> crossfadeManagerProvider;
+
   public MusicService_MembersInjector(Provider<AudioEngine> audioEngineProvider,
-      Provider<MusicDao> musicDaoProvider) {
+      Provider<MusicDao> musicDaoProvider, Provider<CrossfadeManager> crossfadeManagerProvider) {
     this.audioEngineProvider = audioEngineProvider;
     this.musicDaoProvider = musicDaoProvider;
+    this.crossfadeManagerProvider = crossfadeManagerProvider;
   }
 
   public static MembersInjector<MusicService> create(Provider<AudioEngine> audioEngineProvider,
-      Provider<MusicDao> musicDaoProvider) {
-    return new MusicService_MembersInjector(audioEngineProvider, musicDaoProvider);
+      Provider<MusicDao> musicDaoProvider, Provider<CrossfadeManager> crossfadeManagerProvider) {
+    return new MusicService_MembersInjector(audioEngineProvider, musicDaoProvider, crossfadeManagerProvider);
   }
 
   @Override
   public void injectMembers(MusicService instance) {
     injectAudioEngine(instance, audioEngineProvider.get());
     injectMusicDao(instance, musicDaoProvider.get());
+    injectCrossfadeManager(instance, crossfadeManagerProvider.get());
   }
 
   @InjectedFieldSignature("com.fourshil.musicya.player.MusicService.audioEngine")
@@ -50,5 +54,11 @@ public final class MusicService_MembersInjector implements MembersInjector<Music
   @InjectedFieldSignature("com.fourshil.musicya.player.MusicService.musicDao")
   public static void injectMusicDao(MusicService instance, MusicDao musicDao) {
     instance.musicDao = musicDao;
+  }
+
+  @InjectedFieldSignature("com.fourshil.musicya.player.MusicService.crossfadeManager")
+  public static void injectCrossfadeManager(MusicService instance,
+      CrossfadeManager crossfadeManager) {
+    instance.crossfadeManager = crossfadeManager;
   }
 }
