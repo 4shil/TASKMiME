@@ -14,14 +14,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 
 /**
  * Reusable album art composable with proper loading and fallback states.
  * Shows a placeholder icon when no album art is available.
+ * 
+ * Performance optimizations:
+ * - Size hints prevent unnecessary image scaling
+ * - Hardware bitmaps for GPU acceleration
+ * - Memory and disk caching enabled
  */
 @Composable
 fun AlbumArtImage(
@@ -32,6 +40,7 @@ fun AlbumArtImage(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val sizePx = with(LocalDensity.current) { size.roundToPx() }
     
     Card(
         modifier = modifier.size(size),
@@ -40,7 +49,9 @@ fun AlbumArtImage(
         SubcomposeAsyncImage(
             model = ImageRequest.Builder(context)
                 .data(uri)
-                .crossfade(true)
+                .size(sizePx) // Decode to exact size needed
+                .crossfade(150) // Faster crossfade
+                .allowHardware(true) // GPU acceleration
                 .diskCachePolicy(coil.request.CachePolicy.ENABLED)
                 .memoryCachePolicy(coil.request.CachePolicy.ENABLED)
                 .build(),

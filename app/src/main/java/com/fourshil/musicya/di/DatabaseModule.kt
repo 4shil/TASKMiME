@@ -26,7 +26,6 @@ object DatabaseModule {
      */
     private val MIGRATION_1_2 = object : Migration(1, 2) {
         override fun migrate(db: SupportSQLiteDatabase) {
-            // Create SongPlayHistory table if it doesn't exist
             db.execSQL(
                 """
                 CREATE TABLE IF NOT EXISTS `song_play_history` (
@@ -39,6 +38,17 @@ object DatabaseModule {
         }
     }
     
+    /**
+     * Migration from version 2 to 3.
+     * v3 added indices for performance optimization on Most Played/Recently Played queries.
+     */
+    private val MIGRATION_2_3 = object : Migration(2, 3) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_song_play_history_playCount` ON `song_play_history` (`playCount`)")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_song_play_history_lastPlayedAt` ON `song_play_history` (`lastPlayedAt`)")
+        }
+    }
+    
     @Provides
     @Singleton
     fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
@@ -47,7 +57,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             "lyra_database"
         )
-        .addMigrations(MIGRATION_1_2)
+        .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
         .build()
     }
     
