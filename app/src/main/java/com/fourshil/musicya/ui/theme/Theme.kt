@@ -15,59 +15,109 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// Clean Minimalistic Light Theme
+// ═══════════════════════════════════════════════════════════════════════════════
 private val LightColorScheme = lightColorScheme(
-    primary = Slate900,
+    // Primary
+    primary = AccentPrimary,
     onPrimary = PureWhite,
-    primaryContainer = Slate200,
-    onPrimaryContainer = Slate900,
-    secondary = NeoCoral,
+    primaryContainer = AccentPrimary.copy(alpha = 0.12f),
+    onPrimaryContainer = AccentPrimary,
+    
+    // Secondary
+    secondary = AccentSecondary,
     onSecondary = PureWhite,
-    secondaryContainer = NeoCoralLight,
-    onSecondaryContainer = Slate900,
-    tertiary = NeoTeal,
-    onTertiary = Slate900,
-    tertiaryContainer = NeoSage,
-    onTertiaryContainer = Slate900,
+    secondaryContainer = AccentSecondary.copy(alpha = 0.12f),
+    onSecondaryContainer = AccentSecondary,
+    
+    // Tertiary
+    tertiary = AccentWarning,
+    onTertiary = PureWhite,
+    tertiaryContainer = AccentWarning.copy(alpha = 0.12f),
+    onTertiaryContainer = AccentWarning,
+    
+    // Background & Surface
     background = LightBackground,
-    onBackground = Slate900,
+    onBackground = LightOnBackground,
     surface = LightSurface,
-    onSurface = Slate900,
-    surfaceVariant = Slate100,
-    onSurfaceVariant = Slate600,
-    outline = Slate300,
-    outlineVariant = Slate200,
-    error = NeoCoralDark
+    onSurface = LightOnSurface,
+    surfaceVariant = LightSurfaceVariant,
+    onSurfaceVariant = LightOnSurfaceVariant,
+    
+    // Outline
+    outline = LightOutline,
+    outlineVariant = LightOutlineVariant,
+    
+    // Error
+    error = AccentError,
+    onError = PureWhite,
+    errorContainer = AccentError.copy(alpha = 0.12f),
+    onErrorContainer = AccentError,
+    
+    // Inverse
+    inverseSurface = Gray800,
+    inverseOnSurface = Gray100,
+    inversePrimary = AccentPrimaryDark,
+    
+    // Scrim
+    scrim = PureBlack.copy(alpha = 0.32f)
 )
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// Clean Minimalistic Dark Theme
+// ═══════════════════════════════════════════════════════════════════════════════
 private val DarkColorScheme = darkColorScheme(
-    primary = Slate50,
-    onPrimary = Slate900,
-    primaryContainer = Slate700,
-    onPrimaryContainer = Slate50,
-    secondary = NeoCoralLight,
-    onSecondary = Slate900,
-    secondaryContainer = NeoCoralDark,
-    onSecondaryContainer = Slate50,
-    tertiary = NeoTeal,
-    onTertiary = Slate900,
-    tertiaryContainer = NeoTealDark,
-    onTertiaryContainer = Slate50,
+    // Primary
+    primary = AccentPrimaryDark,
+    onPrimary = Gray900,
+    primaryContainer = AccentPrimaryDark.copy(alpha = 0.16f),
+    onPrimaryContainer = AccentPrimaryDark,
+    
+    // Secondary
+    secondary = AccentSecondary,
+    onSecondary = Gray900,
+    secondaryContainer = AccentSecondary.copy(alpha = 0.16f),
+    onSecondaryContainer = AccentSecondary,
+    
+    // Tertiary
+    tertiary = AccentWarning,
+    onTertiary = Gray900,
+    tertiaryContainer = AccentWarning.copy(alpha = 0.16f),
+    onTertiaryContainer = AccentWarning,
+    
+    // Background & Surface
     background = DarkBackground,
-    onBackground = Slate50,
+    onBackground = DarkOnBackground,
     surface = DarkSurface,
-    onSurface = Slate50,
-    surfaceVariant = Slate800,
-    onSurfaceVariant = Slate300,
-    outline = Slate600,
-    outlineVariant = Slate700,
-    error = NeoCoralLight
+    onSurface = DarkOnSurface,
+    surfaceVariant = DarkSurfaceVariant,
+    onSurfaceVariant = DarkOnSurfaceVariant,
+    
+    // Outline
+    outline = DarkOutline,
+    outlineVariant = DarkOutlineVariant,
+    
+    // Error
+    error = AccentError,
+    onError = Gray900,
+    errorContainer = AccentError.copy(alpha = 0.16f),
+    onErrorContainer = AccentError,
+    
+    // Inverse
+    inverseSurface = Gray100,
+    inverseOnSurface = Gray800,
+    inversePrimary = AccentPrimary,
+    
+    // Scrim
+    scrim = PureBlack.copy(alpha = 0.5f)
 )
 
 @Composable
 fun MusicyaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = false, // DISABLED by default to enforce our style
+    dynamicColor: Boolean = false, // DISABLED to enforce our clean design
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -84,7 +134,9 @@ fun MusicyaTheme(
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.background.toArgb()
+            window.navigationBarColor = colorScheme.background.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = !darkTheme
         }
     }
 
