@@ -2,49 +2,36 @@ package com.fourshil.musicya.ui.library
 
 import android.Manifest
 import android.os.Build
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.SelectAll
-import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fourshil.musicya.data.model.Song
 import com.fourshil.musicya.ui.components.*
-import com.fourshil.musicya.ui.theme.NeoCoral
 import com.fourshil.musicya.ui.theme.NeoDimens
-import com.fourshil.musicya.ui.theme.Slate50
-import com.fourshil.musicya.ui.theme.Slate700
-import com.fourshil.musicya.ui.theme.Slate900
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.fourshil.musicya.ui.components.TopNavItem
-import com.fourshil.musicya.ui.components.TopNavigationChips
-import com.fourshil.musicya.ui.navigation.Screen
 
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import androidx.paging.compose.itemContentType
 
+/**
+ * Clean Minimalistic Songs Screen
+ * With paging support and selection mode
+ */
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SongsScreen(
@@ -56,9 +43,6 @@ fun SongsScreen(
 ) {
     // Collect Paging Data
     val pagedSongs = viewModel.pagedSongs.collectAsLazyPagingItems()
-    
-    // Keep full list for logic (Selection, Player)
-    // val fullSongs by viewModel.songs.collectAsState() // REMOVED: Double source of truth
     
     val isLoading by viewModel.isLoading.collectAsState()
     val favoriteIds by viewModel.favoriteIds.collectAsState()
@@ -87,32 +71,66 @@ fun SongsScreen(
             permissionsState.launchMultiplePermissionRequest()
         }
     }
-    
-    LaunchedEffect(permissionsState.allPermissionsGranted) {
-        if (permissionsState.allPermissionsGranted) {
-             // Permission granted, PagingSource will automatically fetch data
-        }
-    }
 
-    // Force load on entry if permission is granted but list is empty
-    // REMOVED: Managed by Paging
-    
     Scaffold(
-        containerColor = Color.Transparent,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             if (selectionState.isSelectionMode) {
                 val scope = rememberCoroutineScope()
-                SelectionTopBar(
-                    selectedCount = selectionState.selectedCount,
-                    onClose = { selectionState.clearSelection() },
-                    onSelectAll = { 
-                         scope.launch {
-                             val allIds = viewModel.getAllSongIds()
-                             selectionState.selectAll(allIds)
-                         }
-                    },
-                    onActions = { showBulkActionsSheet = true }
-                )
+                // Selection mode header
+                Surface(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = MaterialTheme.colorScheme.primaryContainer
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .statusBarsPadding()
+                            .padding(horizontal = NeoDimens.ScreenPadding, vertical = NeoDimens.SpacingM),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingM)
+                        ) {
+                            IconButton(onClick = { selectionState.clearSelection() }) {
+                                Icon(
+                                    Icons.Default.Close,
+                                    contentDescription = "Cancel selection",
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
+                            Text(
+                                "${selectionState.selectedCount} selected",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                        Row {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    val allIds = viewModel.getAllSongIds()
+                                    selectionState.selectAll(allIds)
+                                }
+                            }) {
+                                Icon(
+                                    Icons.Default.SelectAll,
+                                    contentDescription = "Select all",
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
+                            IconButton(onClick = { showBulkActionsSheet = true }) {
+                                Icon(
+                                    Icons.Default.MoreVert,
+                                    contentDescription = "More actions",
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     ) { padding ->
@@ -120,37 +138,80 @@ fun SongsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 24.dp)
         ) {
-                
             when {
                 !permissionsState.allPermissionsGranted -> {
-                    PermissionRequiredView { permissionsState.launchMultiplePermissionRequest() }
+                    // Permission required state
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingL)
+                        ) {
+                            Text(
+                                "Permission Required",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Text(
+                                "Please grant access to your music files",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Button(onClick = { permissionsState.launchMultiplePermissionRequest() }) {
+                                Text("Grant Permission")
+                            }
+                        }
+                    }
                 }
-                // Initial Loading of Pager
+                
                 pagedSongs.loadState.refresh is LoadState.Loading -> {
-                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    // Loading state
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
                         CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                     }
                 }
+                
                 pagedSongs.itemCount == 0 && pagedSongs.loadState.refresh !is LoadState.Loading -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text("NULL ARCHIVE", style = MaterialTheme.typography.headlineLarge)
+                    // Empty state
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingM)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.MusicNote,
+                                contentDescription = null,
+                                modifier = Modifier.size(64.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                            )
+                            Text(
+                                "No songs found",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
+                
                 else -> {
+                    // Song list
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(
-                            top = 16.dp, 
-                            bottom = 160.dp + padding.calculateBottomPadding() 
+                            top = NeoDimens.SpacingM,
+                            bottom = NeoDimens.ListBottomPadding
                         ),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingXS)
                     ) {
-                        if (!selectionState.isSelectionMode) {
-                              // Removed redundant spacer
-                        }
-
                         items(
                             count = pagedSongs.itemCount,
                             key = pagedSongs.itemKey { it.id },
@@ -159,19 +220,16 @@ fun SongsScreen(
                             val song = pagedSongs[index]
                             
                             if (song != null) {
-                                val isFavorite = song.id in favoriteIds
                                 val isSelected = selectionState.isSelected(song.id)
                                 
                                 SongListItem(
                                     song = song,
-                                    isFavorite = isFavorite,
                                     isSelected = isSelected,
-                                    isSelectionMode = selectionState.isSelectionMode,
+                                    inSelectionMode = selectionState.isSelectionMode,
                                     onClick = {
                                         if (selectionState.isSelectionMode) {
                                             selectionState.toggleSelection(song.id)
                                         } else {
-                                            // Play specifically this song
                                             viewModel.playSong(song)
                                             onSongClick(index)
                                         }
@@ -194,8 +252,7 @@ fun SongsScreen(
         }
     }
     
-    // Bottom Sheets (Keeping logic same, just assuming they will overlay)
-    // For full redesign, sheets should also be styled, but prioritized screens first.
+    // Bottom Sheets and Dialogs
     if (showActionsSheet && selectedSong != null) {
         val isFavorite = selectedSong!!.id in favoriteIds
         SongActionsBottomSheet(
@@ -225,8 +282,6 @@ fun SongsScreen(
             selectedCount = selectionState.selectedCount,
             onDismiss = { showBulkActionsSheet = false },
             onAddToQueue = {
-                // val selectedSongs = fullSongs.filter { it.id in selectionState.selectedIds }
-                // viewModel.addToQueue(selectedSongs)
                 selectionState.clearSelection()
             },
             onAddToFavorites = {
@@ -295,5 +350,3 @@ fun SongsScreen(
         )
     }
 }
-
-
