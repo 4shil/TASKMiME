@@ -101,7 +101,9 @@ fun QueueScreen(
                     .fillMaxSize()
                     .padding(paddingValues),
                 contentPadding = PaddingValues(
-                    horizontal = NeoDimens.ScreenPadding,
+                    start = NeoDimens.ScreenPadding,
+                    end = NeoDimens.ScreenPadding,
+                    top = 0.dp,
                     bottom = NeoDimens.ListBottomPadding
                 ),
                 verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingS)

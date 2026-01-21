@@ -2,7 +2,6 @@
 package com.fourshil.musicya.ui.components
 
 import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -28,7 +26,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -47,7 +44,6 @@ import com.fourshil.musicya.ui.theme.NeoDimens
 
 /**
  * Clean Minimalistic Card Component
- * Legacy wrapper that delegates to Surface-based implementation
  */
 @Composable
 fun ArtisticCard(
@@ -76,7 +72,7 @@ fun ArtisticCard(
                 if (onClick != null) {
                     Modifier.clickable(
                         interactionSource = interactionSource,
-                        indication = ripple(),
+                        indication = null,
                         onClick = onClick
                     )
                 } else Modifier
@@ -93,16 +89,17 @@ fun ArtisticCard(
 
 /**
  * Clean Minimalistic Button Component
- * With subtle press animation
+ * Supports both text and icon content
  */
 @Composable
 fun ArtisticButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    text: String? = null,
+    icon: (@Composable () -> Unit)? = null,
     isActive: Boolean = false,
     enabled: Boolean = true,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
-    icon: (@Composable () -> Unit)? = null,
     activeColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
     activeContentColor: Color = MaterialTheme.colorScheme.onPrimary,
@@ -125,7 +122,7 @@ fun ArtisticButton(
             .scale(scale)
             .clickable(
                 interactionSource = interactionSource,
-                indication = ripple(),
+                indication = null,
                 enabled = enabled,
                 role = Role.Button,
                 onClick = onClick
@@ -139,7 +136,19 @@ fun ArtisticButton(
             contentAlignment = Alignment.Center,
             modifier = Modifier.padding(NeoDimens.SpacingM)
         ) {
-            icon?.invoke()
+            when {
+                text != null -> {
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = tintColor
+                    )
+                }
+                icon != null -> {
+                    icon()
+                }
+            }
         }
     }
 }
