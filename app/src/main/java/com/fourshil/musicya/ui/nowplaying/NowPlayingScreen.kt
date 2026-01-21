@@ -3,10 +3,11 @@ package com.fourshil.musicya.ui.nowplaying
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.QueueMusic
@@ -16,23 +17,24 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.fourshil.musicya.ui.components.HalftoneBackground
 import com.fourshil.musicya.ui.components.LyricsBottomSheet
 import com.fourshil.musicya.ui.components.MarqueeText
+import com.fourshil.musicya.ui.components.MinimalControlButton
+import com.fourshil.musicya.ui.components.MinimalIconButton
 import com.fourshil.musicya.ui.theme.*
+import kotlin.math.abs
+import kotlin.math.roundToInt
 
 /**
  * Helper to format time - moved outside composable for performance
@@ -45,8 +47,8 @@ private fun formatTime(ms: Long): String {
 }
 
 /**
- * Neo-Brutalism Now Playing Screen
- * Clean, professional design with soft colors and smooth 60fps animations
+ * Clean Minimalistic Now Playing Screen
+ * Features swipe gestures on album art for skip next/previous
  */
 @Composable
 fun NowPlayingScreen(
@@ -67,28 +69,28 @@ fun NowPlayingScreen(
     // Lyrics state
     var showLyrics by remember { mutableStateOf(false) }
 
+    // Swipe gesture state for album art
+    val density = LocalDensity.current
+    val swipeThreshold = with(density) { 100.dp.toPx() }
+    var offsetX by remember { mutableFloatStateOf(0f) }
+    val animatedOffsetX by animateFloatAsState(
+        targetValue = offsetX,
+        animationSpec = spring(stiffness = Spring.StiffnessMedium),
+        label = "albumSwipe"
+    )
 
     val backgroundColor = MaterialTheme.colorScheme.background
     val contentColor = MaterialTheme.colorScheme.onBackground
-    val surfaceColor = MaterialTheme.colorScheme.surface
-    val accentColor = NeoCoral
+    val accentColor = MaterialTheme.colorScheme.primary
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(backgroundColor)
-    ) {
-        // Subtle halftone background
-        HalftoneBackground(
-            modifier = Modifier.fillMaxSize(),
-            color = contentColor,
-            alpha = 0.03f
-        )
-
+    Scaffold(
+        containerColor = backgroundColor,
+        contentColor = contentColor
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
+                .padding(paddingValues)
                 .padding(horizontal = NeoDimens.ScreenPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -96,248 +98,230 @@ fun NowPlayingScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp),
+                    .padding(top = NeoDimens.SpacingL),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                NeoIconButton(
+                MinimalIconButton(
                     onClick = onBack,
                     icon = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Go back",
-                    backgroundColor = surfaceColor
+                    contentDescription = "Go back"
                 )
 
                 Text(
                     "Now Playing",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.SemiBold
-                    ),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Medium,
                     color = contentColor
                 )
 
-                NeoIconButton(
+                MinimalIconButton(
                     onClick = onQueueClick,
                     icon = Icons.AutoMirrored.Filled.QueueMusic,
-                    contentDescription = "View queue",
-                    backgroundColor = surfaceColor
-                )
-            }
-            
-            // Lyrics button row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                NeoIconButton(
-                    onClick = { showLyrics = true },
-                    icon = Icons.Default.Lyrics,
-                    contentDescription = "Show lyrics",
-                    backgroundColor = surfaceColor,
-                    size = 40.dp,
-                    iconSize = 20.dp
+                    contentDescription = "View queue"
                 )
             }
 
-            Spacer(modifier = Modifier.weight(0.3f))
+            Spacer(modifier = Modifier.weight(0.15f))
 
-            // Album Artwork
+            // Album Artwork with swipe gestures
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .size(NeoDimens.AlbumArtLarge + NeoDimens.ShadowMedium)
-                    .padding(bottom = 24.dp)
+                    .size(NeoDimens.AlbumArtXL)
+                    .offset { IntOffset(animatedOffsetX.roundToInt(), 0) }
+                    .graphicsLayer {
+                        rotationZ = animatedOffsetX / 50f
+                        alpha = 1f - (abs(animatedOffsetX) / (swipeThreshold * 2))
+                    }
+                    .pointerInput(Unit) {
+                        detectHorizontalDragGestures(
+                            onDragEnd = {
+                                when {
+                                    offsetX < -swipeThreshold -> viewModel.skipToNext()
+                                    offsetX > swipeThreshold -> viewModel.skipToPrevious()
+                                }
+                                offsetX = 0f
+                            },
+                            onDragCancel = { offsetX = 0f },
+                            onHorizontalDrag = { _, dragAmount ->
+                                offsetX = (offsetX + dragAmount).coerceIn(
+                                    -swipeThreshold * 1.5f,
+                                    swipeThreshold * 1.5f
+                                )
+                            }
+                        )
+                    }
             ) {
-                // Shadow
-                Box(
-                    modifier = Modifier
-                        .size(NeoDimens.AlbumArtLarge)
-                        .offset(x = NeoDimens.ShadowMedium, y = NeoDimens.ShadowMedium)
-                        .background(NeoShadowLight)
-                )
-                // Main container
-                Box(
-                    modifier = Modifier
-                        .size(NeoDimens.AlbumArtLarge)
-                        .border(NeoDimens.BorderMedium, MaterialTheme.colorScheme.outline)
-                        .background(surfaceColor)
+                // Album art with rounded corners
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    shape = RoundedCornerShape(NeoDimens.CornerLarge),
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    tonalElevation = NeoDimens.ElevationHigh,
+                    shadowElevation = NeoDimens.ElevationHigh
                 ) {
                     AsyncImage(
                         model = currentSong?.albumArtUri,
                         contentDescription = "Album artwork",
                         contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(NeoDimens.CornerLarge))
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(NeoDimens.SpacingXXL))
 
-            // Song Title
-            MarqueeText(
-                isActive = true,
-                text = currentSong?.title ?: "No song playing",
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = (-0.5).sp,
+            // Song Info
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                MarqueeText(
+                    isActive = true,
+                    text = currentSong?.title ?: "No song playing",
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center
+                    ),
+                    color = contentColor,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(NeoDimens.SpacingS))
+
+                Text(
+                    text = currentSong?.artist ?: "Unknown artist",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
-                ),
-                color = contentColor,
-                modifier = Modifier.fillMaxWidth()
-            )
+                )
+            }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Artist
-            Text(
-                text = currentSong?.artist ?: "Unknown artist",
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Medium
-                ),
-                color = contentColor.copy(alpha = 0.7f),
-                textAlign = TextAlign.Center
-            )
-
-            Spacer(modifier = Modifier.weight(0.3f))
+            Spacer(modifier = Modifier.height(NeoDimens.SpacingXXL))
 
             // Progress Section
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp)
+                modifier = Modifier.fillMaxWidth()
             ) {
-                // Progress Bar
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp)
-                        .border(NeoDimens.BorderThin, MaterialTheme.colorScheme.outline)
-                        .background(surfaceColor)
-                        .pointerInput(Unit) {
-                            detectTapGestures { offset ->
-                                val p = (offset.x / size.width.toFloat()).coerceIn(0f, 1f)
-                                viewModel.seekTo((p * duration).toLong())
-                            }
-                        }
-                ) {
-                    val progressFraction = if (duration > 0) position.toFloat() / duration else 0f
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .fillMaxWidth(progressFraction)
-                            .background(accentColor)
+                // Slim progress bar
+                Slider(
+                    value = if (duration > 0) position.toFloat() / duration else 0f,
+                    onValueChange = { fraction ->
+                        viewModel.seekTo((fraction * duration).toLong())
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = SliderDefaults.colors(
+                        thumbColor = accentColor,
+                        activeTrackColor = accentColor,
+                        inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
                     )
-                }
-                
-                Spacer(modifier = Modifier.height(8.dp))
-                
+                )
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
                         formatTime(position),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = contentColor.copy(alpha = 0.6f)
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         formatTime(duration),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = contentColor.copy(alpha = 0.6f)
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.weight(0.2f))
+            Spacer(modifier = Modifier.weight(0.15f))
 
-            // Controls
+            // Control buttons
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 48.dp),
+                    .padding(bottom = NeoDimens.SpacingXXL),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Shuffle
-                IconButton(
+                MinimalIconButton(
                     onClick = { viewModel.toggleShuffle() },
-                    modifier = Modifier.size(48.dp)
-                ) {
-                    Icon(
-                        Icons.Default.Shuffle,
-                        contentDescription = "Shuffle",
-                        tint = if (shuffleEnabled) accentColor else contentColor.copy(alpha = 0.5f),
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
+                    icon = Icons.Default.Shuffle,
+                    contentDescription = "Shuffle",
+                    contentColor = if (shuffleEnabled) accentColor else MaterialTheme.colorScheme.onSurfaceVariant,
+                    size = 48.dp,
+                    iconSize = 24.dp
+                )
 
                 // Previous
-                IconButton(
+                MinimalIconButton(
                     onClick = { viewModel.skipToPrevious() },
-                    modifier = Modifier.size(56.dp)
-                ) {
-                    Icon(
-                        Icons.Default.SkipPrevious,
-                        contentDescription = "Previous",
-                        tint = contentColor,
-                        modifier = Modifier.size(36.dp)
-                    )
-                }
+                    icon = Icons.Default.SkipPrevious,
+                    contentDescription = "Previous",
+                    size = 56.dp,
+                    iconSize = 32.dp
+                )
 
-                // Play/Pause - Main button with Neo-Brutalism styling
-                Box(
-                    modifier = Modifier.size(80.dp + NeoDimens.ShadowMedium)
-                ) {
-                    // Shadow
-                    Box(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .offset(x = NeoDimens.ShadowMedium, y = NeoDimens.ShadowMedium)
-                            .background(NeoShadowLight, RoundedCornerShape(NeoDimens.CornerSmall))
-                    )
-                    // Button
-                    Surface(
-                        onClick = { viewModel.togglePlayPause() },
-                        shape = RoundedCornerShape(NeoDimens.CornerSmall),
-                        color = Slate900,
-                        border = androidx.compose.foundation.BorderStroke(NeoDimens.BorderMedium, Slate700),
-                        modifier = Modifier.size(80.dp)
-                    ) {
-                        Box(contentAlignment = Alignment.Center) {
-                            Crossfade(targetState = isPlaying, label = "PlayPause") { playing ->
-                                Icon(
-                                    if (playing) Icons.Default.Pause else Icons.Default.PlayArrow,
-                                    contentDescription = if (playing) "Pause" else "Play",
-                                    modifier = Modifier.size(48.dp),
-                                    tint = Slate50
-                                )
-                            }
-                        }
-                    }
-                }
+                // Play/Pause - Primary action
+                MinimalControlButton(
+                    onClick = { viewModel.togglePlayPause() },
+                    icon = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
+                    contentDescription = if (isPlaying) "Pause" else "Play",
+                    size = 72.dp,
+                    iconSize = 36.dp
+                )
 
                 // Next
-                IconButton(
+                MinimalIconButton(
                     onClick = { viewModel.skipToNext() },
-                    modifier = Modifier.size(56.dp)
-                ) {
+                    icon = Icons.Default.SkipNext,
+                    contentDescription = "Next",
+                    size = 56.dp,
+                    iconSize = 32.dp
+                )
+
+                // Repeat
+                MinimalIconButton(
+                    onClick = { viewModel.toggleRepeat() },
+                    icon = if (repeatMode == 1) Icons.Default.RepeatOne else Icons.Default.Repeat,
+                    contentDescription = "Repeat",
+                    contentColor = if (repeatMode != 0) accentColor else MaterialTheme.colorScheme.onSurfaceVariant,
+                    size = 48.dp,
+                    iconSize = 24.dp
+                )
+            }
+
+            // Secondary actions row
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = NeoDimens.SpacingXL),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Favorite button
+                IconButton(onClick = { 
+                    currentSong?.let { viewModel.toggleFavorite(it.id) }
+                }) {
                     Icon(
-                        Icons.Default.SkipNext,
-                        contentDescription = "Next",
-                        tint = contentColor,
-                        modifier = Modifier.size(36.dp)
+                        imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = "Favorite",
+                        tint = if (isFavorite) AccentError else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
-                // Repeat
-                IconButton(
-                    onClick = { viewModel.toggleRepeat() },
-                    modifier = Modifier.size(48.dp)
-                ) {
+                Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
+
+                // Lyrics button
+                IconButton(onClick = { showLyrics = true }) {
                     Icon(
-                        if (repeatMode == 1) Icons.Default.RepeatOne else Icons.Default.Repeat,
-                        contentDescription = "Repeat",
-                        tint = if (repeatMode != 0) accentColor else contentColor.copy(alpha = 0.5f),
-                        modifier = Modifier.size(24.dp)
+                        imageVector = Icons.Default.Lyrics,
+                        contentDescription = "Lyrics",
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -351,48 +335,5 @@ fun NowPlayingScreen(
             currentPositionMs = position,
             onDismiss = { showLyrics = false }
         )
-    }
-}
-
-/**
- * Neo-Brutalism Icon Button
- * Clean button with small shadow
- */
-@Composable
-private fun NeoIconButton(
-    onClick: () -> Unit,
-    icon: ImageVector,
-    contentDescription: String? = null,
-    backgroundColor: Color = MaterialTheme.colorScheme.surface,
-    size: Dp = 48.dp,
-    iconSize: Dp = 24.dp
-) {
-    Box(
-        modifier = Modifier
-            .size(size + NeoDimens.ShadowSmall)
-            .clickable(onClick = onClick)
-    ) {
-        // Shadow
-        Box(
-            modifier = Modifier
-                .size(size)
-                .offset(x = NeoDimens.ShadowSmall, y = NeoDimens.ShadowSmall)
-                .background(NeoShadowLight, RoundedCornerShape(NeoDimens.CornerSmall))
-        )
-        // Button
-        Box(
-            modifier = Modifier
-                .size(size)
-                .background(backgroundColor, RoundedCornerShape(NeoDimens.CornerSmall))
-                .border(NeoDimens.BorderThin, MaterialTheme.colorScheme.outline, RoundedCornerShape(NeoDimens.CornerSmall)),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = contentDescription,
-                modifier = Modifier.size(iconSize),
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-        }
     }
 }
