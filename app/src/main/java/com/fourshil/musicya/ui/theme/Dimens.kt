@@ -3,25 +3,33 @@ package com.fourshil.musicya.ui.theme
 import androidx.compose.ui.unit.dp
 
 /**
- * Neo-Brutalism Design System Dimensions
- * Centralized values for consistent spacing, shadows, and borders
+ * Clean Minimalistic Design System Dimensions
+ * Consistent spacing, sizing, and corner radii for a polished UI
  */
 object NeoDimens {
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Shadows - Small and clean for professional Neo-Brutalism
+    // Elevation - Subtle Material shadows
     // ═══════════════════════════════════════════════════════════════════════════
-    val ShadowNone = 0.dp
-    val ShadowSmall = 2.dp      // Subtle elevation
-    val ShadowMedium = 3.dp     // Standard cards
-    val ShadowLarge = 4.dp      // Elevated elements (modals, FABs)
+    val ElevationNone = 0.dp
+    val ElevationLow = 1.dp         // Subtle lift
+    val ElevationMedium = 4.dp      // Cards, surfaces
+    val ElevationHigh = 8.dp        // Modals, dialogs
+    val ElevationHighest = 16.dp    // Floating elements
+
+    // Legacy shadow aliases (for compatibility)
+    val ShadowNone = ElevationNone
+    val ShadowSmall = ElevationLow
+    val ShadowMedium = ElevationMedium
+    val ShadowLarge = ElevationHigh
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Borders - Clean Neo-Brutalism strokes
+    // Borders - Clean, thin lines
     // ═══════════════════════════════════════════════════════════════════════════
-    val BorderThin = 2.dp       // Subtle borders
-    val BorderMedium = 3.dp     // Standard component borders
-    val BorderThick = 4.dp      // Emphasis borders (rarely used)
+    val BorderNone = 0.dp
+    val BorderThin = 1.dp           // Standard borders
+    val BorderMedium = 1.5.dp       // Emphasis borders
+    val BorderThick = 2.dp          // Rarely used
 
     // ═══════════════════════════════════════════════════════════════════════════
     // Spacing - Consistent padding and margins
@@ -37,44 +45,57 @@ object NeoDimens {
     val SpacingHuge = 48.dp
 
     // ═══════════════════════════════════════════════════════════════════════════
+    // Corner Radius - Modern rounded corners
+    // ═══════════════════════════════════════════════════════════════════════════
+    val CornerNone = 0.dp
+    val CornerXS = 4.dp             // Subtle rounding
+    val CornerSmall = 8.dp          // Small elements
+    val CornerMedium = 12.dp        // Cards, buttons
+    val CornerLarge = 16.dp         // Large cards
+    val CornerXL = 24.dp            // Sheets, dialogs
+    val CornerFull = 999.dp         // Circular/pill shapes
+
+    // ═══════════════════════════════════════════════════════════════════════════
     // Component Sizes
     // ═══════════════════════════════════════════════════════════════════════════
     val IconSmall = 16.dp
     val IconMedium = 24.dp
     val IconLarge = 32.dp
+    val IconXL = 48.dp
 
     val ButtonHeightSmall = 36.dp
     val ButtonHeightMedium = 48.dp
     val ButtonHeightLarge = 56.dp
 
-    val CardPadding = 12.dp
-    val ScreenPadding = 24.dp
+    val CardPadding = 16.dp
+    val ScreenPadding = 16.dp       // Reduced from 24dp for cleaner look
 
     val AlbumArtSmall = 48.dp
     val AlbumArtMedium = 64.dp
     val AlbumArtLarge = 280.dp
+    val AlbumArtXL = 320.dp
 
-    val MiniPlayerHeight = 72.dp
+    val MiniPlayerHeight = 64.dp    // Slightly reduced
     val BottomNavHeight = 64.dp
     
-    // Combined bottom padding for lists (Nav + Play + Spacing)
-    val ListBottomPadding = 160.dp 
+    // Combined bottom padding for lists (Nav + MiniPlayer + spacing)
+    val ListBottomPadding = 140.dp  // Slightly reduced
     
-    // Top Header Space (Title + Chips + Search)
-    val HeaderHeight = 262.dp
+    // Top Header Space
+    val HeaderHeight = 200.dp       // Reduced for cleaner look
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Corner Radius - Subtle rounding (Neo-Brutalism is typically sharp)
+    // Touch Targets
     // ═══════════════════════════════════════════════════════════════════════════
-    val CornerNone = 0.dp
-    val CornerSmall = 2.dp
-    val CornerMedium = 4.dp
-    val CornerLarge = 8.dp
+    val TouchTargetMin = 48.dp      // Minimum touch target size
+    val TouchTargetMedium = 56.dp
+    val TouchTargetLarge = 64.dp
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // Animation Durations (for smooth 60fps)
+    // Animation Durations (ms)
     // ═══════════════════════════════════════════════════════════════════════════
     const val AnimFast = 150
     const val AnimMedium = 250
     const val AnimSlow = 350
+    const val AnimSpring = 500      // For spring animations
 }
