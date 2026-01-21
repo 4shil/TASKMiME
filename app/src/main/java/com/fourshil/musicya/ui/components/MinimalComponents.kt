@@ -119,7 +119,7 @@ fun MinimalCardRow(
                 if (onClick != null) {
                     Modifier.clickable(
                         interactionSource = interactionSource,
-                        indication = ripple(),
+                        indication = null,
                         onClick = onClick
                     )
                 } else Modifier
@@ -191,7 +191,7 @@ fun MinimalButton(
             .scale(scale)
             .clickable(
                 interactionSource = interactionSource,
-                indication = ripple(),
+                indication = null,
                 enabled = enabled,
                 role = Role.Button,
                 onClick = onClick
@@ -306,7 +306,7 @@ fun MinimalControlButton(
             .scale(scale)
             .clickable(
                 interactionSource = interactionSource,
-                indication = ripple(),
+                indication = null,
                 enabled = enabled,
                 role = Role.Button,
                 onClick = onClick
