@@ -1,139 +1,158 @@
 package com.fourshil.musicya.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.fourshil.musicya.data.model.Song
-import com.fourshil.musicya.ui.theme.NeoCoral
 import com.fourshil.musicya.ui.theme.NeoDimens
-import com.fourshil.musicya.ui.theme.NeoShadowLight
-import com.fourshil.musicya.ui.theme.Slate50
-import com.fourshil.musicya.ui.theme.Slate700
 
 /**
- * Neo-Brutalism Song List Item
- * Clean card design with subtle selection state
+ * Clean Minimalistic Song List Item
+ * Simple, readable design with proper touch targets
  */
 @Composable
 fun SongListItem(
     song: Song,
-    isFavorite: Boolean,
-    isSelected: Boolean,
-    isSelectionMode: Boolean,
+    isCurrentlyPlaying: Boolean = false,
+    isSelected: Boolean = false,
+    inSelectionMode: Boolean = false,
+    showTrackNumber: Boolean = false,
     onClick: () -> Unit,
-    onLongClick: () -> Unit,
-    onMoreClick: () -> Unit
+    onLongClick: () -> Unit = {},
+    onMoreClick: () -> Unit = {}
 ) {
-    // Selection uses accent color, normal uses theme outline
-    val borderColor = if (isSelected) NeoCoral else MaterialTheme.colorScheme.outline
-    val shadowColor = if (isSelected) NeoCoral else NeoShadowLight
-    
-    ArtisticCard(
-        onClick = onClick,
-        borderColor = borderColor,
-        shadowColor = shadowColor,
-        showHalftone = false,
-        modifier = Modifier.fillMaxWidth()
+    val backgroundColor = when {
+        isSelected -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+        isCurrentlyPlaying -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.15f)
+        else -> Color.Transparent
+    }
+
+    val contentColor = when {
+        isCurrentlyPlaying -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.onSurface
+    }
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = NeoDimens.SpacingL, vertical = NeoDimens.SpacingXS),
+        color = backgroundColor,
+        shape = RoundedCornerShape(NeoDimens.CornerMedium)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(NeoDimens.CardPadding),
+                .padding(NeoDimens.SpacingM),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Album Art
+            // Selection checkbox or Album Art
             Box(
                 modifier = Modifier
-                    .size(56.dp)
-                    .border(NeoDimens.BorderThin, MaterialTheme.colorScheme.outline)
+                    .size(NeoDimens.AlbumArtSmall)
+                    .clip(RoundedCornerShape(NeoDimens.CornerSmall))
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
-                if (song.albumArtUri != null) {
-                    AlbumArtImage(uri = song.albumArtUri, size = 56.dp)
+                if (inSelectionMode && isSelected) {
+                    // Selection checkmark
+                    Box(
+                        modifier = Modifier
+                            .size(NeoDimens.AlbumArtSmall)
+                            .background(MaterialTheme.colorScheme.primary),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "Selected",
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.size(NeoDimens.IconMedium)
+                        )
+                    }
+                } else if (showTrackNumber) {
+                    // Track number
+                    Text(
+                        text = song.trackNumber?.toString() ?: "-",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.Medium
+                    )
                 } else {
-                    Icon(
-                        imageVector = Icons.Default.MusicNote,
-                        contentDescription = "No album art",
-                        modifier = Modifier.size(28.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    // Album art
+                    AlbumArtImage(
+                        uri = song.albumArtUri,
+                        size = NeoDimens.AlbumArtSmall
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(NeoDimens.SpacingM))
 
-            // Text Info
-            Column(modifier = Modifier.weight(1f)) {
-                MarqueeText(
+            // Song info
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
                     text = song.title,
-                    isActive = isSelected,
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = (-0.25).sp
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = if (isCurrentlyPlaying) FontWeight.SemiBold else FontWeight.Normal,
+                    color = contentColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = song.artist,
-                    style = MaterialTheme.typography.bodySmall.copy(
-                        fontWeight = FontWeight.Medium
-                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    overflow = TextOverflow.Ellipsis
                 )
             }
-            
-            // Selection indicator or more button
-            if (isSelectionMode) {
-                // Optimize: Simple Box instead of heavy nesting
-                 Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .border(NeoDimens.BorderThin, MaterialTheme.colorScheme.outline)
-                        .background(if (isSelected) NeoCoral else MaterialTheme.colorScheme.surface),
-                    contentAlignment = Alignment.Center
+
+            // Duration
+            Text(
+                text = formatDuration(song.duration),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = NeoDimens.SpacingS)
+            )
+
+            // More button (only when not in selection mode)
+            if (!inSelectionMode) {
+                IconButton(
+                    onClick = onMoreClick,
+                    modifier = Modifier.size(NeoDimens.TouchTargetMin)
                 ) {
-                    if (isSelected) {
-                        Icon(
-                            Icons.Default.Check,
-                            contentDescription = "Selected",
-                            modifier = Modifier.size(16.dp),
-                            tint = Slate50
-                        )
-                    }
-                }
-            } else {
-                IconButton(onClick = onMoreClick) {
                     Icon(
-                        Icons.Default.MoreVert,
+                        imageVector = Icons.Default.MoreVert,
                         contentDescription = "More options",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(NeoDimens.IconMedium)
                     )
                 }
             }
@@ -141,3 +160,92 @@ fun SongListItem(
     }
 }
 
+/**
+ * Format duration from milliseconds to MM:SS
+ */
+private fun formatDuration(durationMs: Long): String {
+    val totalSeconds = durationMs / 1000
+    val minutes = totalSeconds / 60
+    val seconds = totalSeconds % 60
+    return "%d:%02d".format(minutes, seconds)
+}
+
+/**
+ * Simple Song Item variant for Queue and smaller lists
+ */
+@Composable
+fun SimpleQueueItem(
+    song: Song,
+    isCurrentlyPlaying: Boolean = false,
+    onClick: () -> Unit,
+    onRemove: (() -> Unit)? = null
+) {
+    val contentColor = if (isCurrentlyPlaying) {
+        MaterialTheme.colorScheme.primary
+    } else {
+        MaterialTheme.colorScheme.onSurface
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = NeoDimens.SpacingL, vertical = NeoDimens.SpacingM),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Album art
+        Box(
+            modifier = Modifier
+                .size(NeoDimens.AlbumArtSmall)
+                .clip(RoundedCornerShape(NeoDimens.CornerSmall))
+                .background(MaterialTheme.colorScheme.surfaceVariant),
+            contentAlignment = Alignment.Center
+        ) {
+            AlbumArtImage(
+                uri = song.albumArtUri,
+                size = NeoDimens.AlbumArtSmall
+            )
+        }
+
+        Spacer(modifier = Modifier.width(NeoDimens.SpacingM))
+
+        // Song info
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            if (isCurrentlyPlaying) {
+                Text(
+                    text = "Now Playing",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            Text(
+                text = song.title,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = if (isCurrentlyPlaying) FontWeight.SemiBold else FontWeight.Normal,
+                color = contentColor,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = song.artist,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+
+        // Remove button
+        if (onRemove != null) {
+            IconButton(onClick = onRemove) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "Remove",
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
