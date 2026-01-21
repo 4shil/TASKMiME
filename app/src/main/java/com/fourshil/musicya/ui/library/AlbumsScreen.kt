@@ -49,7 +49,7 @@ fun AlbumsScreen(
             .statusBarsPadding()
             .padding(horizontal = NeoDimens.ScreenPadding),
         contentPadding = PaddingValues(
-            top = NeoDims.HeaderHeight,
+            top = NeoDimens.HeaderHeight,
             bottom = NeoDimens.ListBottomPadding
         ),
         horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingM),
