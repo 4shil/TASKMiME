@@ -2,6 +2,7 @@ package com.fourshil.musicya.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,8 +14,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,12 +23,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.fourshil.musicya.data.model.Song
 import com.fourshil.musicya.ui.theme.NeoDimens
 
@@ -35,17 +36,23 @@ import com.fourshil.musicya.ui.theme.NeoDimens
  * Clean Minimalistic Song List Item
  * Simple, readable design with proper touch targets
  */
+@OptIn(ExperimentalComposeUiApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun SongListItem(
     song: Song,
     isCurrentlyPlaying: Boolean = false,
+    isFavorite: Boolean = false,
     isSelected: Boolean = false,
+    isSelectionMode: Boolean = false,
     inSelectionMode: Boolean = false,
     showTrackNumber: Boolean = false,
     onClick: () -> Unit,
     onLongClick: () -> Unit = {},
     onMoreClick: () -> Unit = {}
 ) {
+    // Use either isSelectionMode or inSelectionMode (backward compatibility)
+    val selectionActive = isSelectionMode || inSelectionMode
+    
     val backgroundColor = when {
         isSelected -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
         isCurrentlyPlaying -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.15f)
@@ -60,7 +67,10 @@ fun SongListItem(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
             .padding(horizontal = NeoDimens.SpacingL, vertical = NeoDimens.SpacingXS),
         color = backgroundColor,
         shape = RoundedCornerShape(NeoDimens.CornerMedium)
@@ -79,7 +89,7 @@ fun SongListItem(
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
-                if (inSelectionMode && isSelected) {
+                if (selectionActive && isSelected) {
                     // Selection checkmark
                     Box(
                         modifier = Modifier
@@ -94,14 +104,6 @@ fun SongListItem(
                             modifier = Modifier.size(NeoDimens.IconMedium)
                         )
                     }
-                } else if (showTrackNumber) {
-                    // Track number
-                    Text(
-                        text = song.trackNumber?.toString() ?: "-",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.Medium
-                    )
                 } else {
                     // Album art
                     AlbumArtImage(
@@ -133,17 +135,29 @@ fun SongListItem(
                     overflow = TextOverflow.Ellipsis
                 )
             }
+            
+            // Favorite indicator
+            if (isFavorite && !selectionActive) {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = "Favorite",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .size(NeoDimens.IconSmall)
+                        .padding(end = NeoDimens.SpacingXS)
+                )
+            }
 
             // Duration
             Text(
-                text = formatDuration(song.duration),
+                text = song.durationFormatted,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = NeoDimens.SpacingS)
             )
 
             // More button (only when not in selection mode)
-            if (!inSelectionMode) {
+            if (!selectionActive) {
                 IconButton(
                     onClick = onMoreClick,
                     modifier = Modifier.size(NeoDimens.TouchTargetMin)
@@ -158,16 +172,6 @@ fun SongListItem(
             }
         }
     }
-}
-
-/**
- * Format duration from milliseconds to MM:SS
- */
-private fun formatDuration(durationMs: Long): String {
-    val totalSeconds = durationMs / 1000
-    val minutes = totalSeconds / 60
-    val seconds = totalSeconds % 60
-    return "%d:%02d".format(minutes, seconds)
 }
 
 /**

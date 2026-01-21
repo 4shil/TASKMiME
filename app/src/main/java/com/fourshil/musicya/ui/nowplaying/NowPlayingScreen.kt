@@ -305,7 +305,7 @@ fun NowPlayingScreen(
             ) {
                 // Favorite button
                 IconButton(onClick = { 
-                    currentSong?.let { viewModel.toggleFavorite(it.id) }
+                    viewModel.toggleFavorite()
                 }) {
                     Icon(
                         imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,

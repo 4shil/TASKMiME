@@ -20,10 +20,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -70,7 +70,7 @@ fun MinimalCard(
                 if (onClick != null) {
                     Modifier.clickable(
                         interactionSource = interactionSource,
-                        indication = ripple(),
+                        indication = null,
                         onClick = onClick
                     )
                 } else Modifier
@@ -261,7 +261,7 @@ fun MinimalIconButton(
             .background(containerColor)
             .clickable(
                 interactionSource = interactionSource,
-                indication = ripple(bounded = true),
+                indication = null,
                 enabled = enabled,
                 role = Role.Button,
                 onClick = onClick
