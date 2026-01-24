@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -28,6 +29,7 @@ import com.fourshil.musicya.ui.settings.EqualizerScreen
 import com.fourshil.musicya.ui.settings.SettingsScreen
 import com.fourshil.musicya.player.PlayerController
 import com.fourshil.musicya.ui.theme.PureBlack
+import com.fourshil.musicya.ui.theme.NeoDimens
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -109,6 +111,7 @@ fun MusicyaNavGraph(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(padding)
+                    .clipToBounds()
             ) {
                 NavHost(
                     navController = navController,
@@ -208,22 +211,16 @@ fun MusicyaNavGraph(
                 Column(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(bottom = 0.dp),
+                        .navigationBarsPadding()
+                        .padding(bottom = NeoDimens.SpacingM),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // Mini Player (Only if not in now playing screen and song exists)
                     if (currentSong != null && currentRoute != Screen.NowPlaying.route) {
-                        // Pass ViewModel or Lambda to avoid reading frequent state at this level
-                        // However, since we already read `position` above, we need to remove THAT reading.
-                        // But wait, removing the reading above affects `MiniPlayer` passing.
-                        // We will inline the connection here for now or delegate to a wrapper.
-                        
                         ConnectedMiniPlayer(
                             viewModel = nowPlayingViewModel,
                             onClick = { navController.navigate(Screen.NowPlaying.route) },
-                            modifier = Modifier
-                                .padding(horizontal = 24.dp)
-                                .padding(bottom = 24.dp)
+                            modifier = Modifier.padding(horizontal = NeoDimens.ScreenPadding)
                         )
                     }
 

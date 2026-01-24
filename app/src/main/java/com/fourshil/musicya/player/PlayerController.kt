@@ -49,7 +49,8 @@ import javax.inject.Singleton
 class PlayerController @Inject constructor(
     @ApplicationContext private val context: Context,
     private val sleepTimerManager: SleepTimerManager,
-    private val speedManager: PlaybackSpeedManager
+    private val speedManager: PlaybackSpeedManager,
+    private val crossfadeManager: CrossfadeManager
 ) {
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var positionUpdateJob: Job? = null
@@ -371,7 +372,9 @@ class PlayerController @Inject constructor(
      * Note: Media3 does not natively support crossfade.
      */
     fun setCrossfadeDuration(seconds: Int) {
-        _crossfadeDuration.value = seconds.coerceIn(0, 12)
+        val duration = seconds.coerceIn(0, 12)
+        _crossfadeDuration.value = duration
+        crossfadeManager.setDuration(duration)
     }
     
     // ============ Lifecycle ============

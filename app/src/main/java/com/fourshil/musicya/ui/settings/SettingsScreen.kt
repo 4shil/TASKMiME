@@ -202,7 +202,10 @@ fun SettingsScreen(
             contentColor = MaterialTheme.colorScheme.onSurface,
             surfaceColor = MaterialTheme.colorScheme.surface,
             onDismiss = { showCrossfadeDialog = false },
-            onDurationSelected = { duration -> viewModel.setCrossfadeDuration(duration) }
+            onDurationSelected = { duration ->
+                viewModel.setCrossfadeDuration(duration)
+                playerController.setCrossfadeDuration(duration)
+            }
         )
     }
 }

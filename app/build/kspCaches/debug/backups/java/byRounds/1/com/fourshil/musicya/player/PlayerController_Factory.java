@@ -28,27 +28,32 @@ public final class PlayerController_Factory implements Factory<PlayerController>
 
   private final Provider<PlaybackSpeedManager> speedManagerProvider;
 
+  private final Provider<CrossfadeManager> crossfadeManagerProvider;
+
   public PlayerController_Factory(Provider<Context> contextProvider,
       Provider<SleepTimerManager> sleepTimerManagerProvider,
-      Provider<PlaybackSpeedManager> speedManagerProvider) {
+      Provider<PlaybackSpeedManager> speedManagerProvider,
+      Provider<CrossfadeManager> crossfadeManagerProvider) {
     this.contextProvider = contextProvider;
     this.sleepTimerManagerProvider = sleepTimerManagerProvider;
     this.speedManagerProvider = speedManagerProvider;
+    this.crossfadeManagerProvider = crossfadeManagerProvider;
   }
 
   @Override
   public PlayerController get() {
-    return newInstance(contextProvider.get(), sleepTimerManagerProvider.get(), speedManagerProvider.get());
+    return newInstance(contextProvider.get(), sleepTimerManagerProvider.get(), speedManagerProvider.get(), crossfadeManagerProvider.get());
   }
 
   public static PlayerController_Factory create(Provider<Context> contextProvider,
       Provider<SleepTimerManager> sleepTimerManagerProvider,
-      Provider<PlaybackSpeedManager> speedManagerProvider) {
-    return new PlayerController_Factory(contextProvider, sleepTimerManagerProvider, speedManagerProvider);
+      Provider<PlaybackSpeedManager> speedManagerProvider,
+      Provider<CrossfadeManager> crossfadeManagerProvider) {
+    return new PlayerController_Factory(contextProvider, sleepTimerManagerProvider, speedManagerProvider, crossfadeManagerProvider);
   }
 
   public static PlayerController newInstance(Context context, SleepTimerManager sleepTimerManager,
-      PlaybackSpeedManager speedManager) {
-    return new PlayerController(context, sleepTimerManager, speedManager);
+      PlaybackSpeedManager speedManager, CrossfadeManager crossfadeManager) {
+    return new PlayerController(context, sleepTimerManager, speedManager, crossfadeManager);
   }
 }
