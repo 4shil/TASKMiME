@@ -93,6 +93,25 @@ class LibraryViewModel @Inject constructor(
             playerController.playSongs(allSongs, index)
         }
     }
+    
+    /**
+     * Play a song while setting all provided songs as the queue.
+     * This enables proper skip next/previous functionality.
+     */
+    fun playSongWithQueue(song: Song, allSongs: List<Song>) {
+        if (allSongs.isEmpty()) {
+            // Fallback to single song play
+            playerController.playSong(song)
+        } else {
+            val index = allSongs.indexOfFirst { it.id == song.id }
+            if (index >= 0) {
+                playerController.playSongs(allSongs, index)
+            } else {
+                // Song not found in list, play as single
+                playerController.playSong(song)
+            }
+        }
+    }
 
     fun playAlbum(albumId: Long) {
         viewModelScope.launch {

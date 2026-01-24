@@ -58,8 +58,7 @@ fun MusicyaNavGraph(
         Screen.NeverPlayed.route
     )
 
-    // Should we show the bottom bar?
-    val showBottomNav = libraryRoutes.contains(currentRoute) || currentRoute == Screen.Folders.route
+    // Bottom navigation is handled via top chips, no bottom bar needed
 
     // Unified Header Logic
     val currentTitle = when (currentRoute) {
@@ -104,9 +103,7 @@ fun MusicyaNavGraph(
                    )
                }
             },
-            bottomBar = {
-                // Navigation Bar
-            }
+            // No bottom bar - navigation is via top chips
         ) { padding ->
             Box(
                 modifier = Modifier
@@ -226,7 +223,7 @@ fun MusicyaNavGraph(
                             onClick = { navController.navigate(Screen.NowPlaying.route) },
                             modifier = Modifier
                                 .padding(horizontal = 24.dp)
-                                .padding(bottom = if (showBottomNav) 8.dp else 24.dp)
+                                .padding(bottom = 24.dp)
                         )
                     }
 

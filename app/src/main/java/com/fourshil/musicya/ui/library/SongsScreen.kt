@@ -230,7 +230,9 @@ fun SongsScreen(
                                         if (selectionState.isSelectionMode) {
                                             selectionState.toggleSelection(song.id)
                                         } else {
-                                            viewModel.playSong(song)
+                                            // Collect all currently loaded songs for the queue
+                                            val allVisibleSongs = (0 until pagedSongs.itemCount).mapNotNull { pagedSongs[it] }
+                                            viewModel.playSongWithQueue(song, allVisibleSongs)
                                             onSongClick(index)
                                         }
                                     },
