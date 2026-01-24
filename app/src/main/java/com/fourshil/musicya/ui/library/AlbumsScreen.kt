@@ -46,10 +46,9 @@ fun AlbumsScreen(
         columns = GridCells.Adaptive(minSize = 150.dp),
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
             .padding(horizontal = NeoDimens.ScreenPadding),
         contentPadding = PaddingValues(
-            top = NeoDimens.HeaderHeight,
+            top = 0.dp,
             bottom = NeoDimens.ListBottomPadding
         ),
         horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingM),

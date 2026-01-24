@@ -49,16 +49,12 @@ fun PlaylistsScreen(
     var showRenameDialog by remember { mutableStateOf<Playlist?>(null) }
     
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .statusBarsPadding(),
-        contentPadding = PaddingValues(bottom = NeoDimens.ListBottomPadding)
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(
+            top = 0.dp,
+            bottom = NeoDimens.ListBottomPadding
+        )
     ) {
-        item {
-             Column(modifier = Modifier.padding(horizontal = NeoDimens.ScreenPadding)) {
-                Spacer(modifier = Modifier.height(NeoDimens.HeaderHeight))
-             }
-        }
 
         if (playlists.isEmpty()) {
             item {

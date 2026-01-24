@@ -1,8 +1,12 @@
 package com.fourshil.musicya.ui.components
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
@@ -13,7 +17,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,26 +34,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.fourshil.musicya.data.model.Song
 import com.fourshil.musicya.ui.theme.NeoDimens
 import kotlin.math.abs
-import kotlin.math.roundToInt
 
 /**
  * Clean Minimalistic Mini Player
- * Features swipe gestures for skip next/previous
+ * Features swipe gestures for skip next/previous - only song info animates
  */
 @Composable
 fun MiniPlayer(
@@ -68,32 +69,13 @@ fun MiniPlayer(
     val density = LocalDensity.current
     val swipeThreshold = with(density) { 80.dp.toPx() }
     
-    var offsetX by remember { mutableFloatStateOf(0f) }
-    val animatedOffsetX by animateFloatAsState(
-        targetValue = offsetX,
-        animationSpec = spring(stiffness = Spring.StiffnessHigh),
-        label = "swipeOffset"
-    )
+    var dragOffsetX by remember { mutableFloatStateOf(0f) }
+    var swipeDirection by remember { mutableIntStateOf(0) } // -1 = left (next), 1 = right (prev), 0 = none
 
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .height(NeoDimens.MiniPlayerHeight)
-            .pointerInput(Unit) {
-                detectHorizontalDragGestures(
-                    onDragEnd = {
-                        when {
-                            offsetX < -swipeThreshold -> onNextClick()
-                            offsetX > swipeThreshold -> onPreviousClick()
-                        }
-                        offsetX = 0f
-                    },
-                    onDragCancel = { offsetX = 0f },
-                    onHorizontalDrag = { _, dragAmount ->
-                        offsetX = (offsetX + dragAmount).coerceIn(-swipeThreshold * 1.5f, swipeThreshold * 1.5f)
-                    }
-                )
-            }
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(topStart = NeoDimens.CornerLarge, topEnd = NeoDimens.CornerLarge),
         color = MaterialTheme.colorScheme.surface,
@@ -116,56 +98,112 @@ fun MiniPlayer(
                 )
             }
 
-            // Content with swipe offset
+            // Content row - controls on sides are FIXED, song info in middle ANIMATES
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .offset { IntOffset(animatedOffsetX.roundToInt(), 0) }
-                    .graphicsLayer {
-                        alpha = 1f - (abs(animatedOffsetX) / (swipeThreshold * 2))
-                    }
                     .padding(horizontal = NeoDimens.SpacingL),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Album Art
+                // Song info area with swipe detection - this is where we detect gestures
                 Box(
                     modifier = Modifier
-                        .size(NeoDimens.AlbumArtSmall)
-                        .clip(RoundedCornerShape(NeoDimens.CornerSmall))
-                        .background(MaterialTheme.colorScheme.surfaceVariant),
-                    contentAlignment = Alignment.Center
+                        .weight(1f)
+                        .pointerInput(Unit) {
+                            detectHorizontalDragGestures(
+                                onDragEnd = {
+                                    when {
+                                        dragOffsetX < -swipeThreshold -> {
+                                            swipeDirection = -1
+                                            onNextClick()
+                                        }
+                                        dragOffsetX > swipeThreshold -> {
+                                            swipeDirection = 1
+                                            onPreviousClick()
+                                        }
+                                    }
+                                    dragOffsetX = 0f
+                                },
+                                onDragCancel = { 
+                                    dragOffsetX = 0f 
+                                },
+                                onHorizontalDrag = { _, dragAmount ->
+                                    dragOffsetX = (dragOffsetX + dragAmount).coerceIn(
+                                        -swipeThreshold * 1.5f, 
+                                        swipeThreshold * 1.5f
+                                    )
+                                }
+                            )
+                        }
                 ) {
-                    AlbumArtImage(
-                        uri = song.albumArtUri,
-                        size = NeoDimens.AlbumArtSmall
-                    )
-                }
+                    // Animated song content - only this part animates on song change
+                    AnimatedContent(
+                        targetState = song,
+                        transitionSpec = {
+                            val direction = swipeDirection
+                            // Reset after animation
+                            swipeDirection = 0
+                            
+                            if (direction < 0) {
+                                // Swipe left = next song - slide from right
+                                (slideInHorizontally { width -> width } + fadeIn()) togetherWith
+                                        (slideOutHorizontally { width -> -width } + fadeOut())
+                            } else if (direction > 0) {
+                                // Swipe right = previous song - slide from left
+                                (slideInHorizontally { width -> -width } + fadeIn()) togetherWith
+                                        (slideOutHorizontally { width -> width } + fadeOut())
+                            } else {
+                                // Default transition
+                                (fadeIn()) togetherWith (fadeOut())
+                            } using SizeTransform(clip = false)
+                        },
+                        label = "songTransition"
+                    ) { currentSong ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            // Album Art
+                            Box(
+                                modifier = Modifier
+                                    .size(NeoDimens.AlbumArtSmall)
+                                    .clip(RoundedCornerShape(NeoDimens.CornerSmall))
+                                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                AlbumArtImage(
+                                    uri = currentSong.albumArtUri,
+                                    size = NeoDimens.AlbumArtSmall
+                                )
+                            }
 
-                Spacer(modifier = Modifier.width(NeoDimens.SpacingM))
+                            Spacer(modifier = Modifier.width(NeoDimens.SpacingM))
 
-                // Track Info
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = song.title,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Medium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = song.artist,
-                        style = MaterialTheme.typography.bodySmall,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                            // Track Info
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = currentSong.title,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.Medium,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Text(
+                                    text = currentSong.artist,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
                 }
 
                 Spacer(modifier = Modifier.width(NeoDimens.SpacingS))
 
-                // Play/Pause Button
+                // Play/Pause Button - FIXED position
                 Surface(
                     modifier = Modifier
                         .size(44.dp)
@@ -185,7 +223,7 @@ fun MiniPlayer(
 
                 Spacer(modifier = Modifier.width(NeoDimens.SpacingXS))
 
-                // Next Button
+                // Next Button - FIXED position
                 IconButton(
                     onClick = onNextClick,
                     modifier = Modifier.size(44.dp)

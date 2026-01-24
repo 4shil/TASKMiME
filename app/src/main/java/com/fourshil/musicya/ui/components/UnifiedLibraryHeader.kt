@@ -92,13 +92,13 @@ fun UnifiedLibraryHeader(
             }
         }
         
-        Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
+        Spacer(modifier = Modifier.height(NeoDimens.SpacingM))
 
         TopNavigationChips(
             items = NavigationUtils.LibraryTabs,
             currentRoute = currentRoute,
             onItemClick = onNavigate,
-            modifier = Modifier.padding(bottom = NeoDimens.SpacingXL)
+            modifier = Modifier.padding(bottom = NeoDimens.SpacingS)
         )
     }
 }

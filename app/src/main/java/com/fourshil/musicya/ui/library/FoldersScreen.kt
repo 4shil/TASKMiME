@@ -38,11 +38,9 @@ fun FoldersScreen(
     val isLoading by viewModel.isLoading.collectAsState()
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .statusBarsPadding(),
+        modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(
-            top = NeoDimens.HeaderHeight,
+            top = 0.dp,
             bottom = NeoDimens.ListBottomPadding
         ),
         verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingXS)

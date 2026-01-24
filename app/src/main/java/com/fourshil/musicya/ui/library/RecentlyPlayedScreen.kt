@@ -37,16 +37,12 @@ fun RecentlyPlayedScreen(
     var showDetailsDialog by remember { mutableStateOf(false) }
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .statusBarsPadding(),
-        contentPadding = PaddingValues(bottom = NeoDimens.ListBottomPadding)
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(
+            top = 0.dp,
+            bottom = NeoDimens.ListBottomPadding
+        )
     ) {
-        item {
-            Column(modifier = Modifier.padding(horizontal = NeoDimens.ScreenPadding)) {
-                Spacer(modifier = Modifier.height(NeoDimens.HeaderHeight))
-            }
-        }
 
         if (isLoading) {
             item {

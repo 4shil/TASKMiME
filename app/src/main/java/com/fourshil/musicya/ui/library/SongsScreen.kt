@@ -137,7 +137,10 @@ fun SongsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .then(
+                    if (selectionState.isSelectionMode) Modifier.padding(padding)
+                    else Modifier
+                )
         ) {
             when {
                 !permissionsState.allPermissionsGranted -> {
@@ -207,7 +210,7 @@ fun SongsScreen(
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(
-                            top = NeoDimens.SpacingM,
+                            top = 0.dp,
                             bottom = NeoDimens.ListBottomPadding
                         ),
                         verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingXS)
