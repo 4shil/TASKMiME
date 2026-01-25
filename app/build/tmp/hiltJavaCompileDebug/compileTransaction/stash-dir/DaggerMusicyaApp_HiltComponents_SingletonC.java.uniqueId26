@@ -635,6 +635,7 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
       MusicService_MembersInjector.injectAudioEngine(instance, singletonCImpl.audioEngineProvider.get());
       MusicService_MembersInjector.injectMusicDao(instance, singletonCImpl.provideMusicDaoProvider.get());
       MusicService_MembersInjector.injectCrossfadeManager(instance, singletonCImpl.crossfadeManagerProvider.get());
+      MusicService_MembersInjector.injectSettingsPreferences(instance, singletonCImpl.settingsPreferencesProvider.get());
       return instance;
     }
   }
@@ -650,6 +651,8 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
 
     private Provider<PlaybackSpeedManager> playbackSpeedManagerProvider;
 
+    private Provider<CrossfadeManager> crossfadeManagerProvider;
+
     private Provider<PlayerController> playerControllerProvider;
 
     private Provider<AudioEngine> audioEngineProvider;
@@ -662,8 +665,6 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
 
     private Provider<LyricsManager> lyricsManagerProvider;
 
-    private Provider<CrossfadeManager> crossfadeManagerProvider;
-
     private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
       this.applicationContextModule = applicationContextModuleParam;
       initialize(applicationContextModuleParam);
@@ -675,13 +676,13 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
       this.settingsPreferencesProvider = DoubleCheck.provider(new SwitchingProvider<SettingsPreferences>(singletonCImpl, 0));
       this.sleepTimerManagerProvider = DoubleCheck.provider(new SwitchingProvider<SleepTimerManager>(singletonCImpl, 2));
       this.playbackSpeedManagerProvider = DoubleCheck.provider(new SwitchingProvider<PlaybackSpeedManager>(singletonCImpl, 3));
+      this.crossfadeManagerProvider = DoubleCheck.provider(new SwitchingProvider<CrossfadeManager>(singletonCImpl, 4));
       this.playerControllerProvider = DoubleCheck.provider(new SwitchingProvider<PlayerController>(singletonCImpl, 1));
-      this.audioEngineProvider = DoubleCheck.provider(new SwitchingProvider<AudioEngine>(singletonCImpl, 4));
-      this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 6));
-      this.provideMusicDaoProvider = DoubleCheck.provider(new SwitchingProvider<MusicDao>(singletonCImpl, 5));
-      this.musicRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<MusicRepository>(singletonCImpl, 7));
-      this.lyricsManagerProvider = DoubleCheck.provider(new SwitchingProvider<LyricsManager>(singletonCImpl, 8));
-      this.crossfadeManagerProvider = DoubleCheck.provider(new SwitchingProvider<CrossfadeManager>(singletonCImpl, 9));
+      this.audioEngineProvider = DoubleCheck.provider(new SwitchingProvider<AudioEngine>(singletonCImpl, 5));
+      this.provideAppDatabaseProvider = DoubleCheck.provider(new SwitchingProvider<AppDatabase>(singletonCImpl, 7));
+      this.provideMusicDaoProvider = DoubleCheck.provider(new SwitchingProvider<MusicDao>(singletonCImpl, 6));
+      this.musicRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<MusicRepository>(singletonCImpl, 8));
+      this.lyricsManagerProvider = DoubleCheck.provider(new SwitchingProvider<LyricsManager>(singletonCImpl, 9));
     }
 
     @Override
@@ -721,7 +722,7 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
           return (T) new SettingsPreferences(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
           case 1: // com.fourshil.musicya.player.PlayerController 
-          return (T) new PlayerController(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.sleepTimerManagerProvider.get(), singletonCImpl.playbackSpeedManagerProvider.get());
+          return (T) new PlayerController(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.sleepTimerManagerProvider.get(), singletonCImpl.playbackSpeedManagerProvider.get(), singletonCImpl.crossfadeManagerProvider.get());
 
           case 2: // com.fourshil.musicya.player.SleepTimerManager 
           return (T) new SleepTimerManager();
@@ -729,23 +730,23 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
           case 3: // com.fourshil.musicya.player.PlaybackSpeedManager 
           return (T) new PlaybackSpeedManager();
 
-          case 4: // com.fourshil.musicya.player.AudioEngine 
+          case 4: // com.fourshil.musicya.player.CrossfadeManager 
+          return (T) new CrossfadeManager();
+
+          case 5: // com.fourshil.musicya.player.AudioEngine 
           return (T) new AudioEngine();
 
-          case 5: // com.fourshil.musicya.data.db.MusicDao 
+          case 6: // com.fourshil.musicya.data.db.MusicDao 
           return (T) DatabaseModule_ProvideMusicDaoFactory.provideMusicDao(singletonCImpl.provideAppDatabaseProvider.get());
 
-          case 6: // com.fourshil.musicya.data.db.AppDatabase 
+          case 7: // com.fourshil.musicya.data.db.AppDatabase 
           return (T) DatabaseModule_ProvideAppDatabaseFactory.provideAppDatabase(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 7: // com.fourshil.musicya.data.repository.MusicRepository 
+          case 8: // com.fourshil.musicya.data.repository.MusicRepository 
           return (T) new MusicRepository(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 8: // com.fourshil.musicya.util.LyricsManager 
+          case 9: // com.fourshil.musicya.util.LyricsManager 
           return (T) new LyricsManager(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
-
-          case 9: // com.fourshil.musicya.player.CrossfadeManager 
-          return (T) new CrossfadeManager();
 
           default: throw new AssertionError(id);
         }

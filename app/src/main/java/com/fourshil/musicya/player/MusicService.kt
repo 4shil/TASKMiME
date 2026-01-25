@@ -10,6 +10,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
 import com.fourshil.musicya.MainActivity
+import com.fourshil.musicya.data.SettingsPreferences
 import com.fourshil.musicya.data.db.MusicDao
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -17,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -27,7 +29,7 @@ import kotlinx.coroutines.launch
  * - Audio focus handling
  * - Equalizer integration
  * - Play history tracking
- * - Crossfade support
+ * - Crossfade support (loaded from settings)
  */
 @AndroidEntryPoint
 class MusicService : MediaSessionService() {
@@ -35,6 +37,7 @@ class MusicService : MediaSessionService() {
     @Inject lateinit var audioEngine: AudioEngine
     @Inject lateinit var musicDao: MusicDao
     @Inject lateinit var crossfadeManager: CrossfadeManager
+    @Inject lateinit var settingsPreferences: SettingsPreferences
 
     private val serviceScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
@@ -68,6 +71,20 @@ class MusicService : MediaSessionService() {
             
             // Initialize crossfade manager
             crossfadeManager.initialize(exoPlayer, serviceScope)
+            
+            // Load crossfade duration from preferences
+            serviceScope.launch {
+                val savedDuration = settingsPreferences.crossfadeDuration.first()
+                crossfadeManager.setDuration(savedDuration)
+                android.util.Log.d("MusicService", "Loaded crossfade duration: ${savedDuration}s")
+            }
+            
+            // Observe crossfade changes from settings
+            serviceScope.launch {
+                settingsPreferences.crossfadeDuration.collect { duration ->
+                    crossfadeManager.setDuration(duration)
+                }
+            }
             
             // Player listener for audio session changes and play tracking
             exoPlayer.addListener(object : Player.Listener {
@@ -125,7 +142,7 @@ class MusicService : MediaSessionService() {
 
     override fun onDestroy() {
         mediaSession?.run {
-            player?.release()
+            player.release()
             release()
             mediaSession = null
         }
@@ -135,4 +152,3 @@ class MusicService : MediaSessionService() {
         super.onDestroy()
     }
 }
-

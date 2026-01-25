@@ -635,6 +635,7 @@ public final class DaggerMusicyaApp_HiltComponents_SingletonC {
       MusicService_MembersInjector.injectAudioEngine(instance, singletonCImpl.audioEngineProvider.get());
       MusicService_MembersInjector.injectMusicDao(instance, singletonCImpl.provideMusicDaoProvider.get());
       MusicService_MembersInjector.injectCrossfadeManager(instance, singletonCImpl.crossfadeManagerProvider.get());
+      MusicService_MembersInjector.injectSettingsPreferences(instance, singletonCImpl.settingsPreferencesProvider.get());
       return instance;
     }
   }

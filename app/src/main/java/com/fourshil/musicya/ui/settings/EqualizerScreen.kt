@@ -2,26 +2,36 @@ package com.fourshil.musicya.ui.settings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.fourshil.musicya.ui.components.ArtisticButton
-import com.fourshil.musicya.ui.components.ArtisticCard
-import com.fourshil.musicya.ui.theme.MangaRed
-import com.fourshil.musicya.ui.theme.PureBlack
+import com.fourshil.musicya.player.EqBand
+import com.fourshil.musicya.ui.components.MinimalIconButton
+import com.fourshil.musicya.ui.theme.NeoDimens
 
+/**
+ * Complete Equalizer Screen with:
+ * - 5-Band EQ with vertical sliders
+ * - Presets dropdown
+ * - Bass Boost slider
+ * - Virtualizer slider
+ * - Loudness Enhancer slider
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EqualizerScreen(
@@ -32,162 +42,355 @@ fun EqualizerScreen(
     val bands by viewModel.bands.collectAsState()
     val bassLevel by viewModel.bassLevel.collectAsState()
     val virtualizerLevel by viewModel.virtualizerLevel.collectAsState()
+    val loudnessLevel by viewModel.loudnessLevel.collectAsState()
     val presets by viewModel.presets.collectAsState()
     val currentPreset by viewModel.currentPreset.collectAsState()
     val isInitialized by viewModel.isInitialized.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .statusBarsPadding()
-            .padding(horizontal = 24.dp)
-    ) {
-         Spacer(modifier = Modifier.height(24.dp))
-        
-        // Header
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-             Row(verticalAlignment = Alignment.CenterVertically) {
-                ArtisticButton(
-                    onClick = onBack,
-                    icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = PureBlack) },
-                    modifier = Modifier.size(48.dp)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    text = "EQ/FX",
-                    style = MaterialTheme.typography.displayMedium.copy(
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.Black,
-                        fontStyle = FontStyle.Italic
-                    ),
-                    color = PureBlack
-                )
-            }
-            
-            // Toggle Switch
-             Switch(
-                checked = isEnabled,
-                onCheckedChange = { viewModel.toggleEnabled(it) },
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = MangaRed,
-                    checkedTrackColor = PureBlack,
-                    uncheckedThumbColor = PureBlack,
-                    uncheckedTrackColor = Color.LightGray,
-                    uncheckedBorderColor = PureBlack
-                )
-            )
-        }
-        
-        Spacer(modifier = Modifier.height(32.dp))
-
-        if (!isInitialized) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            // Header
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+                    .padding(horizontal = NeoDimens.ScreenPadding, vertical = NeoDimens.SpacingL),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                 Text("AUDIO FX UNAVAILABLE", style = MaterialTheme.typography.headlineMedium)
-            }
-        } else {
-             // Presets
-            if (presets.isNotEmpty()) {
-                var expanded by remember { mutableStateOf(false) }
-                Box {
-                    ArtisticButton(
-                        onClick = { expanded = true },
-                        text = if (currentPreset >= 0) presets[currentPreset].uppercase() else "CUSTOM",
-                        modifier = Modifier.fillMaxWidth()
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    MinimalIconButton(
+                        onClick = onBack,
+                        icon = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Go back"
                     )
-                    
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        modifier = Modifier.background(Color.White).border(2.dp, PureBlack)
-                    ) {
-                        presets.forEachIndexed { index, preset ->
-                            DropdownMenuItem(
-                                text = { Text(preset.uppercase(), fontWeight = FontWeight.Bold) },
-                                onClick = {
-                                    viewModel.setPreset(index)
-                                    expanded = false
-                                }
-                            )
-                        }
+                    Spacer(modifier = Modifier.width(NeoDimens.SpacingM))
+                    Text(
+                        text = "Equalizer",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+                
+                // Enable/Disable Switch
+                Switch(
+                    checked = isEnabled,
+                    onCheckedChange = { viewModel.toggleEnabled(it) },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.primary,
+                        checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                )
+            }
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = NeoDimens.ScreenPadding)
+        ) {
+            if (!isInitialized) {
+                // Not initialized state
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(NeoDimens.SpacingM))
+                        Text(
+                            "Initializing audio engine...",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
-                Spacer(modifier = Modifier.height(24.dp))
+            } else {
+                // Preset Selector
+                if (presets.isNotEmpty()) {
+                    PresetSelector(
+                        presets = presets,
+                        currentPreset = currentPreset,
+                        enabled = isEnabled,
+                        onPresetSelected = { viewModel.setPreset(it) },
+                        onReset = { viewModel.resetEqualizer() }
+                    )
+                    Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
+                }
+                
+                // Equalizer Bands
+                if (bands.isNotEmpty()) {
+                    EqBandsSection(
+                        bands = bands,
+                        enabled = isEnabled,
+                        onBandChange = { index, level -> viewModel.setBandLevel(index, level) }
+                    )
+                    Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
+                }
+                
+                // FX Controls Section
+                FxControlsSection(
+                    bassLevel = bassLevel,
+                    virtualizerLevel = virtualizerLevel,
+                    loudnessLevel = loudnessLevel,
+                    enabled = isEnabled,
+                    onBassChange = { viewModel.setBassLevel(it) },
+                    onVirtualizerChange = { viewModel.setVirtualizerLevel(it) },
+                    onLoudnessChange = { viewModel.setLoudnessLevel(it) }
+                )
+                
+                Spacer(modifier = Modifier.height(NeoDimens.SpacingHuge))
             }
-            
-            // Bands Container
-            ArtisticCard(
-                onClick = null,
-                modifier = Modifier.fillMaxWidth().height(300.dp)
+        }
+    }
+}
+
+@Composable
+private fun PresetSelector(
+    presets: List<String>,
+    currentPreset: Int,
+    enabled: Boolean,
+    onPresetSelected: (Int) -> Unit,
+    onReset: () -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val presetName = if (currentPreset >= 0 && currentPreset < presets.size) {
+        presets[currentPreset]
+    } else {
+        "Custom"
+    }
+    
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingM)
+    ) {
+        // Preset Dropdown
+        Box(modifier = Modifier.weight(1f)) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(NeoDimens.CornerMedium),
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = NeoDimens.ElevationLow,
+                onClick = { if (enabled) expanded = true }
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(horizontal = NeoDimens.SpacingL),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    bands.forEach { band ->
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight(),
-                            verticalArrangement = Arrangement.SpaceBetween 
-                        ) {
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .width(40.dp)
-                            ) {
-                                Slider(
-                                    value = band.level.toFloat(),
-                                    onValueChange = { viewModel.setBandLevel(band.index, it.toInt()) },
-                                    valueRange = band.minLevel.toFloat()..band.maxLevel.toFloat(),
-                                    enabled = isEnabled,
-                                    modifier = Modifier
-                                        .graphicsLayer { rotationZ = 270f }
-                                        .width(200.dp),
-                                    colors = SliderDefaults.colors(
-                                        thumbColor = MangaRed,
-                                        activeTrackColor = PureBlack,
-                                        inactiveTrackColor = Color.LightGray
-                                    )
-                                )
-                            }
-                            
-                            Text(
-                                text = formatFreq(band.centerFreq),
-                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold, fontSize = 10.sp),
-                                maxLines = 1
-                            )
-                        }
-                    }
+                    Text(
+                        text = presetName,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Medium,
+                        color = if (enabled) MaterialTheme.colorScheme.onSurface 
+                               else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = "▼",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
             }
             
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            // Bass & Virtualizer
-            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-                FXSlider(
-                    label = "BASS BOOST",
-                    value = bassLevel.toFloat(),
-                    onValueChange = { viewModel.setBassLevel(it.toInt()) },
-                    enabled = isEnabled
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+            ) {
+                presets.forEachIndexed { index, preset ->
+                    DropdownMenuItem(
+                        text = { 
+                            Text(
+                                text = preset,
+                                fontWeight = if (index == currentPreset) FontWeight.Bold else FontWeight.Normal,
+                                color = if (index == currentPreset) MaterialTheme.colorScheme.primary
+                                       else MaterialTheme.colorScheme.onSurface
+                            )
+                        },
+                        onClick = {
+                            onPresetSelected(index)
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+        
+        // Reset Button
+        MinimalIconButton(
+            onClick = onReset,
+            icon = Icons.Default.Refresh,
+            contentDescription = "Reset to flat",
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+    }
+}
+
+@Composable
+private fun EqBandsSection(
+    bands: List<EqBand>,
+    enabled: Boolean,
+    onBandChange: (Int, Int) -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(NeoDimens.CornerLarge),
+        color = MaterialTheme.colorScheme.surface,
+        tonalElevation = NeoDimens.ElevationLow
+    ) {
+        Column(
+            modifier = Modifier.padding(NeoDimens.SpacingL)
+        ) {
+            // Level indicators
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = NeoDimens.SpacingS),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "+15dB",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-                FXSlider(
-                   label = "VIRTUALIZER",
-                   value = virtualizerLevel.toFloat(),
-                   onValueChange = { viewModel.setVirtualizerLevel(it.toInt()) },
-                   enabled = isEnabled
+                Text(
+                    text = "0dB",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "-15dB",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            
+            // Sliders
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                bands.forEach { band ->
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        // Vertical Slider
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .width(48.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Slider(
+                                value = band.level.toFloat(),
+                                onValueChange = { onBandChange(band.index, it.toInt()) },
+                                valueRange = band.minLevel.toFloat()..band.maxLevel.toFloat(),
+                                enabled = enabled,
+                                modifier = Modifier
+                                    .graphicsLayer { rotationZ = 270f }
+                                    .width(160.dp),
+                                colors = SliderDefaults.colors(
+                                    thumbColor = MaterialTheme.colorScheme.primary,
+                                    activeTrackColor = MaterialTheme.colorScheme.primary,
+                                    inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    disabledThumbColor = MaterialTheme.colorScheme.outline,
+                                    disabledActiveTrackColor = MaterialTheme.colorScheme.outline,
+                                    disabledInactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
+                                )
+                            )
+                        }
+                        
+                        // Frequency Label
+                        Text(
+                            text = band.formatFrequency(),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun FxControlsSection(
+    bassLevel: Int,
+    virtualizerLevel: Int,
+    loudnessLevel: Int,
+    enabled: Boolean,
+    onBassChange: (Int) -> Unit,
+    onVirtualizerChange: (Int) -> Unit,
+    onLoudnessChange: (Int) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingL)) {
+        Text(
+            text = "Audio Effects",
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.SemiBold
+        )
+        
+        Surface(
+            shape = RoundedCornerShape(NeoDimens.CornerLarge),
+            color = MaterialTheme.colorScheme.surface,
+            tonalElevation = NeoDimens.ElevationLow
+        ) {
+            Column(
+                modifier = Modifier.padding(NeoDimens.SpacingL),
+                verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingL)
+            ) {
+                FxSlider(
+                    label = "Bass Boost",
+                    value = bassLevel,
+                    maxValue = 1000,
+                    enabled = enabled,
+                    formatValue = { "${(it / 10)}%" },
+                    onValueChange = onBassChange
+                )
+                
+                FxSlider(
+                    label = "Virtualizer",
+                    value = virtualizerLevel,
+                    maxValue = 1000,
+                    enabled = enabled,
+                    formatValue = { "${(it / 10)}%" },
+                    onValueChange = onVirtualizerChange
+                )
+                
+                FxSlider(
+                    label = "Volume Boost",
+                    value = loudnessLevel,
+                    maxValue = 100,
+                    enabled = enabled,
+                    formatValue = { "+${it / 10}dB" },
+                    onValueChange = onLoudnessChange
                 )
             }
         }
@@ -195,29 +398,52 @@ fun EqualizerScreen(
 }
 
 @Composable
-fun FXSlider(
+private fun FxSlider(
     label: String,
-    value: Float,
-    onValueChange: (Float) -> Unit,
-    enabled: Boolean
+    value: Int,
+    maxValue: Int,
+    enabled: Boolean,
+    formatValue: (Int) -> String,
+    onValueChange: (Int) -> Unit
 ) {
     Column {
-        Text(label, style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Black))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
+                color = if (enabled) MaterialTheme.colorScheme.onSurface 
+                       else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = formatValue(value),
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = if (value > 0) MaterialTheme.colorScheme.primary 
+                       else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        
+        Spacer(modifier = Modifier.height(NeoDimens.SpacingXS))
+        
         Slider(
-            value = value,
-            onValueChange = onValueChange,
-            valueRange = 0f..1000f,
+            value = value.toFloat(),
+            onValueChange = { onValueChange(it.toInt()) },
+            valueRange = 0f..maxValue.toFloat(),
             enabled = enabled,
             modifier = Modifier.fillMaxWidth(),
             colors = SliderDefaults.colors(
-                thumbColor = MangaRed,
-                activeTrackColor = PureBlack,
-                inactiveTrackColor = Color.LightGray
+                thumbColor = MaterialTheme.colorScheme.primary,
+                activeTrackColor = MaterialTheme.colorScheme.primary,
+                inactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                disabledThumbColor = MaterialTheme.colorScheme.outline,
+                disabledActiveTrackColor = MaterialTheme.colorScheme.outline,
+                disabledInactiveTrackColor = MaterialTheme.colorScheme.surfaceVariant
             )
         )
     }
-}
-
-private fun formatFreq(mHz: Int): String {
-    return if (mHz < 1000000) "${mHz / 1000}Hz" else "${mHz / 1000000}kHz"
 }
