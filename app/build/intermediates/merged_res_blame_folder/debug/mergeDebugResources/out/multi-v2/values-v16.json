@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.fourshil.musicya.app-mergeDebugResources-50:/values-v16/values-v16.xml",
+            "outputFile": "com.fourshil.musicya.app-mergeDebugResources-70:/values-v16/values-v16.xml",
             "map": [
                 {
                     "source": "C:\\Users\\ashil\\.gradle\\caches\\9.0-milestone-1\\transforms\\3aea0e8bd39e7bce78dd567f91fc5f6e\\transformed\\core-1.12.0\\res\\values-v16\\values-v16.xml",

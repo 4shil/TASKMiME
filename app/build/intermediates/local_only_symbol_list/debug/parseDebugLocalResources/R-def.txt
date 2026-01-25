@@ -1,14 +1,5 @@
 R_DEF: Internal format may change without notice
 local
-drawable widget_background
-drawable widget_background_neo
-id widget_album_art
-id widget_artist
-id widget_btn_next
-id widget_btn_play_pause
-id widget_btn_prev
-id widget_title
-layout widget_music_4x1
 string about
 string add_to_favorites
 string add_to_playlist
@@ -86,4 +77,3 @@ style Theme.Musicya
 xml automotive_app_desc
 xml backup_rules
 xml data_extraction_rules
-xml widget_info
