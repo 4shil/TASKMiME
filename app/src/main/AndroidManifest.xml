@@ -40,20 +40,7 @@
             </intent-filter>
         </service>
         
-        <!-- Home Screen Widget -->
-        <receiver
-            android:name=".ui.widget.MusicWidgetProvider"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.fourshil.musicya.WIDGET_PLAY_PAUSE" />
-                <action android:name="com.fourshil.musicya.WIDGET_NEXT" />
-                <action android:name="com.fourshil.musicya.WIDGET_PREV" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info" />
-        </receiver>
+
 
     </application>
 
