@@ -47,7 +47,9 @@ fun NowPlayingScreen(
     
     // Lyrics state
     var showLyrics by remember { mutableStateOf(false) }
-
+    var showMenu by remember { mutableStateOf(false) }
+    var showDetails by remember { mutableStateOf(false) }
+ 
     // Colors from HTML spec
     val bgLight = NeoBackground
     val textDark = Color(0xFF171717) // Slate-900 like
@@ -98,13 +100,30 @@ fun NowPlayingScreen(
                 )
                 
                 // Menu Button (More Horiz)
-                NeoButton(
-                    onClick = { /* TODO: Menu */ },
-                    modifier = Modifier.size(48.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    shadowSize = 2.dp
-                ) {
-                    Icon(Icons.Default.MoreHoriz, null, tint = Color.Black)
+                Box {
+                    NeoButton(
+                        onClick = { showMenu = true },
+                        modifier = Modifier.size(48.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        shadowSize = 2.dp
+                    ) {
+                        Icon(Icons.Default.MoreHoriz, null, tint = Color.Black)
+                    }
+
+                    DropdownMenu(
+                        expanded = showMenu,
+                        onDismissRequest = { showMenu = false },
+                        modifier = Modifier.background(Color.White)
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Details", fontWeight = FontWeight.Bold) },
+                            onClick = {
+                                showMenu = false
+                                showDetails = true
+                            },
+                             leadingIcon = { Icon(Icons.Default.Info, null) }
+                        )
+                    }
                 }
             }
             
@@ -142,7 +161,12 @@ fun NowPlayingScreen(
                      
                      if (currentSong != null) {
                          AsyncImage(
-                             model = currentSong!!.albumArtUri,
+                             model = coil.request.ImageRequest.Builder(LocalContext.current)
+                                 .data(currentSong!!.albumArtUri)
+                                 .size(coil.size.Size.ORIGINAL) // Force original size for high quality
+                                 .precision(coil.request.Precision.EXACT)
+                                 .crossfade(true)
+                                 .build(),
                              contentDescription = "Album Art",
                              contentScale = ContentScale.Crop,
                              modifier = Modifier
@@ -220,8 +244,9 @@ fun NowPlayingScreen(
                         .height(30.dp) // Hit area
                         .pointerInput(Unit) {
                             detectTapGestures { offset ->
-                                val fraction = offset.x / size.width
-                                viewModel.seekTo((fraction * duration).toLong())
+                                 val fraction = offset.x / size.width
+                                 val seekPos = (fraction * duration).toLong()
+                                 viewModel.seekTo(seekPos)
                             }
                         },
                     contentAlignment = Alignment.Center
@@ -263,10 +288,15 @@ fun NowPlayingScreen(
                     onClick = { viewModel.toggleShuffle() },
                     modifier = Modifier.size(56.dp),
                     shape = RoundedCornerShape(16.dp),
-                    backgroundColor = NeoGreen,
+                    backgroundColor = Color.White,
                     shadowSize = 2.dp
                 ) {
-                    Icon(Icons.Default.Shuffle, null, modifier = Modifier.size(24.dp))
+                    Icon(
+                        Icons.Default.Shuffle, 
+                        null, 
+                        modifier = Modifier.size(24.dp),
+                        tint = if (shuffleEnabled) NeoBlue else Color.Black
+                    )
                 }
                 
                 // Prev
@@ -332,11 +362,24 @@ fun NowPlayingScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 ActionItem(icon = Icons.Default.Lyrics, label = "LYRICS", onClick = { showLyrics = true })
-                // QueueMusic is likely in Default or Filled. AutoMirrored might be wrong for older versions or specifically this icon.
-                // Checking previous usage in MusicyaNavGraph... it used Icons.Default.QueueMusic (line 42 of NavGraph uses Icons.Default.QueueMusic in old code?)
-                // Actually let's just try Icons.Default.QueueMusic.
                 ActionItem(icon = Icons.Default.QueueMusic, label = "QUEUE", onClick = onQueueClick)
-                ActionItem(icon = Icons.Default.Share, label = "SHARE", onClick = { /* Share */ })
+                
+                 val context = LocalContext.current
+                 ActionItem(
+                     icon = Icons.Default.Share, 
+                     label = "SHARE", 
+                     onClick = {
+                        if (currentSong != null) {
+                            val sendIntent: android.content.Intent = android.content.Intent().apply {
+                                action = android.content.Intent.ACTION_SEND
+                                putExtra(android.content.Intent.EXTRA_TEXT, "Check out \"${currentSong!!.title}\" by ${currentSong!!.artist}")
+                                type = "text/plain"
+                            }
+                            val shareIntent = android.content.Intent.createChooser(sendIntent, null)
+                            context.startActivity(shareIntent)
+                        }
+                     }
+                 )
             }
             
             Spacer(modifier = Modifier.height(32.dp))
@@ -362,7 +405,16 @@ fun NowPlayingScreen(
             onDismiss = { showLyrics = false }
         )
     }
-}
+    
+    // Song Details (Placeholder)
+    if (showDetails && currentSong != null) {
+        com.fourshil.musicya.ui.components.SongDetailsDialog(
+            song = currentSong!!,
+            onDismiss = { showDetails = false }
+        )
+    }
+
+
 
 @Composable
 fun ActionItem(icon: ImageVector, label: String, onClick: () -> Unit) {
