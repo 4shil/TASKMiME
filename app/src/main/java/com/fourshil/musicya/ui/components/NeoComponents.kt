@@ -7,8 +7,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,8 +18,85 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+
+/**
+ * NeoScaffold
+ * A wrapper around Scaffold that enforces the Neo design tokens.
+ */
+@Composable
+fun NeoScaffold(
+    modifier: Modifier = Modifier,
+    topBar: @Composable () -> Unit = {},
+    bottomBar: @Composable () -> Unit = {},
+    snackbarHost: @Composable () -> Unit = {},
+    floatingActionButton: @Composable () -> Unit = {},
+    floatingActionButtonPosition: FabPosition = FabPosition.End,
+    containerColor: Color = NeoBackground,
+    contentColor: Color = Color.Black,
+    content: @Composable (PaddingValues) -> Unit
+) {
+    Scaffold(
+        modifier = modifier,
+        topBar = topBar,
+        bottomBar = bottomBar,
+        snackbarHost = snackbarHost,
+        floatingActionButton = floatingActionButton,
+        floatingActionButtonPosition = floatingActionButtonPosition,
+        containerColor = containerColor,
+        contentColor = contentColor,
+        content = content
+    )
+}
+
+/**
+ * NeoCard
+ * A container with a white background, black border, and hard shadow.
+ */
+@Composable
+fun NeoCard(
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = Color.White,
+    borderColor: Color = Color.Black,
+    borderWidth: Dp = 2.dp, // Thinner than buttons typically
+    shadowSize: Dp = 4.dp,
+    shape: Shape = RoundedCornerShape(16.dp),
+    onClick: (() -> Unit)? = null,
+    content: @Composable BoxScope.() -> Unit
+) {
+    Box(
+        modifier = modifier
+            .padding(bottom = shadowSize, end = shadowSize)
+    ) {
+        // Shadow
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .offset(x = shadowSize, y = shadowSize)
+                .background(Color.Black, shape)
+        )
+
+        // Card Surface
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(shape)
+                .background(backgroundColor)
+                .border(borderWidth, borderColor, shape)
+                .then(
+                    if (onClick != null) {
+                        Modifier.clickable(onClick = onClick)
+                    } else {
+                        Modifier
+                    }
+                ),
+            content = content
+        )
+    }
+}
+
 
 /**
  * Neobrutalism Button
