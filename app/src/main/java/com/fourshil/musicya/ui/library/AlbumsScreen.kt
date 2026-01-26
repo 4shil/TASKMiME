@@ -112,7 +112,7 @@ fun AlbumsScreen(
 }
 
 /**
- * Clean Album Card
+ * Neo-Brutalist Album Card
  */
 @Composable
 private fun AlbumCard(
@@ -120,13 +120,14 @@ private fun AlbumCard(
     isScrolling: Boolean = false,
     onClick: () -> Unit
 ) {
-    Surface(
+    NeoCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(NeoDimens.CornerMedium),
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = NeoDimens.ElevationLow
+        shape = RoundedCornerShape(12.dp),
+        shadowSize = 4.dp,
+        backgroundColor = Color.White,
+        borderWidth = 2.dp
     ) {
         Column {
             // Album Art
@@ -134,8 +135,11 @@ private fun AlbumCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .clip(RoundedCornerShape(topStart = NeoDimens.CornerMedium, topEnd = NeoDimens.CornerMedium))
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                    .background(Color.LightGray)
+                    .border(
+                        width = 0.dp, // No border for image inside card if unnecessary, or bottom border
+                        color = Color.Black
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 // Defer loading while scrolling
@@ -153,32 +157,40 @@ private fun AlbumCard(
                     )
                 }
             }
+            
+            // Separator border
+            Box(modifier = Modifier.fillMaxWidth().height(2.dp).background(Color.Black))
 
             // Album Info
             Column(
-                modifier = Modifier.padding(NeoDimens.SpacingM)
+                modifier = Modifier.padding(12.dp)
             ) {
                 Text(
                     text = album.name,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Black,
+                    color = Color.Black,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = album.artist,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = Color.Black,
+                    fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "${album.songCount} songs",
+                    text = "${album.songCount} SONGS",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                    color = Color.Gray,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.5.sp,
+                    modifier = Modifier.padding(top = 4.dp)
                 )
             }
         }
     }
 }
+

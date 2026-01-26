@@ -111,7 +111,7 @@ fun ArtistsScreen(
 }
 
 /**
- * Clean Artist List Item
+ * Neo-Brutalist Artist List Item
  */
 @Composable
 private fun ArtistListItem(
@@ -120,17 +120,17 @@ private fun ArtistListItem(
     isScrolling: Boolean = false,
     onClick: () -> Unit
 ) {
-    Surface(
+    NeoCard(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = NeoDimens.ScreenPadding, vertical = NeoDimens.SpacingXS),
-        shape = RoundedCornerShape(NeoDimens.CornerMedium),
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = NeoDimens.ElevationLow
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(12.dp),
+        shadowSize = 4.dp,
+        backgroundColor = Color.White,
+        borderWidth = 2.dp
     ) {
         Row(
-            modifier = Modifier.padding(NeoDimens.SpacingM),
+            modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Circular artist art
@@ -138,7 +138,8 @@ private fun ArtistListItem(
                 modifier = Modifier
                     .size(56.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                    .border(2.dp, Color.Black, CircleShape)
+                    .background(Color.LightGray),
                 contentAlignment = Alignment.Center
             ) {
                 if (artUris.isNotEmpty()) {
@@ -148,36 +149,39 @@ private fun ArtistListItem(
                         imageVector = Icons.Default.Person,
                         contentDescription = null,
                         modifier = Modifier.size(28.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        tint = Color.Black
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
+            Spacer(modifier = Modifier.width(16.dp))
 
             // Artist info
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = artist.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Black,
+                    color = Color.Black,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "${artist.songCount} songs • ${artist.albumCount} albums",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "${artist.songCount} SONGS • ${artist.albumCount} ALBUMS",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.Gray,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.5.sp
                 )
             }
 
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(NeoDimens.IconMedium)
+                tint = Color.Black,
+                modifier = Modifier.size(24.dp)
             )
         }
     }
 }
+

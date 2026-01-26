@@ -51,48 +51,63 @@ fun QueueScreen(
         }
     }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+    NeoScaffold(
+        containerColor = NeoBackground,
         topBar = {
             // Clean header
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding()
-                    .padding(horizontal = NeoDimens.ScreenPadding, vertical = NeoDimens.SpacingL),
+                    .padding(horizontal = 24.dp, vertical = 24.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                MinimalIconButton(
+                NeoButton(
                     onClick = onBack,
-                    icon = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Go back"
-                )
+                    modifier = Modifier.size(48.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    shadowSize = 4.dp
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Go back",
+                        tint = Color.Black
+                    )
+                }
                 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "Queue",
+                        text = "QUEUE",
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        fontWeight = FontWeight.Black,
+                        color = Color.Black,
+                        letterSpacing = 1.sp
                     )
                     if (queue.isNotEmpty()) {
                         Text(
-                            text = "${currentIndex + 1} of ${queue.size}",
+                            text = "${currentIndex + 1} OF ${queue.size}",
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = Color.Gray,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 }
                 
                 // Clear queue button
-                MinimalIconButton(
+                NeoButton(
                     onClick = { viewModel.clearQueue() },
-                    icon = Icons.Default.ClearAll,
-                    contentDescription = "Clear queue",
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                    modifier = Modifier.size(48.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    shadowSize = 4.dp,
+                    backgroundColor = NeoPink
+                ) {
+                    Icon(
+                        Icons.Default.ClearAll,
+                        contentDescription = "Clear queue",
+                        tint = Color.Black
+                    )
+                }
             }
         }
     ) { paddingValues ->
@@ -106,18 +121,19 @@ fun QueueScreen(
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingM)
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.QueueMusic,
                         contentDescription = null,
                         modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+                        tint = Color.Gray
                     )
                     Text(
-                        "No songs in queue",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        "NO SONGS IN QUEUE",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
@@ -128,21 +144,22 @@ fun QueueScreen(
                     .fillMaxSize()
                     .padding(paddingValues),
                 contentPadding = PaddingValues(
-                    start = NeoDimens.ScreenPadding,
-                    end = NeoDimens.ScreenPadding,
+                    start = 24.dp,
+                    end = 24.dp,
                     top = 0.dp,
-                    bottom = NeoDimens.ListBottomPadding
+                    bottom = 100.dp
                 ),
-                verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingS)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 // Played songs section header (if there are songs before current)
                 if (currentIndex > 0) {
                     item(key = "played_header") {
                         Text(
-                            text = "▲ Played (${currentIndex} songs)",
+                            text = "▲ PLAYED (${currentIndex})",
                             style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(vertical = NeoDimens.SpacingS)
+                            color = Color.Gray,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(vertical = 8.dp)
                         )
                     }
                 }
@@ -166,11 +183,11 @@ fun QueueScreen(
                     // Add "Up Next" label after current song
                     if (isPlaying && index < queue.size - 1) {
                         Text(
-                            text = "▼ Up Next (${queue.size - currentIndex - 1} songs)",
+                            text = "▼ UP NEXT (${queue.size - currentIndex - 1})",
                             style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.padding(vertical = NeoDimens.SpacingS)
+                            color = NeoBlue,
+                            fontWeight = FontWeight.Black,
+                            modifier = Modifier.padding(vertical = 12.dp)
                         )
                     }
                 }
@@ -191,57 +208,55 @@ private fun QueueItem(
     onRemove: () -> Unit
 ) {
     val backgroundColor = when {
-        isPlaying -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
-        isPlayed -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-        else -> MaterialTheme.colorScheme.surface
+        isPlaying -> NeoBlue // Active color
+        isPlayed -> Color(0xFFF0F0F0) // Grayed out
+        else -> Color.White
     }
     
-    val contentAlpha = if (isPlayed) 0.6f else 1f
-
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .alpha(contentAlpha)
-            .clickable(onClick = onPlay),
-        shape = RoundedCornerShape(NeoDimens.CornerMedium),
-        color = backgroundColor,
-        tonalElevation = when {
-            isPlaying -> NeoDimens.ElevationHigh
-            else -> NeoDimens.ElevationLow
-        }
+    val borderColor = Color.Black
+    val borderWidth = if (isPlaying) 2.dp else 1.dp
+    
+    NeoCard(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = onPlay,
+        backgroundColor = backgroundColor,
+        shadowSize = if (isPlaying) 4.dp else 2.dp,
+        borderWidth = borderWidth,
+        shape = RoundedCornerShape(12.dp)
     ) {
         Row(
-            modifier = Modifier.padding(NeoDimens.SpacingM),
+            modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             // Album art
             Box(
                 modifier = Modifier
-                    .size(NeoDimens.AlbumArtSmall)
-                    .clip(RoundedCornerShape(NeoDimens.CornerSmall))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .size(48.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+                    .background(Color.Gray)
             ) {
-                AlbumArtImage(uri = song.albumArtUri, size = NeoDimens.AlbumArtSmall)
+                AlbumArtImage(uri = song.albumArtUri, size = 48.dp)
                 
                 // Playing indicator overlay
                 if (isPlaying) {
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.3f)),
+                            .background(Color.Black.copy(alpha = 0.3f)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             Icons.Default.PlayArrow,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(20.dp)
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.width(NeoDimens.SpacingM))
+            Spacer(modifier = Modifier.width(12.dp))
 
             // Song info
             Column(modifier = Modifier.weight(1f)) {
@@ -249,26 +264,24 @@ private fun QueueItem(
                     Text(
                         "NOW PLAYING",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold
+                        color = Color.Black,
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = 1.sp
                     )
                 }
                 Text(
                     text = song.title,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = if (isPlaying) FontWeight.SemiBold else FontWeight.Normal,
-                    color = when {
-                        isPlaying -> MaterialTheme.colorScheme.primary
-                        isPlayed -> MaterialTheme.colorScheme.onSurfaceVariant
-                        else -> MaterialTheme.colorScheme.onSurface
-                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = if (isPlaying) FontWeight.Black else FontWeight.Bold,
+                    color = if (isPlayed) Color.Gray else Color.Black,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = song.artist,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = if (isPlayed) Color.LightGray else Color.DarkGray,
+                    fontWeight = FontWeight.Medium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -279,9 +292,10 @@ private fun QueueItem(
                 Icon(
                     Icons.Default.Close,
                     contentDescription = "Remove from queue",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = Color.Black
                 )
             }
         }
     }
 }
+

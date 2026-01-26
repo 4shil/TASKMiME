@@ -48,28 +48,36 @@ fun SettingsScreen(
     val sleepTimerMinutes = (sleepTimerRemaining / 60000).toInt()
     val sleepTimerActive = sleepTimerRemaining > 0
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+    NeoScaffold(
+        containerColor = NeoBackground,
         topBar = {
             // Clean header
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .statusBarsPadding()
-                    .padding(horizontal = NeoDimens.ScreenPadding, vertical = NeoDimens.SpacingL),
+                    .padding(horizontal = 24.dp, vertical = 24.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                MinimalIconButton(
+                NeoButton(
                     onClick = onBack,
-                    icon = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Go back"
-                )
-                Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
+                    modifier = Modifier.size(48.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    shadowSize = 4.dp
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Go back",
+                        tint = Color.Black
+                    )
+                }
+                Spacer(modifier = Modifier.width(24.dp))
                 Text(
-                    text = "Settings",
+                    text = "SETTINGS",
                     style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onBackground
+                    fontWeight = FontWeight.Black,
+                    color = Color.Black,
+                    letterSpacing = (-1).sp
                 )
             }
         }
@@ -79,10 +87,10 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .verticalScroll(scrollState)
-                .padding(horizontal = NeoDimens.ScreenPadding)
+                .padding(horizontal = 24.dp)
         ) {
             // Audio Section
-            SettingsSection(title = "Audio") {
+            SettingsSection(title = "AUDIO") {
                 SettingsItem(
                     title = "Equalizer",
                     subtitle = "Adjust audio frequencies",
@@ -99,9 +107,9 @@ fun SettingsScreen(
                         Text(
                             text = String.format("%.1fx", currentSpeed),
                             style = MaterialTheme.typography.labelLarge,
-                            color = if (currentSpeed != 1.0f) MaterialTheme.colorScheme.primary 
-                                    else MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontWeight = FontWeight.SemiBold
+                            color = if (currentSpeed != 1.0f) NeoBlue 
+                                    else Color.Gray,
+                            fontWeight = FontWeight.Bold
                         )
                     }
                 )
@@ -116,18 +124,18 @@ fun SettingsScreen(
                             Text(
                                 text = "${crossfadeDuration}s",
                                 style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontWeight = FontWeight.SemiBold
+                                color = NeoBlue,
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     } else null
                 )
             }
 
-            Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
+            Spacer(modifier = Modifier.height(24.dp))
 
             // Preferences Section
-            SettingsSection(title = "Preferences") {
+            SettingsSection(title = "PREFERENCES") {
                 SettingsItem(
                     title = "Sleep Timer",
                     subtitle = if (sleepTimerActive) "$sleepTimerMinutes min remaining" else "Off",
@@ -138,7 +146,7 @@ fun SettingsScreen(
                             Icon(
                                 Icons.Default.CheckCircle,
                                 contentDescription = "Timer active",
-                                tint = MaterialTheme.colorScheme.primary,
+                                tint = NeoGreen,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -157,10 +165,10 @@ fun SettingsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
+            Spacer(modifier = Modifier.height(24.dp))
 
             // Info Section
-            SettingsSection(title = "About") {
+            SettingsSection(title = "ABOUT") {
                 SettingsItem(
                     title = "About Musicya",
                     subtitle = "Version 1.0.0",
@@ -169,7 +177,7 @@ fun SettingsScreen(
                 )
             }
             
-            Spacer(modifier = Modifier.height(NeoDimens.SpacingHuge))
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 
@@ -178,8 +186,8 @@ fun SettingsScreen(
         SleepTimerDialog(
             sleepTimerActive = sleepTimerActive,
             sleepTimerMinutes = sleepTimerMinutes,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-            surfaceColor = MaterialTheme.colorScheme.surface,
+            contentColor = Color.Black,
+            surfaceColor = Color.White,
             onDismiss = { showSleepTimerDialog = false },
             onSetTimer = { playerController.setSleepTimer(it) },
             onCancelTimer = { playerController.cancelSleepTimer() }
@@ -189,8 +197,8 @@ fun SettingsScreen(
     if (showThemeDialog) {
         ThemeSelectionDialog(
             currentTheme = currentTheme,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-            surfaceColor = MaterialTheme.colorScheme.surface,
+            contentColor = Color.Black,
+            surfaceColor = Color.White,
             onDismiss = { showThemeDialog = false },
             onThemeSelected = { viewModel.setThemeMode(it) }
         )
@@ -199,8 +207,8 @@ fun SettingsScreen(
     if (showCrossfadeDialog) {
         CrossfadeDialog(
             currentDuration = crossfadeDuration,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-            surfaceColor = MaterialTheme.colorScheme.surface,
+            contentColor = Color.Black,
+            surfaceColor = Color.White,
             onDismiss = { showCrossfadeDialog = false },
             onDurationSelected = { duration ->
                 viewModel.setCrossfadeDuration(duration)
@@ -222,14 +230,17 @@ private fun SettingsSection(
         Text(
             text = title,
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(bottom = NeoDimens.SpacingM)
+            color = Color.Black,
+            fontWeight = FontWeight.Black,
+            modifier = Modifier.padding(bottom = 8.dp, start = 4.dp),
+            letterSpacing = 1.sp
         )
-        Surface(
-            shape = RoundedCornerShape(NeoDimens.CornerLarge),
-            color = MaterialTheme.colorScheme.surface,
-            tonalElevation = NeoDimens.ElevationLow
+        NeoCard(
+            modifier = Modifier.fillMaxWidth(),
+            backgroundColor = Color.White,
+            shadowSize = 4.dp,
+            shape = RoundedCornerShape(16.dp),
+            borderWidth = 2.dp
         ) {
             Column {
                 content()
@@ -237,6 +248,7 @@ private fun SettingsSection(
         }
     }
 }
+
 
 /**
  * Clean Settings Item

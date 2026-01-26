@@ -20,8 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fourshil.musicya.data.db.Playlist
-import com.fourshil.musicya.ui.components.ArtisticButton
-import com.fourshil.musicya.ui.components.ArtisticCard
+
 import com.fourshil.musicya.ui.components.CreatePlaylistDialog
 import com.fourshil.musicya.ui.components.PlaylistArtGrid
 import com.fourshil.musicya.ui.theme.NeoCoral
@@ -171,48 +170,54 @@ fun PlaylistArtisticItem(
     onLongClick: () -> Unit,
     onRename: () -> Unit
 ) {
-    ArtisticCard(
+    NeoCard(
         onClick = onClick,
         modifier = Modifier.fillMaxWidth(),
-        showHalftone = false // Performance optimization
+        shape = RoundedCornerShape(12.dp),
+        shadowSize = 4.dp,
+        backgroundColor = Color.White,
+        borderWidth = 2.dp
     ) {
          Row(
-            modifier = Modifier.padding(NeoDimens.SpacingL),
+            modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
                     .size(56.dp)
-                    .border(NeoDimens.BorderThin, MaterialTheme.colorScheme.outline)
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                    .border(2.dp, Color.Black)
+                    .background(Color.LightGray),
                 contentAlignment = Alignment.Center
             ) {
                 if (artUris.isNotEmpty()) {
                     PlaylistArtGrid(uris = artUris, size = 56.dp, isScrolling = isScrolling)
                 } else {
-                    Icon(Icons.Default.Folder, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Icon(Icons.Default.Folder, null, tint = Color.Black)
                 }
             }
             
-            Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
+            Spacer(modifier = Modifier.width(16.dp))
             
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = playlist.name,
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
                     maxLines = 1,
-                    color = MaterialTheme.colorScheme.onSurface // Added explicit color
+                    color = Color.Black
                 )
                 Text(
-                    text = "$songCount songs",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = "$songCount SONGS",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.Gray,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 0.5.sp
                 )
             }
             
             IconButton(onClick = onRename) {
-                Icon(Icons.Default.Edit, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                Icon(Icons.Default.Edit, null, tint = Color.Black)
             }
         }
     }
 }
+
