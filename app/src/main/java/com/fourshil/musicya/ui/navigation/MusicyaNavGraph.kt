@@ -77,7 +77,7 @@ fun MusicyaNavGraph(
     }
 
     Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = NeoBackground,
         topBar = {
                if (libraryRoutes.contains(currentRoute) || currentRoute == Screen.Folders.route) {
                    UnifiedLibraryHeader(

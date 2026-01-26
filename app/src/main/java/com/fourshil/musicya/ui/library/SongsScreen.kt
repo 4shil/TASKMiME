@@ -76,53 +76,47 @@ fun SongsScreen(
         }
     }
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+    NeoScaffold(
+        containerColor = NeoBackground,
         topBar = {
             if (selectionState.isSelectionMode) {
                 val scope = rememberCoroutineScope()
                 // Selection mode header
-                // Styled to match UnifiedLibraryHeader (floating, rounded)
-                // We add a spacer at top to separate from the main header potentially, 
-                // or just rely on the fact that this replaces the top bar.
-                // Since this is in topBar slot of a nested Scaffold, it sits BELOW the parent header.
-                // We remove statusBarsPadding as we are already offset.
-                
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = NeoDimens.ScreenPadding)
-                        .padding(top = NeoDimens.SpacingM) // Add some top margin
+                        .padding(top = NeoDimens.SpacingM)
                 ) {
-                    Surface(
+                    NeoCard(
                         modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        shape = RoundedCornerShape(NeoDimens.CornerMedium),
-                        tonalElevation = NeoDimens.ElevationLow
+                        backgroundColor = NeoGreen, // Selection Green
+                        shadowSize = 4.dp,
+                        shape = RoundedCornerShape(16.dp)
                     ) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = NeoDimens.SpacingM, vertical = NeoDimens.SpacingS),
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingM)
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
                             ) {
                                 IconButton(onClick = { selectionState.clearSelection() }) {
                                     Icon(
                                         Icons.Default.Close,
                                         contentDescription = "Cancel selection",
-                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                        tint = Color.Black
                                     )
                                 }
                                 Text(
-                                    "${selectionState.selectedCount} selected",
+                                    "${selectionState.selectedCount} SELECTED",
                                     style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                                    fontWeight = FontWeight.Black,
+                                    color = Color.Black
                                 )
                             }
                             Row {
@@ -135,14 +129,14 @@ fun SongsScreen(
                                     Icon(
                                         Icons.Default.SelectAll,
                                         contentDescription = "Select all",
-                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                        tint = Color.Black
                                     )
                                 }
                                 IconButton(onClick = { showBulkActionsSheet = true }) {
                                     Icon(
                                         Icons.Default.MoreVert,
                                         contentDescription = "More actions",
-                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                        tint = Color.Black
                                     )
                                 }
                             }
@@ -152,6 +146,7 @@ fun SongsScreen(
             }
         }
     ) { padding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()

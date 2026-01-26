@@ -16,10 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fourshil.musicya.ui.theme.NeoCoral
-import com.fourshil.musicya.ui.theme.Slate50
-import com.fourshil.musicya.ui.theme.Slate700
-import com.fourshil.musicya.ui.theme.Slate900
+import com.fourshil.musicya.ui.theme.NeoBlue
 import com.fourshil.musicya.ui.theme.NeoDimens
 
 data class TopNavItem(
@@ -40,8 +37,8 @@ fun TopNavigationChips(
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(horizontal = NeoDimens.SpacingNone), // Or 0.dp
-        horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingS)
+        contentPadding = PaddingValues(horizontal = 24.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(items) { item ->
             val isSelected = currentRoute == item.route
@@ -60,24 +57,27 @@ private fun TopNavChip(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    // In our theme, Primary is Slate900 (Light) and Slate50 (Dark), so we use Primary/OnPrimary
-    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
-    val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-    val borderColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline
+    // Neo-Brutalist: Selected = NeoBlue + Black Border + Bold
+    // Unselected = White + Black Border
+    val backgroundColor = if (isSelected) NeoBlue else Color.White
+    val contentColor = Color.Black
+    val borderColor = Color.Black
+    val borderWidth = if (isSelected) 2.dp else 1.dp
+    val fontWeight = if (isSelected) FontWeight.Black else FontWeight.Medium
 
     Box(
         modifier = Modifier
             .clickable(onClick = onClick)
-            .border(NeoDimens.BorderThin, borderColor, RoundedCornerShape(50))
+            .border(borderWidth, borderColor, RoundedCornerShape(50))
             .background(backgroundColor, RoundedCornerShape(50))
-            .padding(horizontal = NeoDimens.SpacingL, vertical = NeoDimens.SpacingS),
+            .padding(horizontal = 20.dp, vertical = 10.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = label,
-            style = MaterialTheme.typography.labelMedium.copy(
-                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                letterSpacing = 0.5.sp
+            text = label.uppercase(),
+            style = MaterialTheme.typography.labelLarge.copy(
+                fontWeight = fontWeight,
+                letterSpacing = 1.sp
             ),
             color = contentColor
         )

@@ -1,6 +1,7 @@
 package com.fourshil.musicya.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -19,7 +20,6 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,12 +29,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import com.fourshil.musicya.data.model.Song
+import com.fourshil.musicya.ui.theme.NeoBlue
 import com.fourshil.musicya.ui.theme.NeoDimens
+import com.fourshil.musicya.ui.theme.NeoGreen
+import com.fourshil.musicya.ui.theme.NeoPink
 
 /**
- * Clean Minimalistic Song List Item
- * Simple, readable design with proper touch targets
+ * Neo-Brutalist Song List Item
+ * High contrast, bold typography, clear state indicators.
  */
 @OptIn(ExperimentalComposeUiApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
@@ -54,68 +58,67 @@ fun SongListItem(
     // Use either isSelectionMode or inSelectionMode (backward compatibility)
     val selectionActive = isSelectionMode || inSelectionMode
     
-    val backgroundColor = when {
-        isSelected -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-        isCurrentlyPlaying -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.15f)
-        else -> Color.Transparent
+    // Selection state visualization: specific border or background
+    val itemModifier = if (isSelected) {
+        Modifier
+            .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
+            .background(NeoGreen, RoundedCornerShape(12.dp))
+    } else if (isCurrentlyPlaying) {
+        Modifier
+            .background(NeoBlue.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
+            .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
+    } else {
+        Modifier
     }
 
-    val contentColor = when {
-        isCurrentlyPlaying -> MaterialTheme.colorScheme.primary
-        else -> MaterialTheme.colorScheme.onSurface
-    }
-
-    Surface(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(vertical = 4.dp, horizontal = 16.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .then(itemModifier)
             .combinedClickable(
                 onClick = onClick,
                 onLongClick = onLongClick
             )
-            .padding(horizontal = NeoDimens.SpacingL, vertical = NeoDimens.SpacingXS),
-        color = backgroundColor,
-        shape = RoundedCornerShape(NeoDimens.CornerMedium)
+            .padding(8.dp) // Inner padding
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(NeoDimens.SpacingM),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Selection checkbox or Album Art
+            // Album Art Container with Border
             Box(
                 modifier = Modifier
-                    .size(NeoDimens.AlbumArtSmall)
-                    .clip(RoundedCornerShape(NeoDimens.CornerSmall))
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                    .size(56.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
+                    .background(Color.Gray),
                 contentAlignment = Alignment.Center
             ) {
                 if (selectionActive && isSelected) {
-                    // Selection checkmark
                     Box(
                         modifier = Modifier
-                            .size(NeoDimens.AlbumArtSmall)
-                            .background(MaterialTheme.colorScheme.primary),
+                            .fillMaxSize()
+                            .background(NeoGreen),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Check,
                             contentDescription = "Selected",
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(NeoDimens.IconMedium)
+                            tint = Color.Black
                         )
                     }
                 } else {
-                    // Album art
                     AlbumArtImage(
                         uri = song.albumArtUri,
-                        size = NeoDimens.AlbumArtSmall,
+                        size = 56.dp,
                         isScrolling = isScrolling
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.width(NeoDimens.SpacingM))
+            Spacer(modifier = Modifier.width(16.dp))
 
             // Song info
             Column(
@@ -123,16 +126,17 @@ fun SongListItem(
             ) {
                 Text(
                     text = song.title,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = if (isCurrentlyPlaying) FontWeight.SemiBold else FontWeight.Normal,
-                    color = contentColor,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold, // Bold for Neo-Brutalism
+                    color = Color.Black,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = song.artist,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.DarkGray,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -143,32 +147,32 @@ fun SongListItem(
                 Icon(
                     imageVector = Icons.Default.Favorite,
                     contentDescription = "Favorite",
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = Color(0xFFE11D48), // Rose
                     modifier = Modifier
-                        .size(NeoDimens.IconSmall)
-                        .padding(end = NeoDimens.SpacingXS)
+                        .size(20.dp)
+                        .padding(end = 4.dp)
                 )
             }
 
-            // Duration
+            // Duration (Mono font if possible, or usually just bold)
             Text(
                 text = song.durationFormatted,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = NeoDimens.SpacingS)
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.padding(horizontal = 8.dp)
             )
 
-            // More button (only when not in selection mode)
+            // More button
             if (!selectionActive) {
                 IconButton(
                     onClick = onMoreClick,
-                    modifier = Modifier.size(NeoDimens.TouchTargetMin)
+                    modifier = Modifier.size(32.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = "More options",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(NeoDimens.IconMedium)
+                        tint = Color.Black
                     )
                 }
             }
@@ -186,34 +190,35 @@ fun SimpleQueueItem(
     onClick: () -> Unit,
     onRemove: (() -> Unit)? = null
 ) {
-    val contentColor = if (isCurrentlyPlaying) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        MaterialTheme.colorScheme.onSurface
-    }
-
+    val backgroundColor = if (isCurrentlyPlaying) NeoBlue else Color.White
+    
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(vertical = 4.dp, horizontal = 16.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(backgroundColor)
+            .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
-            .padding(horizontal = NeoDimens.SpacingL, vertical = NeoDimens.SpacingM),
+            .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Album art
         Box(
             modifier = Modifier
-                .size(NeoDimens.AlbumArtSmall)
-                .clip(RoundedCornerShape(NeoDimens.CornerSmall))
-                .background(MaterialTheme.colorScheme.surfaceVariant),
+                .size(40.dp)
+                .clip(RoundedCornerShape(6.dp))
+                .border(1.dp, Color.Black, RoundedCornerShape(6.dp))
+                .background(Color.LightGray),
             contentAlignment = Alignment.Center
         ) {
             AlbumArtImage(
                 uri = song.albumArtUri,
-                size = NeoDimens.AlbumArtSmall
+                size = 40.dp
             )
         }
 
-        Spacer(modifier = Modifier.width(NeoDimens.SpacingM))
+        Spacer(modifier = Modifier.width(12.dp))
 
         // Song info
         Column(
@@ -221,23 +226,26 @@ fun SimpleQueueItem(
         ) {
             if (isCurrentlyPlaying) {
                 Text(
-                    text = "Now Playing",
+                    text = "NOW PLAYING",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.primary
+                    fontWeight = FontWeight.Black,
+                    color = Color.Black,
+                    letterSpacing = 1.sp
                 )
             }
             Text(
                 text = song.title,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = if (isCurrentlyPlaying) FontWeight.SemiBold else FontWeight.Normal,
-                color = contentColor,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
                 text = song.artist,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = Color.DarkGray,
+                fontWeight = FontWeight.Medium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -245,11 +253,14 @@ fun SimpleQueueItem(
 
         // Remove button
         if (onRemove != null) {
-            IconButton(onClick = onRemove) {
+            IconButton(
+                onClick = onRemove,
+                modifier = Modifier.size(32.dp)
+            ) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = "Remove",
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = Color.Black
                 )
             }
         }
