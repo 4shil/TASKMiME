@@ -9,26 +9,26 @@
 9        android:targetSdkVersion="34" />
 10
 11    <uses-permission
-11-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:5:5-107
+11-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:5:5-107
 12        android:name="android.permission.READ_EXTERNAL_STORAGE"
-12-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:5:22-77
+12-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:5:22-77
 13        android:maxSdkVersion="32" />
-13-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:5:78-104
+13-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:5:78-104
 14    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-14-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:6:5-75
-14-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:6:22-72
+14-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:6:5-75
+14-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:6:22-72
 15    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-15-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:7:5-77
-15-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:7:22-74
+15-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:7:5-77
+15-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:7:22-74
 16    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
-16-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:8:5-92
-16-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:8:22-89
+16-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:8:5-92
+16-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:8:22-89
 17    <uses-permission android:name="android.permission.WAKE_LOCK" />
-17-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:9:5-68
-17-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:9:22-65
+17-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:9:5-68
+17-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:9:22-65
 18    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-18-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:10:5-77
-18-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:10:22-74
+18-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:10:5-77
+18-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:10:22-74
 19    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 19-->[androidx.media3:media3-common:1.2.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\9d303c37baebb9cc68e1e7c339d07c95\transformed\media3-common-1.2.1\AndroidManifest.xml:22:5-79
 19-->[androidx.media3:media3-common:1.2.1] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\9d303c37baebb9cc68e1e7c339d07c95\transformed\media3-common-1.2.1\AndroidManifest.xml:22:22-76
@@ -45,94 +45,94 @@
 25-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\3aea0e8bd39e7bce78dd567f91fc5f6e\transformed\core-1.12.0\AndroidManifest.xml:26:22-94
 26
 27    <application
-27-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:12:5-58:19
+27-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:12:5-58:19
 28        android:name="com.fourshil.musicya.MusicyaApp"
-28-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:13:9-35
+28-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:13:9-35
 29        android:allowBackup="true"
-29-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:14:9-35
+29-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:14:9-35
 30        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 30-->[androidx.core:core:1.12.0] C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\3aea0e8bd39e7bce78dd567f91fc5f6e\transformed\core-1.12.0\AndroidManifest.xml:28:18-86
 31        android:dataExtractionRules="@xml/data_extraction_rules"
-31-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:15:9-65
+31-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:15:9-65
 32        android:debuggable="true"
 33        android:extractNativeLibs="false"
 34        android:fullBackupContent="@xml/backup_rules"
-34-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:16:9-54
+34-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:16:9-54
 35        android:icon="@android:drawable/sym_def_app_icon"
-35-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:17:9-58
+35-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:17:9-58
 36        android:label="@string/app_name"
-36-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:19:9-41
+36-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:19:9-41
 37        android:roundIcon="@android:drawable/sym_def_app_icon"
-37-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:18:9-63
+37-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:18:9-63
 38        android:supportsRtl="true"
-38-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:20:9-35
+38-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:20:9-35
 39        android:theme="@style/Theme.Musicya" >
-39-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:21:9-45
+39-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:21:9-45
 40        <activity
-40-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:24:9-32:20
+40-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:24:9-32:20
 41            android:name="com.fourshil.musicya.MainActivity"
-41-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:25:13-41
+41-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:25:13-41
 42            android:exported="true"
-42-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:26:13-36
+42-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:26:13-36
 43            android:theme="@style/Theme.Musicya" >
-43-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:27:13-49
+43-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:27:13-49
 44            <intent-filter>
-44-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:28:13-31:29
+44-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:28:13-31:29
 45                <action android:name="android.intent.action.MAIN" />
-45-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:29:17-69
-45-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:29:25-66
+45-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:29:17-69
+45-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:29:25-66
 46
 47                <category android:name="android.intent.category.LAUNCHER" />
-47-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:30:17-77
-47-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:30:27-74
+47-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:30:17-77
+47-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:30:27-74
 48            </intent-filter>
 49        </activity>
 50
 51        <service
-51-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:34:9-41:19
+51-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:34:9-41:19
 52            android:name="com.fourshil.musicya.player.MusicService"
-52-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:35:13-48
+52-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:35:13-48
 53            android:exported="true"
-53-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:36:13-36
+53-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:36:13-36
 54            android:foregroundServiceType="mediaPlayback" >
-54-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:37:13-58
+54-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:37:13-58
 55            <intent-filter>
-55-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:38:13-40:29
+55-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:38:13-40:29
 56                <action android:name="androidx.media3.session.MediaSessionService" />
-56-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:39:17-85
-56-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:39:25-83
+56-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:39:17-85
+56-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:39:25-83
 57            </intent-filter>
 58        </service>
 59
 60        <!-- Home Screen Widget -->
 61        <receiver
-61-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:44:9-56:20
+61-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:44:9-56:20
 62            android:name="com.fourshil.musicya.ui.widget.MusicWidgetProvider"
-62-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:45:13-58
+62-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:45:13-58
 63            android:exported="false" >
-63-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:46:13-37
+63-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:46:13-37
 64            <intent-filter>
-64-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:47:13-52:29
+64-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:47:13-52:29
 65                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-65-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:48:17-84
-65-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:48:25-81
+65-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:48:17-84
+65-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:48:25-81
 66                <action android:name="com.fourshil.musicya.WIDGET_PLAY_PAUSE" />
-66-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:49:17-81
-66-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:49:25-78
+66-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:49:17-81
+66-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:49:25-78
 67                <action android:name="com.fourshil.musicya.WIDGET_NEXT" />
-67-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:50:17-75
-67-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:50:25-72
+67-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:50:17-75
+67-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:50:25-72
 68                <action android:name="com.fourshil.musicya.WIDGET_PREV" />
-68-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:51:17-75
-68-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:51:25-72
+68-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:51:17-75
+68-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:51:25-72
 69            </intent-filter>
 70
 71            <meta-data
-71-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:53:13-55:55
+71-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:53:13-55:55
 72                android:name="android.appwidget.provider"
-72-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:54:17-58
+72-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:54:17-58
 73                android:resource="@xml/widget_info" />
-73-->D:\Editing\Musicya\app\src\main\AndroidManifest.xml:55:17-52
+73-->D:\RePacks\Musicya\app\src\main\AndroidManifest.xml:55:17-52
 74        </receiver>
 75
 76        <provider

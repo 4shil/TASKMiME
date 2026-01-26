@@ -83,6 +83,11 @@ class LibraryViewModel @Inject constructor(
         }
     }
 
+    fun refresh() {
+        repository.clearCache()
+        loadLibrary()
+    }
+
     fun playSong(song: Song) {
         playerController.playSong(song)
     }

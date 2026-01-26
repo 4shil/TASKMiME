@@ -101,6 +101,17 @@ val NeoBorderDark = Gray700
 val PrimaryText = Gray900
 val DarkPrimaryText = Gray50
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Neobrutalism Palette
+// ─────────────────────────────────────────────────────────────────────────────
+val NeoPrimary = Color(0xFF3B82F6)        // #3B82F6
+val NeoBackground = Color(0xFFFDFCF7)     // #FDFCF7
+val NeoPink = Color(0xFFFFB7D5)           // #FFB7D5
+val NeoYellow = Color(0xFFFFE999)         // #FFE999
+val NeoGreen = Color(0xFFB2F0D1)          // #B2F0D1
+val NeoBlue = Color(0xFFA5C9FF)           // #A5C9FF (Accent Blue)
+val NeoBorder = Color(0xFF000000)         // Pure Black Border
+
 // Zinc aliases
 val Zinc50 = Gray50
 val Zinc100 = Gray100

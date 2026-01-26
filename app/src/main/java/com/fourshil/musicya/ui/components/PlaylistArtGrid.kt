@@ -28,6 +28,7 @@ import coil.request.ImageRequest
 fun PlaylistArtGrid(
     uris: List<Uri>,
     size: Dp = 48.dp,
+    isScrolling: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -50,32 +51,32 @@ fun PlaylistArtGrid(
             
             when (distinctUris.size) {
                 1 -> {
-                    ArtImage(uri = distinctUris[0], modifier = Modifier.fillMaxSize())
+                    ArtImage(uri = distinctUris[0], isScrolling = isScrolling, modifier = Modifier.fillMaxSize())
                 }
                 2 -> {
                     Row(Modifier.fillMaxSize()) {
-                        ArtImage(uri = distinctUris[0], modifier = Modifier.weight(1f).fillMaxHeight())
-                        ArtImage(uri = distinctUris[1], modifier = Modifier.weight(1f).fillMaxHeight())
+                        ArtImage(uri = distinctUris[0], isScrolling = isScrolling, modifier = Modifier.weight(1f).fillMaxHeight())
+                        ArtImage(uri = distinctUris[1], isScrolling = isScrolling, modifier = Modifier.weight(1f).fillMaxHeight())
                     }
                 }
                 3 -> {
                     Row(Modifier.fillMaxSize()) {
-                        ArtImage(uri = distinctUris[0], modifier = Modifier.weight(1f).fillMaxHeight())
+                        ArtImage(uri = distinctUris[0], isScrolling = isScrolling, modifier = Modifier.weight(1f).fillMaxHeight())
                         Column(Modifier.weight(1f).fillMaxHeight()) {
-                            ArtImage(uri = distinctUris[1], modifier = Modifier.weight(1f).fillMaxWidth())
-                            ArtImage(uri = distinctUris[2], modifier = Modifier.weight(1f).fillMaxWidth())
+                            ArtImage(uri = distinctUris[1], isScrolling = isScrolling, modifier = Modifier.weight(1f).fillMaxWidth())
+                            ArtImage(uri = distinctUris[2], isScrolling = isScrolling, modifier = Modifier.weight(1f).fillMaxWidth())
                         }
                     }
                 }
                 else -> { // 4 or more
                     Column(Modifier.fillMaxSize()) {
                         Row(Modifier.weight(1f)) {
-                            ArtImage(uri = distinctUris[0], modifier = Modifier.weight(1f).fillMaxHeight())
-                            ArtImage(uri = distinctUris[1], modifier = Modifier.weight(1f).fillMaxHeight())
+                            ArtImage(uri = distinctUris[0], isScrolling = isScrolling, modifier = Modifier.weight(1f).fillMaxHeight())
+                            ArtImage(uri = distinctUris[1], isScrolling = isScrolling, modifier = Modifier.weight(1f).fillMaxHeight())
                         }
                         Row(Modifier.weight(1f)) {
-                            ArtImage(uri = distinctUris[2], modifier = Modifier.weight(1f).fillMaxHeight())
-                            ArtImage(uri = distinctUris[3], modifier = Modifier.weight(1f).fillMaxHeight())
+                            ArtImage(uri = distinctUris[2], isScrolling = isScrolling, modifier = Modifier.weight(1f).fillMaxHeight())
+                            ArtImage(uri = distinctUris[3], isScrolling = isScrolling, modifier = Modifier.weight(1f).fillMaxHeight())
                         }
                     }
                 }
@@ -85,14 +86,23 @@ fun PlaylistArtGrid(
 }
 
 @Composable
-private fun ArtImage(uri: Uri, modifier: Modifier = Modifier) {
+private fun ArtImage(uri: Uri, isScrolling: Boolean = false, modifier: Modifier = Modifier) {
+    val builder = ImageRequest.Builder(LocalContext.current)
+        .data(uri)
+        .crossfade(false)
+    
+    if (isScrolling) {
+        builder.diskCachePolicy(coil.request.CachePolicy.DISABLED)
+        builder.memoryCachePolicy(coil.request.CachePolicy.ENABLED)
+    } else {
+        builder.diskCachePolicy(coil.request.CachePolicy.ENABLED)
+        builder.memoryCachePolicy(coil.request.CachePolicy.ENABLED)
+    }
+    
+    val model = builder.build()
+
     AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(uri)
-            .crossfade(false)
-            .diskCachePolicy(coil.request.CachePolicy.ENABLED)
-            .memoryCachePolicy(coil.request.CachePolicy.ENABLED)
-            .build(),
+        model = model,
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = modifier

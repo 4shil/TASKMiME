@@ -14,6 +14,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,8 +41,12 @@ fun ArtistsScreen(
     val songs by viewModel.songs.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
+    val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+    val isScrolling by remember { derivedStateOf { listState.isScrollInProgress } }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
+        state = listState,
         contentPadding = PaddingValues(
             top = 0.dp,
             bottom = NeoDimens.ListBottomPadding
@@ -95,6 +101,7 @@ fun ArtistsScreen(
                     ArtistListItem(
                         artist = artist,
                         artUris = artistSongs.map { it.albumArtUri },
+                        isScrolling = isScrolling,
                         onClick = { onArtistClick(artist.name) }
                     )
                 }
@@ -110,6 +117,7 @@ fun ArtistsScreen(
 private fun ArtistListItem(
     artist: Artist,
     artUris: List<android.net.Uri>,
+    isScrolling: Boolean = false,
     onClick: () -> Unit
 ) {
     Surface(
@@ -134,7 +142,7 @@ private fun ArtistListItem(
                 contentAlignment = Alignment.Center
             ) {
                 if (artUris.isNotEmpty()) {
-                    PlaylistArtGrid(uris = artUris.take(4), size = 56.dp)
+                    PlaylistArtGrid(uris = artUris.take(4), size = 56.dp, isScrolling = isScrolling)
                 } else {
                     Icon(
                         imageVector = Icons.Default.Person,

@@ -66,10 +66,10 @@ com.fourshil.musicya.app-material3-release-64 C:\Users\ashil\.gradle\caches\9.0-
 com.fourshil.musicya.app-media3-ui-1.2.1-65 C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\fc3edcfb683dcb4ae2b3f48c4075a197\transformed\media3-ui-1.2.1\res
 com.fourshil.musicya.app-core-ktx-1.12.0-66 C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\fc68d890b45f64e61e1313938db25ec7\transformed\core-ktx-1.12.0\res
 com.fourshil.musicya.app-activity-compose-1.8.2-67 C:\Users\ashil\.gradle\caches\9.0-milestone-1\transforms\ff267fe9de5292e7323bfa9728b6a47a\transformed\activity-compose-1.8.2\res
-com.fourshil.musicya.app-resValues-68 D:\Editing\Musicya\app\build\generated\res\resValues\debug
-com.fourshil.musicya.app-updated_navigation_xml-69 D:\Editing\Musicya\app\build\generated\updated_navigation_xml\debug
-com.fourshil.musicya.app-packageDebugResources-70 D:\Editing\Musicya\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
-com.fourshil.musicya.app-packageDebugResources-71 D:\Editing\Musicya\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
-com.fourshil.musicya.app-debug-72 D:\Editing\Musicya\app\build\intermediates\merged_res\debug\mergeDebugResources
-com.fourshil.musicya.app-debug-73 D:\Editing\Musicya\app\src\debug\res
-com.fourshil.musicya.app-main-74 D:\Editing\Musicya\app\src\main\res
+com.fourshil.musicya.app-resValues-68 D:\RePacks\Musicya\app\build\generated\res\resValues\debug
+com.fourshil.musicya.app-updated_navigation_xml-69 D:\RePacks\Musicya\app\build\generated\updated_navigation_xml\debug
+com.fourshil.musicya.app-packageDebugResources-70 D:\RePacks\Musicya\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.fourshil.musicya.app-packageDebugResources-71 D:\RePacks\Musicya\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.fourshil.musicya.app-debug-72 D:\RePacks\Musicya\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.fourshil.musicya.app-debug-73 D:\RePacks\Musicya\app\src\debug\res
+com.fourshil.musicya.app-main-74 D:\RePacks\Musicya\app\src\main\res

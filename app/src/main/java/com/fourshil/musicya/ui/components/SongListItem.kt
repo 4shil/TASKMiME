@@ -46,6 +46,7 @@ fun SongListItem(
     isSelectionMode: Boolean = false,
     inSelectionMode: Boolean = false,
     showTrackNumber: Boolean = false,
+    isScrolling: Boolean = false,
     onClick: () -> Unit,
     onLongClick: () -> Unit = {},
     onMoreClick: () -> Unit = {}
@@ -108,7 +109,8 @@ fun SongListItem(
                     // Album art
                     AlbumArtImage(
                         uri = song.albumArtUri,
-                        size = NeoDimens.AlbumArtSmall
+                        size = NeoDimens.AlbumArtSmall,
+                        isScrolling = isScrolling
                     )
                 }
             }

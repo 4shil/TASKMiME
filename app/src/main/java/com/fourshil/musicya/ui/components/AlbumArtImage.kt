@@ -9,6 +9,10 @@ import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -35,27 +39,50 @@ fun AlbumArtImage(
     contentDescription: String = "Album Art",
     size: Dp = 48.dp,
     fallbackIcon: ImageVector = Icons.Default.MusicNote,
+    isScrolling: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
     val sizePx = with(LocalDensity.current) { size.roundToPx() }
+
+    // State to track if we have successfully loaded the image
+    var isLoaded by remember { mutableStateOf(false) }
     
+    // We load if:
+    // 1. We are NOT scrolling (allow full load)
+    // 2. OR we are scrolling, but we ONLY check memory cache (fast)
+    
+    val builder = ImageRequest.Builder(context)
+        .data(uri)
+        .size(sizePx)
+        .crossfade(150)
+        .allowHardware(true)
+
+    if (isScrolling) {
+        // While scrolling: Only check memory. No disk/network.
+        builder.diskCachePolicy(coil.request.CachePolicy.DISABLED)
+        builder.memoryCachePolicy(coil.request.CachePolicy.ENABLED)
+        // If it's not in memory, we don't want to start a decode job that blocks UI threads or simply creates object churn
+        // However, Coil might still try to decode if we don't limit it. 
+        // Ideally we want: "If in memory, show. Else, nothing/placeholder."
+    } else {
+        // Not scrolling: Full access
+        builder.diskCachePolicy(coil.request.CachePolicy.ENABLED)
+        builder.memoryCachePolicy(coil.request.CachePolicy.ENABLED)
+    }
+
+    val model = builder.build()
+
     Card(
         modifier = modifier.size(size),
         shape = MaterialTheme.shapes.small
     ) {
         SubcomposeAsyncImage(
-            model = ImageRequest.Builder(context)
-                .data(uri)
-                .size(sizePx) // Decode to exact size needed
-                .crossfade(150) // Faster crossfade
-                .allowHardware(true) // GPU acceleration
-                .diskCachePolicy(coil.request.CachePolicy.ENABLED)
-                .memoryCachePolicy(coil.request.CachePolicy.ENABLED)
-                .build(),
+            model = model,
             contentDescription = contentDescription,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize(),
+            onSuccess = { isLoaded = true },
             loading = {
                 AlbumArtPlaceholder(icon = fallbackIcon)
             },

@@ -76,17 +76,9 @@ fun MusicyaNavGraph(
         else -> "MUSICYA"
     }
 
-    // Halftone Overlay for the entire app
-    val isDark = isSystemInDarkTheme()
-    Box(modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
-        HalftoneBackground(
-            color = if (isDark) Color.White else PureBlack,
-            modifier = Modifier.matchParentSize()
-        )
-        
-        Scaffold(
-            containerColor = Color.Transparent,
-            topBar = {
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        topBar = {
                if (libraryRoutes.contains(currentRoute) || currentRoute == Screen.Folders.route) {
                    UnifiedLibraryHeader(
                        title = currentTitle,
@@ -226,7 +218,6 @@ fun MusicyaNavGraph(
 
 
                 }
-            }
         }
     }
 }

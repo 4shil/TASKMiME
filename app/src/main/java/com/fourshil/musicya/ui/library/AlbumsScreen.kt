@@ -14,6 +14,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,11 +44,15 @@ fun AlbumsScreen(
     val albums by viewModel.albums.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
+    val gridState = androidx.compose.foundation.lazy.grid.rememberLazyGridState()
+    val isScrolling by remember { derivedStateOf { gridState.isScrollInProgress } }
+
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 150.dp),
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = NeoDimens.ScreenPadding),
+        state = gridState,
         contentPadding = PaddingValues(
             top = 0.dp,
             bottom = NeoDimens.ListBottomPadding
@@ -96,6 +102,7 @@ fun AlbumsScreen(
                 items(albums, key = { it.id }) { album ->
                     AlbumCard(
                         album = album,
+                        isScrolling = isScrolling,
                         onClick = { onAlbumClick(album.id) }
                     )
                 }
@@ -110,6 +117,7 @@ fun AlbumsScreen(
 @Composable
 private fun AlbumCard(
     album: Album,
+    isScrolling: Boolean = false,
     onClick: () -> Unit
 ) {
     Surface(
@@ -130,15 +138,20 @@ private fun AlbumCard(
                     .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(album.artUri)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = album.name,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
+                // Defer loading while scrolling
+                val model = if (isScrolling) null else ImageRequest.Builder(LocalContext.current)
+                    .data(album.artUri)
+                    .crossfade(true)
+                    .build()
+                
+                if (model != null) {
+                    AsyncImage(
+                        model = model,
+                        contentDescription = album.name,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
             }
 
             // Album Info

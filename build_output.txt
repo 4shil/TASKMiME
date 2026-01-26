@@ -35,15 +35,13 @@
 > Task :app:writeDebugAppMetadata UP-TO-DATE
 > Task :app:writeDebugSigningConfigVersions UP-TO-DATE
 
+> Task :app:compileDebugKotlin
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:46:24 Unresolved reference: remember
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:46:35 Unresolved reference: derivedStateOf
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:43:24 Unresolved reference: remember
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:43:35 Unresolved reference: derivedStateOf
+
 > Task :app:compileDebugKotlin FAILED
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:237:42 Cannot find a parameter with this name: start
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:237:56 Cannot find a parameter with this name: top
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:237:68 Cannot find a parameter with this name: end
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:237:80 Cannot find a parameter with this name: bottom
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:237:95 Cannot find a parameter with this name: color
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:237:95 No value passed for parameter 'width'
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:237:95 No value passed for parameter 'brush'
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:237:95 No value passed for parameter 'shape'
 
 FAILURE: Build failed with an exception.
 
@@ -58,5 +56,5 @@ Execution failed for task ':app:compileDebugKotlin'.
 > Run with --scan to get full insights.
 > Get more help at https://help.gradle.org.
 
-BUILD FAILED in 28s
+BUILD FAILED in 15s
 30 actionable tasks: 2 executed, 28 up-to-date

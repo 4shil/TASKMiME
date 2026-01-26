@@ -11,8 +11,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import android.util.Log
 import javax.inject.Inject
 import javax.inject.Singleton
+
+private const val TAG = "MusicRepository"
 
 /**
  * Repository for accessing music files from the device's MediaStore.
@@ -73,6 +76,7 @@ class MusicRepository @Inject constructor(
         
 
         
+        Log.d(TAG, "getAllSongs: Querying MediaStore...")
         try {
             context.contentResolver.query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -108,9 +112,10 @@ class MusicRepository @Inject constructor(
                         )
                     )
                 }
+                Log.d(TAG, "getAllSongs: Found ${songs.size} songs")
             }
-        } catch (_: Exception) {
-            // Silently handle query errors
+        } catch (e: Exception) {
+            Log.e(TAG, "getAllSongs: Error querying MediaStore", e)
         }
         
         cachedSongs = songs
@@ -255,6 +260,7 @@ class MusicRepository @Inject constructor(
         val selection = "${MediaStore.Audio.Media.IS_MUSIC} != 0"
         val sortOrder = "${MediaStore.Audio.Media.TITLE} ASC"
 
+        Log.d(TAG, "getSongsPaged: offset=$offset, limit=$limit")
         try {
             // Android Q (29) and above supports Bundle args for LIMIT/OFFSET
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -312,8 +318,9 @@ class MusicRepository @Inject constructor(
                     } while (cursor.moveToNext() && count < limit)
                 }
             }
-        } catch (_: Exception) {
-            // Handle error
+            Log.d(TAG, "getSongsPaged: Returning ${songs.size} songs")
+        } catch (e: Exception) {
+            Log.e(TAG, "getSongsPaged: Error", e)
         }
         
         songs

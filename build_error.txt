@@ -1,0 +1,64 @@
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+> Task :app:checkKotlinGradlePluginConfigurationErrors
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
+> Task :app:compileDebugShaders NO-SOURCE
+> Task :app:generateDebugAssets UP-TO-DATE
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
+> Task :app:mergeDebugNativeLibs NO-SOURCE
+> Task :app:stripDebugDebugSymbols NO-SOURCE
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+
+> Task :app:kspDebugKotlin FAILED
+e: [ksp] D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/data/repository/MusicRepository.kt: (323, 32): Function declaration must have a name
+e: Error occurred in KSP, check log for detail
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/data/repository/MusicRepository.kt:322:14 Expecting 'catch' or 'finally'
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/data/repository/MusicRepository.kt:323:19 Expecting ')'
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/data/repository/MusicRepository.kt:323:19 Expecting member declaration
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/data/repository/MusicRepository.kt:323:21 Expecting member declaration
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/data/repository/MusicRepository.kt:323:30 Expecting member declaration
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/data/repository/MusicRepository.kt:323:32 Expecting member declaration
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/data/repository/MusicRepository.kt:327:9 Expecting member declaration
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/data/repository/MusicRepository.kt:384:1 Expecting a top level declaration
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/navigation/MusicyaNavGraph.kt:224:1 Expecting a top level declaration
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:kspDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 5s
+29 actionable tasks: 2 executed, 27 up-to-date

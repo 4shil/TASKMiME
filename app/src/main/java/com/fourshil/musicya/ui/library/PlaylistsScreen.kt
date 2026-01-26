@@ -48,8 +48,12 @@ fun PlaylistsScreen(
     var showDeleteDialog by remember { mutableStateOf<Playlist?>(null) }
     var showRenameDialog by remember { mutableStateOf<Playlist?>(null) }
     
+    val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+    val isScrolling by remember { derivedStateOf { listState.isScrollInProgress } }
+    
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
+        state = listState,
         contentPadding = PaddingValues(
             top = 0.dp,
             bottom = NeoDimens.ListBottomPadding
@@ -80,6 +84,7 @@ fun PlaylistsScreen(
                         playlist = playlist,
                         songCount = playlistSongs.size,
                         artUris = playlistSongs.map { it.albumArtUri },
+                        isScrolling = isScrolling,
                         onClick = { onPlaylistClick(playlist.id) },
                         onLongClick = { showDeleteDialog = playlist },
                         onRename = { showRenameDialog = playlist }
@@ -147,8 +152,8 @@ fun PlaylistsScreen(
                     }
                 ) { Text("SAVE", color = MaterialTheme.colorScheme.onSurface, fontWeight = FontWeight.Bold) }
             },
-             dismissButton = {
-                  TextButton(onClick = { showRenameDialog = null }) { Text("CANCEL", color = MaterialTheme.colorScheme.onSurface) }
+              dismissButton = {
+                   TextButton(onClick = { showRenameDialog = null }) { Text("CANCEL", color = MaterialTheme.colorScheme.onSurface) }
             },
             containerColor = MaterialTheme.colorScheme.surface,
             shape = MaterialTheme.shapes.small
@@ -161,6 +166,7 @@ fun PlaylistArtisticItem(
      playlist: Playlist,
     songCount: Int,
     artUris: List<android.net.Uri>,
+    isScrolling: Boolean = false,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     onRename: () -> Unit
@@ -182,7 +188,7 @@ fun PlaylistArtisticItem(
                 contentAlignment = Alignment.Center
             ) {
                 if (artUris.isNotEmpty()) {
-                    PlaylistArtGrid(uris = artUris, size = 56.dp)
+                    PlaylistArtGrid(uris = artUris, size = 56.dp, isScrolling = isScrolling)
                 } else {
                     Icon(Icons.Default.Folder, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
                 }

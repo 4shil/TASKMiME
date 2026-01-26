@@ -4,6 +4,7 @@ import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
@@ -66,8 +67,11 @@ fun SongsScreen(
     
     val permissionsState = rememberMultiplePermissionsState(permissions)
     
-    LaunchedEffect(Unit) {
-        if (!permissionsState.allPermissionsGranted) {
+    LaunchedEffect(permissionsState.allPermissionsGranted) {
+        if (permissionsState.allPermissionsGranted) {
+            viewModel.refresh()
+            pagedSongs.refresh()
+        } else {
             permissionsState.launchMultiplePermissionRequest()
         }
     }
@@ -78,55 +82,69 @@ fun SongsScreen(
             if (selectionState.isSelectionMode) {
                 val scope = rememberCoroutineScope()
                 // Selection mode header
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.primaryContainer
+                // Styled to match UnifiedLibraryHeader (floating, rounded)
+                // We add a spacer at top to separate from the main header potentially, 
+                // or just rely on the fact that this replaces the top bar.
+                // Since this is in topBar slot of a nested Scaffold, it sits BELOW the parent header.
+                // We remove statusBarsPadding as we are already offset.
+                
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = NeoDimens.ScreenPadding)
+                        .padding(top = NeoDimens.SpacingM) // Add some top margin
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .statusBarsPadding()
-                            .padding(horizontal = NeoDimens.ScreenPadding, vertical = NeoDimens.SpacingM),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        shape = RoundedCornerShape(NeoDimens.CornerMedium),
+                        tonalElevation = NeoDimens.ElevationLow
                     ) {
                         Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = NeoDimens.SpacingM, vertical = NeoDimens.SpacingS),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingM)
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            IconButton(onClick = { selectionState.clearSelection() }) {
-                                Icon(
-                                    Icons.Default.Close,
-                                    contentDescription = "Cancel selection",
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
-                            }
-                            Text(
-                                "${selectionState.selectedCount} selected",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        }
-                        Row {
-                            IconButton(onClick = {
-                                scope.launch {
-                                    val allIds = viewModel.getAllSongIds()
-                                    selectionState.selectAll(allIds)
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingM)
+                            ) {
+                                IconButton(onClick = { selectionState.clearSelection() }) {
+                                    Icon(
+                                        Icons.Default.Close,
+                                        contentDescription = "Cancel selection",
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
                                 }
-                            }) {
-                                Icon(
-                                    Icons.Default.SelectAll,
-                                    contentDescription = "Select all",
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                Text(
+                                    "${selectionState.selectedCount} selected",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer
                                 )
                             }
-                            IconButton(onClick = { showBulkActionsSheet = true }) {
-                                Icon(
-                                    Icons.Default.MoreVert,
-                                    contentDescription = "More actions",
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
+                            Row {
+                                IconButton(onClick = {
+                                    scope.launch {
+                                        val allIds = viewModel.getAllSongIds()
+                                        selectionState.selectAll(allIds)
+                                    }
+                                }) {
+                                    Icon(
+                                        Icons.Default.SelectAll,
+                                        contentDescription = "Select all",
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                }
+                                IconButton(onClick = { showBulkActionsSheet = true }) {
+                                    Icon(
+                                        Icons.Default.MoreVert,
+                                        contentDescription = "More actions",
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                }
                             }
                         }
                     }
@@ -207,8 +225,12 @@ fun SongsScreen(
                 
                 else -> {
                     // Song list
+                    val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+                    val isScrolling by remember { derivedStateOf { listState.isScrollInProgress } }
+                    
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
+                        state = listState,
                         contentPadding = PaddingValues(
                             top = 0.dp,
                             bottom = NeoDimens.ListBottomPadding
@@ -229,6 +251,7 @@ fun SongsScreen(
                                     song = song,
                                     isSelected = isSelected,
                                     inSelectionMode = selectionState.isSelectionMode,
+                                    isScrolling = isScrolling,
                                     onClick = {
                                         if (selectionState.isSelectionMode) {
                                             selectionState.toggleSelection(song.id)
