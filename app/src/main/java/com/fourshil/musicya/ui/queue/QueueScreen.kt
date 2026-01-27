@@ -128,23 +128,10 @@ fun QueueScreen(
                     .padding(paddingValues),
                 contentAlignment = Alignment.Center
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.QueueMusic,
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp),
-                        tint = Color.Gray
-                    )
-                    Text(
-                        "NO SONGS IN QUEUE",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.Gray,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                 NeoEmptyState(
+                    message = "NO SONGS IN QUEUE",
+                    icon = Icons.AutoMirrored.Filled.QueueMusic
+                )
             }
         } else {
             LazyColumn(
