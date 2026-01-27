@@ -17,6 +17,7 @@
 > Task :app:processDebugManifest UP-TO-DATE
 > Task :app:processDebugManifestForPackage UP-TO-DATE
 > Task :app:processDebugResources UP-TO-DATE
+> Task :app:kspDebugKotlin UP-TO-DATE
 > Task :app:javaPreCompileDebug UP-TO-DATE
 > Task :app:mergeDebugShaders UP-TO-DATE
 > Task :app:compileDebugShaders NO-SOURCE
@@ -33,12 +34,11 @@
 > Task :app:validateSigningDebug UP-TO-DATE
 > Task :app:writeDebugAppMetadata UP-TO-DATE
 > Task :app:writeDebugSigningConfigVersions UP-TO-DATE
-> Task :app:kspDebugKotlin
-
-> Task :app:compileDebugKotlin
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerScreen.kt:66:34 Unresolved reference: albumArtUri
 
 > Task :app:compileDebugKotlin FAILED
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:72:17 Cannot find a parameter with this name: contentColor
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:82:26 Unresolved reference: NeoEmptyState
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:131:18 Unresolved reference: NeoEmptyState
 
 FAILURE: Build failed with an exception.
 
@@ -53,5 +53,5 @@ Execution failed for task ':app:compileDebugKotlin'.
 > Run with --scan to get full insights.
 > Get more help at https://help.gradle.org.
 
-BUILD FAILED in 5s
-30 actionable tasks: 3 executed, 27 up-to-date
+BUILD FAILED in 14s
+30 actionable tasks: 2 executed, 28 up-to-date
