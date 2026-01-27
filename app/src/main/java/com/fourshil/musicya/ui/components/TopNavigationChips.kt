@@ -62,8 +62,8 @@ private fun TopNavChip(
     val backgroundColor = if (isSelected) NeoBlue else Color.White
     val contentColor = Color.Black
     val borderColor = Color.Black
-    val borderWidth = if (isSelected) 2.dp else 1.dp
-    val fontWeight = if (isSelected) FontWeight.Black else FontWeight.Medium
+    val borderWidth = 2.dp // Consistent thick border
+    val fontWeight = if (isSelected) FontWeight.Black else FontWeight.Bold
 
     Box(
         modifier = Modifier
