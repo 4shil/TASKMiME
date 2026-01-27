@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.fourshil.musicya.data.ThemeMode
-import com.fourshil.musicya.ui.components.ArtisticButton
+import com.fourshil.musicya.ui.components.NeoButton
 import com.fourshil.musicya.ui.components.NeoDialogWrapper
 import com.fourshil.musicya.ui.components.NeoSelectionItem
 import com.fourshil.musicya.ui.theme.NeoDimens
@@ -59,16 +59,24 @@ fun SleepTimerDialog(
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
-             ArtisticButton(
+            NeoButton(
                 onClick = { 
                     onCancelTimer()
                     onDismiss() 
                 },
-                text = if (sleepTimerActive) "CANCEL TIMER" else "CLOSE",
+                modifier = Modifier.fillMaxWidth().height(56.dp),
                 backgroundColor = contentColor,
-                contentColor = surfaceColor,
-                 modifier = Modifier.fillMaxWidth()
-            )
+                borderWidth = 4.dp,
+                shadowSize = 4.dp
+            ) {
+                 Text(
+                     text = if (sleepTimerActive) "CANCEL TIMER" else "CLOSE",
+                     style = MaterialTheme.typography.labelLarge,
+                     fontWeight = FontWeight.Black,
+                     color = surfaceColor,
+                     letterSpacing = 1.sp
+                 )
+            }
          }
     }
 }
