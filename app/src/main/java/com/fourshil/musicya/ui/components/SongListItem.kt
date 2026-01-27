@@ -57,125 +57,124 @@ fun SongListItem(
     onLongClick: () -> Unit = {},
     onMoreClick: () -> Unit = {}
 ) {
-    // Use either isSelectionMode or inSelectionMode (backward compatibility)
     val selectionActive = isSelectionMode || inSelectionMode
     
-    // Selection state visualization: specific border or background
-    val itemModifier = if (isSelected) {
-        Modifier
-            .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
-            .background(NeoGreen, RoundedCornerShape(12.dp))
-    } else if (isCurrentlyPlaying) {
-        Modifier
-            .background(NeoBlue.copy(alpha = 0.2f), RoundedCornerShape(12.dp))
-            .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
-    } else {
-        Modifier
+    // Determine background color based on state
+    val backgroundColor = when {
+        isSelected -> NeoGreen
+        isCurrentlyPlaying -> NeoBlue.copy(alpha = 0.2f)
+        else -> Color.White
     }
 
-    Box(
+    NeoCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp, horizontal = 16.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .then(itemModifier)
-            .combinedClickable(
-                onClick = onClick,
-                onLongClick = onLongClick
-            )
-            .padding(8.dp) // Inner padding
+            .padding(vertical = 4.dp, horizontal = 16.dp),
+        backgroundColor = backgroundColor,
+        shadowSize = 4.dp,
+        onClick = null // We handle click manually for combinedClickable
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .combinedClickable(
+                    onClick = onClick,
+                    onLongClick = onLongClick
+                )
+                .padding(12.dp)
         ) {
-            // Album Art Container with Border
-            Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
-                    .background(Color.Gray),
-                contentAlignment = Alignment.Center
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                if (selectionActive && isSelected) {
-                    Box(
+                // Album Art Container
+                Box(
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
+                        .background(Color.Gray),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (selectionActive && isSelected) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(NeoGreen),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = "Selected",
+                                tint = Color.Black
+                            )
+                        }
+                    } else {
+                        AlbumArtImage(
+                            uri = song.albumArtUri,
+                            size = 56.dp,
+                            isScrolling = isScrolling
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                // Song info
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = song.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Black, // Extra Bold
+                        color = Color.Black,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = song.artist,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black.copy(alpha = 0.7f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                
+                // Favorite indicator
+                if (isFavorite && !selectionActive) {
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = "Favorite",
+                        tint = NeoPink,
                         modifier = Modifier
-                            .fillMaxSize()
-                            .background(NeoGreen),
-                        contentAlignment = Alignment.Center
+                            .size(20.dp)
+                            .padding(end = 4.dp)
+                    )
+                }
+
+                // Duration
+                Text(
+                    text = song.durationFormatted,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
+                // More button
+                if (!selectionActive) {
+                    IconButton(
+                        onClick = onMoreClick,
+                        modifier = Modifier.size(32.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = "Selected",
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = "More options",
                             tint = Color.Black
                         )
                     }
-                } else {
-                    AlbumArtImage(
-                        uri = song.albumArtUri,
-                        size = 56.dp,
-                        isScrolling = isScrolling
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            // Song info
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = song.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold, // Bold for Neo-Brutalism
-                    color = Color.Black,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = song.artist,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.DarkGray,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-            
-            // Favorite indicator
-            if (isFavorite && !selectionActive) {
-                Icon(
-                    imageVector = Icons.Default.Favorite,
-                    contentDescription = "Favorite",
-                    tint = Color(0xFFE11D48), // Rose
-                    modifier = Modifier
-                        .size(20.dp)
-                        .padding(end = 4.dp)
-                )
-            }
-
-            // Duration (Mono font if possible, or usually just bold)
-            Text(
-                text = song.durationFormatted,
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                color = Color.Black,
-                modifier = Modifier.padding(horizontal = 8.dp)
-            )
-
-            // More button
-            if (!selectionActive) {
-                IconButton(
-                    onClick = onMoreClick,
-                    modifier = Modifier.size(32.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = "More options",
-                        tint = Color.Black
-                    )
                 }
             }
         }

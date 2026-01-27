@@ -71,10 +71,12 @@ fun MiniPlayer(
     var dragOffsetX by remember { mutableFloatStateOf(0f) }
     var swipeDirection by remember { mutableIntStateOf(0) } // -1 = left (next), 1 = right (prev), 0 = none
 
-    Surface(
+    val backgroundColor = MaterialTheme.colorScheme.surface
+    
+    NeoCard(
         modifier = modifier
             .fillMaxWidth()
-            .height(NeoDimens.MiniPlayerHeight)
+            .height(NeoDimens.MiniPlayerHeight + 4.dp) // Add space for shadow
             .pointerInput(Unit) {
                 // Handle horizontal swipe gestures on the entire surface
                 detectHorizontalDragGestures(
@@ -102,17 +104,11 @@ fun MiniPlayer(
                         )
                     }
                 )
-            }
-            .pointerInput(Unit) {
-                // Handle tap separately
-                detectTapGestures(
-                    onTap = { onClick() }
-                )
             },
+        backgroundColor = backgroundColor,
+        shadowSize = 6.dp,
         shape = RoundedCornerShape(topStart = NeoDimens.CornerLarge, topEnd = NeoDimens.CornerLarge),
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = NeoDimens.ElevationHigh,
-        shadowElevation = NeoDimens.ElevationMedium
+        onClick = onClick
     ) {
         Column {
             // Progress bar at top
