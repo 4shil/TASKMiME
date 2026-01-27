@@ -17,6 +17,7 @@
 > Task :app:processDebugManifest UP-TO-DATE
 > Task :app:processDebugManifestForPackage UP-TO-DATE
 > Task :app:processDebugResources UP-TO-DATE
+> Task :app:kspDebugKotlin UP-TO-DATE
 > Task :app:javaPreCompileDebug UP-TO-DATE
 > Task :app:mergeDebugShaders UP-TO-DATE
 > Task :app:compileDebugShaders NO-SOURCE
@@ -33,35 +34,66 @@
 > Task :app:validateSigningDebug UP-TO-DATE
 > Task :app:writeDebugAppMetadata UP-TO-DATE
 > Task :app:writeDebugSigningConfigVersions UP-TO-DATE
-> Task :app:kspDebugKotlin
 
-> Task :app:compileDebugKotlin
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/SongListItem.kt:54:5 Parameter 'showTrackNumber' is never used
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:45:5 Parameter 'currentRoute' is never used
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:46:5 Parameter 'onNavigate' is never used
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:42:5 Parameter 'currentRoute' is never used
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:43:5 Parameter 'onNavigate' is never used
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/PlaylistsScreen.kt:43:5 Parameter 'currentRoute' is never used
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/PlaylistsScreen.kt:44:5 Parameter 'onNavigate' is never used
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/PlaylistsScreen.kt:172:5 Parameter 'onLongClick' is never used
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:44:5 Parameter 'onMenuClick' is never used
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:45:5 Parameter 'currentRoute' is never used
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:46:5 Parameter 'onNavigate' is never used
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:51:9 Variable 'isLoading' is never used
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:365:49 'QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.QueueMusic
-w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:225:9 Variable 'borderColor' is never used
+> Task :app:compileDebugKotlin FAILED
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:6:2 Unresolved reference: Composable
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:9:11 Unresolved reference: ImageVector
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:12:15 Unresolved reference: Modifier
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:12:26 Unresolved reference: Modifier
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:14:5 Unresolved reference: Column
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:15:55 Unresolved reference: dp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:16:31 Unresolved reference: Alignment
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:17:31 Unresolved reference: Arrangement
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:21:13 Unresolved reference: Box
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:22:28 Unresolved reference: Modifier
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:23:30 Unresolved reference: dp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:24:33 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:24:46 Unresolved reference: CircleShape
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:25:31 Unresolved reference: dp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:25:35 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:25:48 Unresolved reference: CircleShape
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:26:36 Unresolved reference: Alignment
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:28:17 Unresolved reference: Icon
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:31:32 Unresolved reference: Modifier
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:31:49 Unresolved reference: dp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:32:28 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:35:13 Unresolved reference: Spacer
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:35:31 Unresolved reference: Modifier
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:35:50 Unresolved reference: dp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:39:9 Unresolved reference: Text
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:41:21 Unresolved reference: MaterialTheme
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:42:26 Unresolved reference: FontWeight
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:43:21 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:44:31 Unresolved reference: sp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:50:13 Unresolved reference: Spacer
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:50:31 Unresolved reference: Modifier
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:50:50 Unresolved reference: dp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:51:13 Unresolved reference: NeoButton
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:53:35 Unresolved reference: NeoPrimary
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:54:32 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:56:17 Unresolved reference: Text
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:58:29 Unresolved reference: MaterialTheme
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:59:34 Unresolved reference: FontWeight
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:60:32 Unresolved reference: Modifier
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoEmptyState.kt:60:65 Unresolved reference: dp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:82:26 Unresolved reference: NeoEmptyState
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:202:25 Unresolved reference: NeoEmptyState
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:131:18 Unresolved reference: NeoEmptyState
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsDialogs.kt:77:40 Unresolved reference: sp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:284:18 Unresolved reference: border
 
-> Task :app:compileDebugJavaWithJavac UP-TO-DATE
-> Task :app:hiltAggregateDepsDebug UP-TO-DATE
-> Task :app:hiltJavaCompileDebug UP-TO-DATE
-> Task :app:processDebugJavaRes UP-TO-DATE
-> Task :app:mergeDebugJavaResource UP-TO-DATE
-> Task :app:transformDebugClassesWithAsm
-> Task :app:dexBuilderDebug
-> Task :app:mergeProjectDexDebug
-> Task :app:packageDebug
-> Task :app:createDebugApkListingFileRedirect UP-TO-DATE
-> Task :app:assembleDebug
+FAILURE: Build failed with an exception.
 
-BUILD SUCCESSFUL in 30s
-40 actionable tasks: 7 executed, 33 up-to-date
+* What went wrong:
+Execution failed for task ':app:compileDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 17s
+30 actionable tasks: 2 executed, 28 up-to-date
