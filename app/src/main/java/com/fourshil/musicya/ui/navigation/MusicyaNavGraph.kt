@@ -30,6 +30,7 @@ import com.fourshil.musicya.ui.settings.SettingsScreen
 import com.fourshil.musicya.player.PlayerController
 import com.fourshil.musicya.ui.theme.PureBlack
 import com.fourshil.musicya.ui.theme.NeoDimens
+import com.fourshil.musicya.ui.theme.NeoBackground
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -2,51 +2,45 @@
 > Task :app:preDebugBuild UP-TO-DATE
 > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
 > Task :app:checkKotlinGradlePluginConfigurationErrors
-> Task :app:checkDebugAarMetadata
-> Task :app:processDebugNavigationResources
-> Task :app:generateDebugResValues
-> Task :app:compileDebugNavigationResources
-> Task :app:mapDebugSourceSetPaths
-> Task :app:generateDebugResources
-> Task :app:packageDebugResources
-> Task :app:createDebugCompatibleScreenManifests
-> Task :app:extractDeepLinksDebug
-> Task :app:parseDebugLocalResources
-> Task :app:mergeDebugResources
-> Task :app:processDebugMainManifest
-> Task :app:processDebugManifest
-> Task :app:processDebugManifestForPackage
-> Task :app:javaPreCompileDebug
-> Task :app:mergeDebugShaders
+> Task :app:checkDebugAarMetadata UP-TO-DATE
+> Task :app:processDebugNavigationResources UP-TO-DATE
+> Task :app:compileDebugNavigationResources UP-TO-DATE
+> Task :app:generateDebugResValues UP-TO-DATE
+> Task :app:mapDebugSourceSetPaths UP-TO-DATE
+> Task :app:generateDebugResources UP-TO-DATE
+> Task :app:mergeDebugResources UP-TO-DATE
+> Task :app:packageDebugResources UP-TO-DATE
+> Task :app:parseDebugLocalResources UP-TO-DATE
+> Task :app:createDebugCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksDebug UP-TO-DATE
+> Task :app:processDebugMainManifest UP-TO-DATE
+> Task :app:processDebugManifest UP-TO-DATE
+> Task :app:processDebugManifestForPackage UP-TO-DATE
+> Task :app:processDebugResources UP-TO-DATE
+> Task :app:javaPreCompileDebug UP-TO-DATE
+> Task :app:mergeDebugShaders UP-TO-DATE
 > Task :app:compileDebugShaders NO-SOURCE
 > Task :app:generateDebugAssets UP-TO-DATE
-> Task :app:mergeDebugAssets
-> Task :app:compressDebugAssets
-> Task :app:processDebugResources
-> Task :app:checkDebugDuplicateClasses
-> Task :app:desugarDebugFileDependencies
-> Task :app:kspDebugKotlin
-> Task :app:mergeExtDexDebug
-> Task :app:mergeDebugJniLibFolders
-> Task :app:mergeLibDexDebug
+> Task :app:mergeDebugAssets UP-TO-DATE
+> Task :app:compressDebugAssets UP-TO-DATE
+> Task :app:checkDebugDuplicateClasses UP-TO-DATE
+> Task :app:desugarDebugFileDependencies UP-TO-DATE
+> Task :app:mergeExtDexDebug UP-TO-DATE
+> Task :app:mergeLibDexDebug UP-TO-DATE
+> Task :app:mergeDebugJniLibFolders UP-TO-DATE
 > Task :app:mergeDebugNativeLibs NO-SOURCE
 > Task :app:stripDebugDebugSymbols NO-SOURCE
-> Task :app:validateSigningDebug
-> Task :app:writeDebugAppMetadata
-> Task :app:writeDebugSigningConfigVersions
+> Task :app:validateSigningDebug UP-TO-DATE
+> Task :app:writeDebugAppMetadata UP-TO-DATE
+> Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:kspDebugKotlin
+
+> Task :app:compileDebugKotlin
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/PlaylistsScreen.kt:177:17 Unresolved reference: RoundedCornerShape
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:29:21 Unresolved reference: Precision
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:168:58 Unresolved reference: Precision
 
 > Task :app:compileDebugKotlin FAILED
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/dsp/DspScreen.kt:159:22 Unresolved reference: graphicsLayer
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/dsp/DspScreen.kt:160:25 Unresolved reference: rotationZ
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/dsp/DspScreen.kt:161:25 Unresolved reference: transformOrigin
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/dsp/DspScreen.kt:163:31 Cannot infer a type for this parameter. Please specify it explicitly.
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/dsp/DspScreen.kt:163:43 Cannot infer a type for this parameter. Please specify it explicitly.
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/dsp/DspScreen.kt:172:25 Unresolved reference. None of the following candidates is applicable because of receiver type mismatch: 
-public fun Modifier.layout(measure: MeasureScope.(Measurable, Constraints) -> MeasureResult): Modifier defined in androidx.compose.ui.layout
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerScreen.kt:271:23 Unresolved reference: quadTo
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerScreen.kt:275:28 @Composable invocations can only happen from the context of a @Composable function
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerScreen.kt:282:26 Unresolved reference: quadTo
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerScreen.kt:302:39 @Composable invocations can only happen from the context of a @Composable function
 
 FAILURE: Build failed with an exception.
 
@@ -61,5 +55,5 @@ Execution failed for task ':app:compileDebugKotlin'.
 > Run with --scan to get full insights.
 > Get more help at https://help.gradle.org.
 
-BUILD FAILED in 2m 18s
-30 actionable tasks: 30 executed
+BUILD FAILED in 16s
+30 actionable tasks: 3 executed, 27 up-to-date

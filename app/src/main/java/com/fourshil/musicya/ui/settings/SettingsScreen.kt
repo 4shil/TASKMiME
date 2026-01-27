@@ -24,6 +24,13 @@ import com.fourshil.musicya.data.ThemeMode
 import com.fourshil.musicya.player.PlayerController
 import com.fourshil.musicya.ui.components.MinimalIconButton
 import com.fourshil.musicya.ui.theme.NeoDimens
+import com.fourshil.musicya.ui.components.NeoScaffold
+import com.fourshil.musicya.ui.components.NeoButton
+import com.fourshil.musicya.ui.components.NeoCard
+import com.fourshil.musicya.ui.theme.NeoBackground
+import com.fourshil.musicya.ui.theme.NeoBlue
+import com.fourshil.musicya.ui.theme.NeoGreen
+import androidx.compose.ui.unit.sp
 
 /**
  * Clean Minimalistic Settings Screen

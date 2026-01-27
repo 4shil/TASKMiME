@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+// import coil.request.Precision (Removed)
 import com.fourshil.musicya.ui.components.LyricsBottomSheet
 import com.fourshil.musicya.ui.components.NeoButton
 import com.fourshil.musicya.ui.components.NeoProgressBar
@@ -164,7 +165,6 @@ fun NowPlayingScreen(
                              model = coil.request.ImageRequest.Builder(LocalContext.current)
                                  .data(currentSong!!.albumArtUri)
                                  .size(coil.size.Size.ORIGINAL) // Force original size for high quality
-                                 .precision(coil.request.Precision.EXACT)
                                  .crossfade(true)
                                  .build(),
                              contentDescription = "Album Art",
@@ -413,6 +413,7 @@ fun NowPlayingScreen(
             onDismiss = { showDetails = false }
         )
     }
+}
 
 
 

@@ -17,6 +17,7 @@
 > Task :app:processDebugManifest UP-TO-DATE
 > Task :app:processDebugManifestForPackage UP-TO-DATE
 > Task :app:processDebugResources UP-TO-DATE
+> Task :app:kspDebugKotlin UP-TO-DATE
 > Task :app:javaPreCompileDebug UP-TO-DATE
 > Task :app:mergeDebugShaders UP-TO-DATE
 > Task :app:compileDebugShaders NO-SOURCE
@@ -33,16 +34,122 @@
 > Task :app:validateSigningDebug UP-TO-DATE
 > Task :app:writeDebugAppMetadata UP-TO-DATE
 > Task :app:writeDebugSigningConfigVersions UP-TO-DATE
-> Task :app:kspDebugKotlin
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerScreen.kt:119:9 Expecting an element
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerScreen.kt:533:2 Expecting '}'
 
-> Task :app:kspDebugKotlin FAILED
+> Task :app:compileDebugKotlin
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/SongListItem.kt:102:30 Unresolved reference: fillMaxSize
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/SongListItem.kt:233:39 Unresolved reference: sp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:123:5 Unresolved reference: NeoCard
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:129:27 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:132:9 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:138:33 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:141:33 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:162:76 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:172:29 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:179:29 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:187:29 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:189:41 Unresolved reference: sp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:123:5 Unresolved reference: NeoCard
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:129:27 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:132:9 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:141:22 Unresolved reference: border
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:141:35 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:142:33 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:152:32 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:165:29 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:172:29 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:174:41 Unresolved reference: sp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:181:24 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/PlaylistsScreen.kt:173:5 Unresolved reference: NeoCard
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/PlaylistsScreen.kt:176:17 Unresolved reference: RoundedCornerShape
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/PlaylistsScreen.kt:181:10 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:80:26 Unresolved reference: NeoBackground
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:93:43 Unresolved reference: NeoGreen
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:112:48 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:119:45 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:132:48 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:139:48 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/navigation/MusicyaNavGraph.kt:80:26 Unresolved reference: NeoBackground
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:167:58 Unresolved reference: Precision
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:54:5 Unresolved reference: NeoScaffold
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:55:26 Unresolved reference: NeoBackground
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:58:13 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:66:17 Unresolved reference: NeoButton
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:72:21 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:75:32 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:84:33 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:85:43 Unresolved reference: sp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:91:37 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:98:17 Unresolved reference: NeoButton
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:103:39 Unresolved reference: NeoPink
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:105:21 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:108:32 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:113:9 Cannot infer a type for this parameter. Please specify it explicitly.
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:116:13 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:119:22 Overload resolution ambiguity: 
+public fun Modifier.padding(paddingValues: PaddingValues): Modifier defined in androidx.compose.foundation.layout
+public fun Modifier.padding(all: Dp): Modifier defined in androidx.compose.foundation.layout
+public fun Modifier.padding(horizontal: Dp = ..., vertical: Dp = ...): Modifier defined in androidx.compose.foundation.layout
+public fun Modifier.padding(start: Dp = ..., top: Dp = ..., end: Dp = ..., bottom: Dp = ...): Modifier defined in androidx.compose.foundation.layout
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:130:32 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:135:33 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:141:13 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:145:22 Overload resolution ambiguity: 
+public fun Modifier.padding(paddingValues: PaddingValues): Modifier defined in androidx.compose.foundation.layout
+public fun Modifier.padding(all: Dp): Modifier defined in androidx.compose.foundation.layout
+public fun Modifier.padding(horizontal: Dp = ..., vertical: Dp = ...): Modifier defined in androidx.compose.foundation.layout
+public fun Modifier.padding(start: Dp = ..., top: Dp = ..., end: Dp = ..., bottom: Dp = ...): Modifier defined in androidx.compose.foundation.layout
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:160:37 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:188:37 Unresolved reference: NeoBlue
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:211:22 Unresolved reference: NeoBlue
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:212:21 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:213:17 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:216:23 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:219:5 Unresolved reference: NeoCard
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:227:9 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:236:22 Unresolved reference: border
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:236:35 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:237:33 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:246:41 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:252:36 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:267:33 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:269:43 Unresolved reference: sp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:272:17 None of the following functions can be called with the arguments supplied: 
+public fun Text(text: AnnotatedString, modifier: Modifier = ..., color: Color = ..., fontSize: TextUnit = ..., fontStyle: FontStyle? = ..., fontWeight: FontWeight? = ..., fontFamily: FontFamily? = ..., letterSpacing: TextUnit = ..., textDecoration: TextDecoration? = ..., textAlign: TextAlign? = ..., lineHeight: TextUnit = ..., overflow: TextOverflow = ..., softWrap: Boolean = ..., maxLines: Int = ..., minLines: Int = ..., inlineContent: Map<String, InlineTextContent> = ..., onTextLayout: (TextLayoutResult) -> Unit = ..., style: TextStyle = ...): Unit defined in androidx.compose.material3
+public fun Text(text: String, modifier: Modifier = ..., color: Color = ..., fontSize: TextUnit = ..., fontStyle: FontStyle? = ..., fontWeight: FontWeight? = ..., fontFamily: FontFamily? = ..., letterSpacing: TextUnit = ..., textDecoration: TextDecoration? = ..., textAlign: TextAlign? = ..., lineHeight: TextUnit = ..., overflow: TextOverflow = ..., softWrap: Boolean = ..., maxLines: Int = ..., minLines: Int = ..., onTextLayout: ((TextLayoutResult) -> Unit)? = ..., style: TextStyle = ...): Unit defined in androidx.compose.material3
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:276:43 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:276:59 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:280:17 None of the following functions can be called with the arguments supplied: 
+public fun Text(text: AnnotatedString, modifier: Modifier = ..., color: Color = ..., fontSize: TextUnit = ..., fontStyle: FontStyle? = ..., fontWeight: FontWeight? = ..., fontFamily: FontFamily? = ..., letterSpacing: TextUnit = ..., textDecoration: TextDecoration? = ..., textAlign: TextAlign? = ..., lineHeight: TextUnit = ..., overflow: TextOverflow = ..., softWrap: Boolean = ..., maxLines: Int = ..., minLines: Int = ..., inlineContent: Map<String, InlineTextContent> = ..., onTextLayout: (TextLayoutResult) -> Unit = ..., style: TextStyle = ...): Unit defined in androidx.compose.material3
+public fun Text(text: String, modifier: Modifier = ..., color: Color = ..., fontSize: TextUnit = ..., fontStyle: FontStyle? = ..., fontWeight: FontWeight? = ..., fontFamily: FontFamily? = ..., letterSpacing: TextUnit = ..., textDecoration: TextDecoration? = ..., textAlign: TextAlign? = ..., lineHeight: TextUnit = ..., overflow: TextOverflow = ..., softWrap: Boolean = ..., maxLines: Int = ..., minLines: Int = ..., onTextLayout: ((TextLayoutResult) -> Unit)? = ..., style: TextStyle = ...): Unit defined in androidx.compose.material3
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:283:43 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:283:64 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:295:28 Unresolved reference: Color
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:51:5 Unresolved reference: NeoScaffold
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:52:26 Unresolved reference: NeoBackground
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:55:13 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:62:17 Unresolved reference: NeoButton
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:68:21 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:80:42 Unresolved reference: sp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:84:9 Cannot infer a type for this parameter. Please specify it explicitly.
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:85:9 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:88:18 Overload resolution ambiguity: 
+public fun Modifier.padding(paddingValues: PaddingValues): Modifier defined in androidx.compose.foundation.layout
+public fun Modifier.padding(all: Dp): Modifier defined in androidx.compose.foundation.layout
+public fun Modifier.padding(horizontal: Dp = ..., vertical: Dp = ...): Modifier defined in androidx.compose.foundation.layout
+public fun Modifier.padding(start: Dp = ..., top: Dp = ..., end: Dp = ..., bottom: Dp = ...): Modifier defined in androidx.compose.foundation.layout
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:110:63 Unresolved reference: NeoBlue
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:127:41 Unresolved reference: NeoBlue
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:149:40 Unresolved reference: NeoGreen
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:236:31 Unresolved reference: sp
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:238:9 Unresolved reference: NeoCard
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/SettingsScreen.kt:245:13 @Composable invocations can only happen from the context of a @Composable function
+
+> Task :app:compileDebugKotlin FAILED
 
 FAILURE: Build failed with an exception.
 
 * What went wrong:
-Execution failed for task ':app:kspDebugKotlin'.
+Execution failed for task ':app:compileDebugKotlin'.
 > A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
    > Compilation error. See log for more details
 
@@ -52,5 +159,5 @@ Execution failed for task ':app:kspDebugKotlin'.
 > Run with --scan to get full insights.
 > Get more help at https://help.gradle.org.
 
-BUILD FAILED in 1m 1s
-29 actionable tasks: 2 executed, 27 up-to-date
+BUILD FAILED in 16s
+30 actionable tasks: 2 executed, 28 up-to-date

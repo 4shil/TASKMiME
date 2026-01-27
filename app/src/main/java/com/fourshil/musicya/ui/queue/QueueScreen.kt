@@ -25,6 +25,15 @@ import com.fourshil.musicya.data.model.Song
 import com.fourshil.musicya.ui.components.AlbumArtImage
 import com.fourshil.musicya.ui.components.MinimalIconButton
 import com.fourshil.musicya.ui.theme.NeoDimens
+import com.fourshil.musicya.ui.components.NeoScaffold
+import com.fourshil.musicya.ui.components.NeoButton
+import com.fourshil.musicya.ui.components.NeoCard
+import com.fourshil.musicya.ui.theme.NeoBackground
+import com.fourshil.musicya.ui.theme.NeoPink
+import com.fourshil.musicya.ui.theme.NeoBlue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.border
 
 /**
  * Queue Screen - Centered on current song

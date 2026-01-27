@@ -29,6 +29,10 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fourshil.musicya.data.model.Album
 import com.fourshil.musicya.ui.theme.NeoDimens
+import com.fourshil.musicya.ui.components.NeoCard
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.border
+import androidx.compose.ui.unit.sp
 
 /**
  * Clean Minimalistic Albums Screen

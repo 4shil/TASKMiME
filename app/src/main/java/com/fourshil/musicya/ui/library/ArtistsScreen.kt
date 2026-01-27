@@ -26,6 +26,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.fourshil.musicya.data.model.Artist
 import com.fourshil.musicya.ui.components.PlaylistArtGrid
 import com.fourshil.musicya.ui.theme.NeoDimens
+import com.fourshil.musicya.ui.components.NeoCard
+import com.fourshil.musicya.ui.components.NeoButton
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.border
 
 /**
  * Clean Minimalistic Artists Screen

@@ -33,22 +33,35 @@
 > Task :app:validateSigningDebug UP-TO-DATE
 > Task :app:writeDebugAppMetadata UP-TO-DATE
 > Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:kspDebugKotlin
 
-> Task :app:kspDebugKotlin FAILED
-e: file:///D:/Editing/Musicya/app/src/main/java/com/fourshil/musicya/ui/player/PlayerScreen.kt:538:2 Expecting '}'
+> Task :app:compileDebugKotlin
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/SongListItem.kt:54:5 Parameter 'showTrackNumber' is never used
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:45:5 Parameter 'currentRoute' is never used
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/AlbumsScreen.kt:46:5 Parameter 'onNavigate' is never used
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:42:5 Parameter 'currentRoute' is never used
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/ArtistsScreen.kt:43:5 Parameter 'onNavigate' is never used
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/PlaylistsScreen.kt:43:5 Parameter 'currentRoute' is never used
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/PlaylistsScreen.kt:44:5 Parameter 'onNavigate' is never used
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/PlaylistsScreen.kt:172:5 Parameter 'onLongClick' is never used
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:44:5 Parameter 'onMenuClick' is never used
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:45:5 Parameter 'currentRoute' is never used
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:46:5 Parameter 'onNavigate' is never used
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/library/SongsScreen.kt:51:9 Variable 'isLoading' is never used
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:365:49 'QueueMusic: ImageVector' is deprecated. Use the AutoMirrored version at Icons.AutoMirrored.Filled.QueueMusic
+w: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/queue/QueueScreen.kt:225:9 Variable 'borderColor' is never used
 
-FAILURE: Build failed with an exception.
+> Task :app:compileDebugJavaWithJavac UP-TO-DATE
+> Task :app:hiltAggregateDepsDebug UP-TO-DATE
+> Task :app:hiltJavaCompileDebug UP-TO-DATE
+> Task :app:processDebugJavaRes UP-TO-DATE
+> Task :app:mergeDebugJavaResource UP-TO-DATE
+> Task :app:transformDebugClassesWithAsm
+> Task :app:dexBuilderDebug
+> Task :app:mergeProjectDexDebug
+> Task :app:packageDebug
+> Task :app:createDebugApkListingFileRedirect UP-TO-DATE
+> Task :app:assembleDebug
 
-* What went wrong:
-Execution failed for task ':app:kspDebugKotlin'.
-> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
-   > Compilation error. See log for more details
-
-* Try:
-> Run with --stacktrace option to get the stack trace.
-> Run with --info or --debug option to get more log output.
-> Run with --scan to get full insights.
-> Get more help at https://help.gradle.org.
-
-BUILD FAILED in 3s
-29 actionable tasks: 2 executed, 27 up-to-date
+BUILD SUCCESSFUL in 30s
+40 actionable tasks: 7 executed, 33 up-to-date

@@ -30,11 +30,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.fillMaxSize
 import com.fourshil.musicya.data.model.Song
 import com.fourshil.musicya.ui.theme.NeoBlue
 import com.fourshil.musicya.ui.theme.NeoDimens
 import com.fourshil.musicya.ui.theme.NeoGreen
 import com.fourshil.musicya.ui.theme.NeoPink
+import androidx.compose.ui.unit.sp
 
 /**
  * Neo-Brutalist Song List Item

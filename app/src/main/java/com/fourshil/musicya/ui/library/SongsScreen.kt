@@ -21,6 +21,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.fourshil.musicya.data.model.Song
 import com.fourshil.musicya.ui.components.*
 import com.fourshil.musicya.ui.theme.NeoDimens
+import com.fourshil.musicya.ui.theme.NeoBackground
+import com.fourshil.musicya.ui.theme.NeoGreen
+import androidx.compose.ui.graphics.Color
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
