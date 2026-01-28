@@ -12,27 +12,28 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.pow
 
 /**
- * Manages crossfade transitions between tracks.
+ * Manages "Seamless Gapless Fade" transitions between tracks.
  * 
- * True crossfade behavior: the next song starts playing BEFORE the current song ends,
- * so both songs overlap briefly during the transition.
+ * Instead of attempting a "True Crossfade" (which requires two active players and is impossible 
+ * with a single ExoPlayer instance), this manager implements a professional 
+ * Fade-Out -> Gapless Switch -> Fade-In transition.
  * 
- * ## How it works:
- * 1. Monitors playback position continuously
- * 2. When approaching track end (within crossfade duration):
- *    - Starts fading out current song volume
- *    - At the midpoint of fade, triggers skip to next track
- *    - New track starts with fade-in from low volume
- * 3. The overlap creates the crossfade effect
+ * ## Behavior
+ * 1. **Fade Out**: As the track ends, volume smoothly decreases to 0.
+ * 2. **Native switch**: ExoPlayer switches tracks gaplessly while volume is 0.
+ * 3. **Fade In**: The new track starts at 0 volume and fades up to 100%.
+ * 
+ * This creates a smooth "mix" feel without the jarring cut of the previous implementation.
  */
 @Singleton
 class CrossfadeManager @Inject constructor() {
     
     companion object {
         private const val TAG = "CrossfadeManager"
-        private const val MONITOR_INTERVAL_MS = 50L // Very frequent for smooth fade
+        private const val MONITOR_INTERVAL_MS = 50L
     }
     
     private var player: Player? = null
@@ -40,19 +41,12 @@ class CrossfadeManager @Inject constructor() {
     private var monitorJob: Job? = null
     private var fadeInJob: Job? = null
     
-    // State tracking
-    private var isFadingOut = false
-    private var hasTriggeredSkip = false
-    
     private val _durationSeconds = MutableStateFlow(0)
     val durationSeconds: StateFlow<Int> = _durationSeconds.asStateFlow()
     
     val isEnabled: Boolean
         get() = _durationSeconds.value > 0
 
-    /**
-     * Initialize the manager with player and coroutine scope.
-     */
     fun initialize(player: Player, scope: CoroutineScope) {
         Log.d(TAG, "Initializing CrossfadeManager")
         this.player = player
@@ -63,10 +57,6 @@ class CrossfadeManager @Inject constructor() {
         }
     }
     
-    /**
-     * Set crossfade duration.
-     * @param seconds Duration in seconds (0-12). 0 disables crossfade.
-     */
     fun setDuration(seconds: Int) {
         val newDuration = seconds.coerceIn(0, 12)
         _durationSeconds.value = newDuration
@@ -82,18 +72,12 @@ class CrossfadeManager @Inject constructor() {
     }
     
     private fun startMonitoring() {
-        if (player == null || scope == null) {
-            Log.w(TAG, "Cannot start monitoring - not initialized")
-            return
-        }
-        
-        // Don't restart if already monitoring
+        if (player == null || scope == null) return
         if (monitorJob?.isActive == true) return
         
-        Log.d(TAG, "Starting crossfade monitoring")
         monitorJob = scope?.launch {
             while (isActive && isEnabled) {
-                checkCrossfade()
+                checkFadeOut()
                 delay(MONITOR_INTERVAL_MS)
             }
         }
@@ -104,73 +88,47 @@ class CrossfadeManager @Inject constructor() {
         monitorJob = null
         fadeInJob?.cancel()
         fadeInJob = null
-        isFadingOut = false
-        hasTriggeredSkip = false
     }
     
-    private fun checkCrossfade() {
+    /**
+     * Checks if we need to fade out the current track.
+     */
+    private fun checkFadeOut() {
         val p = player ?: return
-        
-        // Only check during active playback
-        if (!p.isPlaying) {
-            return
-        }
+        if (!p.isPlaying) return
         
         val duration = p.duration
         val position = p.currentPosition
         val crossfadeMs = _durationSeconds.value * 1000L
         
-        // Validate
         if (duration <= 0 || crossfadeMs <= 0) return
         
-        // Need at least one more track in queue
-        val hasNextTrack = p.hasNextMediaItem()
-        if (!hasNextTrack) {
-            // No next track - reset state
-            if (isFadingOut) {
-                isFadingOut = false
-                hasTriggeredSkip = false
-                p.volume = 1f
-            }
+        // Only fade out if there is a next track
+        if (!p.hasNextMediaItem()) {
+            p.volume = 1f
             return
         }
         
         val timeRemaining = duration - position
         
-        // Check if we're in the crossfade window
         if (timeRemaining > 0 && timeRemaining <= crossfadeMs) {
-            // Calculate fade progress (0.0 at start of fade window, 1.0 at end)
+            // Calculate linear progress (0.0 to 1.0)
+            // 0.0 at start of fade window, 1.0 at very end of track
             val fadeProgress = 1f - (timeRemaining.toFloat() / crossfadeMs)
             
-            // Apply fade-out: volume goes from 1.0 to 0.0
+            // Fade Volume: 1.0 -> 0.0
             val volume = (1f - fadeProgress).coerceIn(0f, 1f)
             p.volume = volume
-            
-            if (!isFadingOut) {
-                isFadingOut = true
-                hasTriggeredSkip = false
-                Log.d(TAG, "Started crossfade, ${timeRemaining}ms remaining")
-            }
-            
-            // At 50% through the fade (halfway point), skip to next track
-            // This makes the next song start while current is at 50% volume
-            if (!hasTriggeredSkip && fadeProgress >= 0.5f) {
-                hasTriggeredSkip = true
-                Log.d(TAG, "Triggering early skip to next track")
-                p.seekToNext()
-            }
         } else if (timeRemaining > crossfadeMs) {
-            // Not in crossfade window - ensure full volume
-            if (isFadingOut) {
-                isFadingOut = false
-                hasTriggeredSkip = false
+            // Ensure full volume if not in fade window (and not in a fade-in)
+            if (fadeInJob?.isActive != true) {
                 p.volume = 1f
             }
         }
     }
     
     /**
-     * Call when a new track starts to perform fade-in.
+     * Called when a new track starts. Triggers the fade-in.
      */
     fun onTrackStarted() {
         val p = player ?: return
@@ -181,18 +139,11 @@ class CrossfadeManager @Inject constructor() {
             return
         }
         
-        // Cancel any existing fade-in
+        // Cancel any pending fade-in
         fadeInJob?.cancel()
         
-        Log.d(TAG, "New track started - beginning fade-in")
-        
-        // Reset fade state
-        isFadingOut = false
-        hasTriggeredSkip = false
-        
-        // Start at low volume and fade up
-        val startVolume = if (isFadingOut) 0.3f else 0f
-        p.volume = startVolume
+        // Start completely silent for the seamless transition
+        p.volume = 0f
         
         fadeInJob = s.launch {
             val crossfadeMs = _durationSeconds.value * 1000L
@@ -201,34 +152,32 @@ class CrossfadeManager @Inject constructor() {
                 return@launch
             }
             
-            // Fade-in over half the crossfade duration
-            val fadeInMs = crossfadeMs / 2
+            // Fade-in should be fast/snappy or match fade-out?
+            // Matching fade-out duration usually feels best for "Crossfade" simulation
+            val fadeInDuration = crossfadeMs
             val startTime = System.currentTimeMillis()
+            
+            Log.d(TAG, "Starting fade-in for ${fadeInDuration}ms")
             
             while (isActive) {
                 val elapsed = System.currentTimeMillis() - startTime
-                val progress = (elapsed.toFloat() / fadeInMs).coerceIn(0f, 1f)
+                val progress = (elapsed.toFloat() / fadeInDuration).coerceIn(0f, 1f)
                 
-                // Fade from startVolume to 1.0
-                p.volume = startVolume + (1f - startVolume) * progress
+                // Linear fade in: 0.0 -> 1.0
+                p.volume = progress
                 
                 if (progress >= 1f) {
-                    Log.d(TAG, "Fade-in complete")
                     break
                 }
                 
-                delay(50)
+                delay(20) // High refresh for smoothness
             }
             
             p.volume = 1f
         }
     }
     
-    /**
-     * Release all resources.
-     */
     fun release() {
-        Log.d(TAG, "Releasing CrossfadeManager")
         stopAll()
         player?.volume = 1f
         player = null
