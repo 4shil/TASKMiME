@@ -68,8 +68,7 @@ fun NeoEmptyState(
             Spacer(modifier = Modifier.height(24.dp))
             NeoButton(
                 onClick = onAction,
-                backgroundColor = NeoPrimary,
-                contentColor = Color.White
+                backgroundColor = NeoPrimary
             ) {
                 Text(
                     text = actionLabel.uppercase(),

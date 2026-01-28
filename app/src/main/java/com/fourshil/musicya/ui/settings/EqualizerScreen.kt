@@ -23,6 +23,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.fourshil.musicya.player.EqBand
 import com.fourshil.musicya.ui.components.MinimalIconButton
 import com.fourshil.musicya.ui.theme.NeoDimens
+import com.fourshil.musicya.ui.components.NeoScaffold
+import com.fourshil.musicya.ui.components.NeoCard
+import com.fourshil.musicya.ui.theme.NeoBackground
 
 /**
  * Complete Equalizer Screen with:
@@ -47,8 +50,10 @@ fun EqualizerScreen(
     val currentPreset by viewModel.currentPreset.collectAsState()
     val isInitialized by viewModel.isInitialized.collectAsState()
 
-    Scaffold(
-        containerColor = MaterialTheme.colorScheme.background,
+    val isInitialized by viewModel.isInitialized.collectAsState()
+ 
+    NeoScaffold(
+        containerColor = NeoBackground,
         topBar = {
             // Header
             Row(
@@ -177,13 +182,12 @@ private fun PresetSelector(
     ) {
         // Preset Dropdown
         Box(modifier = Modifier.weight(1f)) {
-            Surface(
+            NeoCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp),
-                shape = RoundedCornerShape(NeoDimens.CornerMedium),
-                color = MaterialTheme.colorScheme.surface,
-                tonalElevation = NeoDimens.ElevationLow,
+                    .height(56.dp), // Height adjustment for shadow
+                backgroundColor = Color.White,
+                shadowSize = 4.dp,
                 onClick = { if (enabled) expanded = true }
             ) {
                 Row(
@@ -248,11 +252,12 @@ private fun EqBandsSection(
     enabled: Boolean,
     onBandChange: (Int, Int) -> Unit
 ) {
-    Surface(
+    onBandChange: (Int, Int) -> Unit
+) {
+    NeoCard(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(NeoDimens.CornerLarge),
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = NeoDimens.ElevationLow
+        backgroundColor = Color.White,
+        shadowSize = 4.dp
     ) {
         Column(
             modifier = Modifier.padding(NeoDimens.SpacingL)
@@ -357,10 +362,11 @@ private fun FxControlsSection(
             fontWeight = FontWeight.SemiBold
         )
         
-        Surface(
-            shape = RoundedCornerShape(NeoDimens.CornerLarge),
-            color = MaterialTheme.colorScheme.surface,
-            tonalElevation = NeoDimens.ElevationLow
+        )
+        
+        NeoCard(
+            backgroundColor = Color.White,
+            shadowSize = 4.dp
         ) {
             Column(
                 modifier = Modifier.padding(NeoDimens.SpacingL),

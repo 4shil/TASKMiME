@@ -17,6 +17,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import com.fourshil.musicya.data.db.Playlist
 import com.fourshil.musicya.ui.theme.Slate50
 import com.fourshil.musicya.ui.theme.Slate900
+import com.fourshil.musicya.ui.theme.NeoPink
 
 /**
  * Bottom sheet for adding song(s) to a playlist.
@@ -138,27 +139,39 @@ fun CreatePlaylistDialog(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                ArtisticButton(
+                NeoButton(
                     onClick = onDismiss,
-                    text = "CANCEL",
                     backgroundColor = surfaceColor,
-                    contentColor = contentColor,
-                    modifier = Modifier.weight(1f)
-                )
+                    modifier = Modifier.weight(1f).height(56.dp),
+                    borderWidth = 2.dp,
+                    shadowSize = 2.dp
+                ) {
+                    Text(
+                        text = "CANCEL",
+                        fontWeight = FontWeight.Bold,
+                        color = contentColor
+                    )
+                }
                 
-                ArtisticButton(
+                NeoButton(
                     onClick = { 
                         if (playlistName.isNotBlank()) {
                             onCreate(playlistName.trim())
                             onDismiss()
                         }
                     },
-                    text = "CREATE",
                     backgroundColor = contentColor,
-                    contentColor = surfaceColor,
-                    enabled = playlistName.isNotBlank(),
-                    modifier = Modifier.weight(1f)
-                )
+                    modifier = Modifier.weight(1f).height(56.dp),
+                    borderWidth = 2.dp,
+                    shadowSize = 4.dp
+                ) {
+                    Text(
+                         text = "CREATE",
+                         fontWeight = FontWeight.Black,
+                         color = surfaceColor,
+                         letterSpacing = 1.sp
+                    )
+                }
             }
         }
     }
@@ -194,25 +207,32 @@ fun DeleteConfirmDialog(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                ArtisticButton(
+                NeoButton(
                     onClick = onDismiss,
-                    text = "CANCEL",
                     backgroundColor = surfaceColor,
-                    contentColor = contentColor,
-                    modifier = Modifier.weight(1f)
-                )
+                    modifier = Modifier.weight(1f).height(56.dp),
+                    borderWidth = 2.dp,
+                    shadowSize = 2.dp
+                ) {
+                    Text(
+                        text = "CANCEL",
+                        fontWeight = FontWeight.Bold,
+                        color = contentColor
+                    )
+                }
                 
-                ArtisticButton(
+                NeoButton(
                     onClick = {
                         onConfirm()
                         onDismiss()
                     },
-                    text = "DELETE",
-                    backgroundColor = MaterialTheme.colorScheme.error,
-                    contentColor = Color.White,
-                    activeColor = MaterialTheme.colorScheme.error.copy(alpha = 0.8f),
-                    modifier = Modifier.weight(1f)
-                )
+                    backgroundColor = NeoPink, // Use NeoPink for destructive/attention
+                    modifier = Modifier.weight(1f).height(56.dp),
+                    borderWidth = 2.dp,
+                    shadowSize = 4.dp
+                ) {
+                    Text("DELETE", fontWeight = FontWeight.Black, color = Color.Black)
+                }
             }
         }
     }

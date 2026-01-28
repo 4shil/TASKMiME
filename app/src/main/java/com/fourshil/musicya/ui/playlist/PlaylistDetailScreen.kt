@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fourshil.musicya.data.model.Song
-import com.fourshil.musicya.ui.components.ArtisticButton
-import com.fourshil.musicya.ui.components.ArtisticCard
+import com.fourshil.musicya.ui.components.NeoButton
+import com.fourshil.musicya.ui.components.NeoCard
 import com.fourshil.musicya.ui.components.LargeAlbumArt
 import com.fourshil.musicya.ui.components.SongListItem
 import com.fourshil.musicya.ui.theme.MangaRed
@@ -48,12 +48,12 @@ fun PlaylistDetailScreen(
             modifier = Modifier.padding(horizontal = NeoDimens.ScreenPadding, vertical = NeoDimens.SpacingL),
             verticalAlignment = Alignment.CenterVertically
         ) {
-             ArtisticButton(
+             NeoButton(
                 onClick = onBack,
-                icon = { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = MaterialTheme.colorScheme.onBackground) },
-                modifier = Modifier.size(NeoDimens.ButtonHeightSmall) // 48.dp matches ButtonHeightSmall? Or Medium? Main Headers use Medium. Let's use Medium for consistent hit target. 
-                // Ah, previous code used 48.dp. Medium is usually ~52-56. Let's stick to NeoDimens.ButtonHeightMedium (52.dp usually) for consistency.
-            )
+                modifier = Modifier.size(52.dp),
+                borderWidth = 2.dp,
+                shadowSize = 4.dp
+            ) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.Black) }
              Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
              Text("RETURN", style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Black), color = MaterialTheme.colorScheme.onBackground)
         }
@@ -79,9 +79,10 @@ fun PlaylistDetailScreen(
                          contentAlignment = Alignment.Center
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                             ArtisticCard(
-                                onClick = null,
-                                modifier = Modifier.size(200.dp) // Large art, keep 200 or add NeoDimens.ArtLarge? 200 is fine as singular hero.
+                             NeoCard(
+                                modifier = Modifier.size(200.dp),
+                                borderWidth = 4.dp,
+                                shadowSize = 8.dp
                             ) {
                                 LargeAlbumArt(
                                      uri = if (!artUri.isNullOrEmpty()) Uri.parse(artUri!!) else null,
@@ -107,16 +108,26 @@ fun PlaylistDetailScreen(
                             
                             // Actions
                              Row(horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingL)) {
-                                 ArtisticButton(
+                                 NeoButton(
                                     onClick = { viewModel.playAll() },
-                                    text = "PLAY ALL",
-                                    icon = { Icon(Icons.Default.PlayArrow, null) }
-                                 )
-                                  ArtisticButton(
+                                    backgroundColor = Color.Black,
+                                    borderWidth = 2.dp,
+                                    shadowSize = 4.dp
+                                 ) {
+                                     Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                                         Icon(Icons.Default.PlayArrow, null, tint = Color.White)
+                                         Spacer(modifier = Modifier.width(8.dp))
+                                         Text("PLAY ALL", color = Color.White, fontWeight = FontWeight.Bold)
+                                     }
+                                 }
+                                  NeoButton(
                                     onClick = { viewModel.shufflePlay() },
-                                    icon = { Icon(Icons.Default.Shuffle, null) },
-                                    modifier = Modifier.size(NeoDimens.ButtonHeightMedium)
-                                 )
+                                    modifier = Modifier.size(52.dp),
+                                    borderWidth = 2.dp,
+                                    shadowSize = 4.dp
+                                 ) {
+                                     Icon(Icons.Default.Shuffle, null, tint = Color.Black)
+                                 }
                              }
                         }
                     }

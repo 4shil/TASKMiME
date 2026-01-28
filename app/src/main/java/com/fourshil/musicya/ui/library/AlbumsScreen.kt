@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fourshil.musicya.data.model.Album
+import com.fourshil.musicya.ui.components.NeoEmptyState
 import com.fourshil.musicya.ui.theme.NeoDimens
 import com.fourshil.musicya.ui.components.NeoCard
 import androidx.compose.ui.graphics.Color

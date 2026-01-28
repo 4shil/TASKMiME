@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fourshil.musicya.ui.components.ArtisticButton
-import com.fourshil.musicya.ui.components.ArtisticCard
+import com.fourshil.musicya.ui.components.NeoButton
+import com.fourshil.musicya.ui.components.NeoCard
 import com.fourshil.musicya.ui.components.TopNavigationChips
 import com.fourshil.musicya.ui.navigation.NavigationUtils
 import com.fourshil.musicya.ui.theme.NeoDimens
@@ -25,6 +25,7 @@ import com.fourshil.musicya.ui.theme.Slate700
 import com.fourshil.musicya.ui.theme.Slate900
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun PermissionRequiredView(onRequest: () -> Unit) {
@@ -32,10 +33,15 @@ fun PermissionRequiredView(onRequest: () -> Unit) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text("LOCKED", style = MaterialTheme.typography.displayMedium)
              Spacer(modifier = Modifier.height(16.dp))
-            ArtisticButton(
-                text = "ACCESS DATA",
-                onClick = onRequest
-            )
+            NeoButton(
+                onClick = onRequest,
+                backgroundColor = Color.Black,
+                modifier = Modifier.height(48.dp),
+                borderWidth = 2.dp,
+                shadowSize = 4.dp
+            ) {
+                Text("ACCESS DATA", color = Color.White, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp))
+            }
         }
     }
 }
@@ -53,10 +59,11 @@ fun SelectionTopBar(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        ArtisticCard(
+        NeoCard(
             modifier = Modifier.fillMaxWidth(),
             backgroundColor = Slate900,
-            borderColor = Slate700
+            borderColor = Color.Black,
+            shadowSize = 4.dp
         ) {
             Row(
                 modifier = Modifier
