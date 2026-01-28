@@ -4,7 +4,6 @@ import com.fourshil.musicya.data.model.Album
 import com.fourshil.musicya.data.model.Artist
 import com.fourshil.musicya.data.model.Folder
 import com.fourshil.musicya.data.model.Song
-import android.content.IntentSender
 
 /**
  * Repository interface for music data operations.
@@ -66,5 +65,5 @@ interface IMusicRepository {
      * Delete songs from the device storage.
      * @return Number of songs successfully deleted
      */
-    suspend fun deleteSongs(songIds: List<Long>): DeleteOutcome
+    suspend fun deleteSongs(songIds: List<Long>): Int
 }

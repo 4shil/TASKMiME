@@ -26,10 +26,6 @@ import com.fourshil.musicya.ui.theme.NeoGreen
 import androidx.compose.ui.graphics.Color
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.IntentSenderRequest
-import androidx.activity.result.contract.ActivityResultContracts
-import android.content.IntentSender
 
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -64,29 +60,7 @@ fun SongsScreen(
     var showAddToPlaylistSheet by remember { mutableStateOf(false) }
     var showCreatePlaylistDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-
     var showBulkActionsSheet by remember { mutableStateOf(false) }
-
-    // Deletion Permission Launcher
-    val intentSenderLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartIntentSenderForResult()
-    ) { result ->
-        if (result.resultCode == android.app.Activity.RESULT_OK) {
-             // Permission granted, retry deletion... 
-             // But we don't know WHICH songs to retry here easily without state.
-             // Simplest is to just refresh or let user click delete again.
-             // Ideally we'd retry. For now, we rely on the user trying again.
-             viewModel.refresh() // Refresh state
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.deletePermissionEvent.collect { intentSender ->
-            intentSenderLauncher.launch(
-                IntentSenderRequest.Builder(intentSender).build()
-            )
-        }
-    }
 
     val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         listOf(Manifest.permission.READ_MEDIA_AUDIO)
@@ -266,10 +240,8 @@ fun SongsScreen(
                                             selectionState.toggleSelection(song.id)
                                         } else {
                                             // Collect all currently loaded songs for the queue
-                                            // OPTIMIZATION: Use ViewModel's background queue generation
-                                            // val allVisibleSongs = (0 until pagedSongs.itemCount).mapNotNull { pagedSongs[it] }
-                                            // viewModel.playSongWithQueue(song, allVisibleSongs)
-                                            viewModel.playSongFromLibrary(song.id)
+                                            val allVisibleSongs = (0 until pagedSongs.itemCount).mapNotNull { pagedSongs[it] }
+                                            viewModel.playSongWithQueue(song, allVisibleSongs)
                                             onSongClick(index)
                                         }
                                     },
