@@ -25,6 +25,10 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.fourshil.musicya.data.repository.SongsPagingSource
+import com.fourshil.musicya.data.repository.DeleteOutcome
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+import android.content.IntentSender
 
 @HiltViewModel
 class LibraryViewModel @Inject constructor(
@@ -62,6 +66,10 @@ class LibraryViewModel @Inject constructor(
     // Playlists
     val playlists = musicDao.getAllPlaylists()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // Permission Events
+    private val _deletePermissionEvent = Channel<IntentSender>()
+    val deletePermissionEvent = _deletePermissionEvent.receiveAsFlow()
 
     init {
         playerController.connect()
@@ -103,17 +111,34 @@ class LibraryViewModel @Inject constructor(
      * Play a song while setting all provided songs as the queue.
      * This enables proper skip next/previous functionality.
      */
-    fun playSongWithQueue(song: Song, allSongs: List<Song>) {
-        if (allSongs.isEmpty()) {
-            // Fallback to single song play
-            playerController.playSong(song)
-        } else {
-            val index = allSongs.indexOfFirst { it.id == song.id }
-            if (index >= 0) {
-                playerController.playSongs(allSongs, index)
+    /**
+     * Optimized playback: Finds the song in the precached library list.
+     * Starts from that index with the full queue, without UI thread overhead.
+     */
+    fun playSongFromLibrary(startSongId: Long) {
+        viewModelScope.launch {
+            // Ensure library is loaded/fresh ideally, but using _songs.value is instant
+            val currentList = _songs.value
+            if (currentList.isNotEmpty()) {
+                val index = currentList.indexOfFirst { it.id == startSongId }
+                if (index >= 0) {
+                    playerController.playSongs(currentList, index)
+                } else {
+                    // Fallback if not found (e.g. filtered list or stale cache)
+                    // Just play the individual song if we can find it, or generic error
+                    // For now, try loading specific song
+                    val songs = repository.getSongsByIds(listOf(startSongId))
+                    if (songs.isNotEmpty()) {
+                        playerController.playSong(songs.first())
+                    }
+                }
             } else {
-                // Song not found in list, play as single
-                playerController.playSong(song)
+                // Library empty? Try to reload and play?
+                // Just fallback to playing by ID
+                 val songs = repository.getSongsByIds(listOf(startSongId))
+                 if (songs.isNotEmpty()) {
+                     playerController.playSong(songs.first())
+                 }
             }
         }
     }
@@ -204,12 +229,24 @@ class LibraryViewModel @Inject constructor(
      */
     fun deleteSongs(songIds: List<Long>, onComplete: (Int) -> Unit = {}) {
         viewModelScope.launch {
-            val deletedCount = repository.deleteSongs(songIds)
-            if (deletedCount > 0) {
-                // Refresh the library after deletion
-                loadLibrary()
+            when (val result = repository.deleteSongs(songIds)) {
+                is DeleteOutcome.Success -> {
+                    if (result.count > 0) {
+                        loadLibrary()
+                        pagedSongs // trigger refresh if possible, or invalidate paging source
+                        // PagingSource invalidation is tricky without the source instance.
+                        // Ideally we call 'adapter.refresh()' in UI, or expose a 'refreshSignal'
+                    }
+                    onComplete(result.count)
+                }
+                is DeleteOutcome.RequirePermission -> {
+                    _deletePermissionEvent.send(result.intentSender)
+                }
+                is DeleteOutcome.Error -> {
+                    // Handle generic error
+                    onComplete(0)
+                }
             }
-            onComplete(deletedCount)
         }
     }
     

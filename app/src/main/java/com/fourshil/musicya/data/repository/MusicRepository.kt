@@ -12,8 +12,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import android.util.Log
+import android.app.RecoverableSecurityException
+import android.content.IntentSender
 import javax.inject.Inject
 import javax.inject.Singleton
+
+sealed class DeleteOutcome {
+    data class Success(val count: Int) : DeleteOutcome()
+    data class RequirePermission(val intentSender: IntentSender) : DeleteOutcome()
+    data class Error(val message: String) : DeleteOutcome()
+}
 
 private const val TAG = "MusicRepository"
 
@@ -358,7 +366,7 @@ class MusicRepository @Inject constructor(
      * Delete songs from the device storage.
      * @return Number of songs successfully deleted
      */
-    override suspend fun deleteSongs(songIds: List<Long>): Int = withContext(Dispatchers.IO) {
+    override suspend fun deleteSongs(songIds: List<Long>): DeleteOutcome = withContext(Dispatchers.IO) {
         var deletedCount = 0
         
         for (songId in songIds) {
@@ -368,16 +376,25 @@ class MusicRepository @Inject constructor(
                 if (deleted > 0) {
                     deletedCount++
                 }
+            } catch (e: RecoverableSecurityException) {
+                // Return immediately if we hit a permission issue
+                // The UI will handle the permission and then retry the deletion
+                return@withContext DeleteOutcome.RequirePermission(e.userAction.actionIntent.intentSender)
             } catch (e: Exception) {
                 android.util.Log.e("MusicRepository", "Error deleting song $songId", e)
             }
         }
         
-        // Clear cache after deletion
+        // Clear cache and result
         if (deletedCount > 0) {
             clearCache()
+            return@withContext DeleteOutcome.Success(deletedCount)
+        } else {
+             if (songIds.isNotEmpty()) {
+                 // If we tried to delete but failed all without specific permission error
+                 return@withContext DeleteOutcome.Error("Failed to delete songs")
+             }
+             return@withContext DeleteOutcome.Success(0)
         }
-        
-        deletedCount
     }
 }
