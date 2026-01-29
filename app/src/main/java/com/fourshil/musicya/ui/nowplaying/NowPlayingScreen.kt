@@ -160,13 +160,14 @@ fun NowPlayingScreen(
                      // We can keep the simpler logic or re-integrate the rigid spring swipe if desired.
                      // For Neobrutal, rigid movements are fine.
                      
-                     if (currentSong != null) {
-                         AsyncImage(
-                             model = coil.request.ImageRequest.Builder(LocalContext.current)
-                                 .data(currentSong!!.albumArtUri)
-                                 .size(coil.size.Size.ORIGINAL) // Force original size for high quality
-                                 .crossfade(true)
-                                 .build(),
+                        if (currentSong != null) {
+                            AsyncImage(
+                                model = coil.request.ImageRequest.Builder(LocalContext.current)
+                                    .data(currentSong!!.albumArtUri)
+                                    .size(coil.size.Size.ORIGINAL) // Force original size
+                                    .precision(coil.size.Precision.EXACT) // Require exact dimensions, don't use smaller cache
+                                    .crossfade(true)
+                                    .build(),
                              contentDescription = "Album Art",
                              contentScale = ContentScale.Crop,
                              modifier = Modifier
