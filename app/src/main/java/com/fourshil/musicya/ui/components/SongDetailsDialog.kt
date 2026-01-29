@@ -1,58 +1,134 @@
 package com.fourshil.musicya.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.fourshil.musicya.data.model.Song
+import com.fourshil.musicya.ui.theme.NeoDimens
+import com.fourshil.musicya.ui.theme.NeoPrimary
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Dialog showing detailed information about a song.
+ * Neo-Brutalist Dialog showing detailed information about a song.
  */
 @Composable
 fun SongDetailsDialog(
     song: Song,
     onDismiss: () -> Unit
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Song Details") },
-        text = {
+    Dialog(onDismissRequest = onDismiss) {
+        NeoCard(
+            modifier = Modifier.fillMaxWidth(),
+            backgroundColor = Color.White,
+            shadowSize = 8.dp,
+            shape = RoundedCornerShape(16.dp)
+        ) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                modifier = Modifier
+                    .padding(NeoDimens.SpacingL)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                DetailRow("Title", song.title)
-                DetailRow("Artist", song.artist)
-                DetailRow("Album", song.album)
-                DetailRow("Duration", song.durationFormatted)
-                DetailRow("Size", formatFileSize(song.size))
-                DetailRow("Path", song.path)
-                DetailRow("Date Added", formatDate(song.dateAdded))
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Close")
+                // Header
+                Text(
+                    text = "DETAILS",
+                    style = MaterialTheme.typography.headlineSmall.copy(
+                        fontWeight = FontWeight.Black,
+                        letterSpacing = 2.sp
+                    ),
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = NeoDimens.SpacingL)
+                )
+
+                // Content
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(weight = 1f, fill = false) // Allow scrolling if too long
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingM)
+                ) {
+                    DetailRow("TITLE", song.title)
+                    DetailRow("ARTIST", song.artist)
+                    DetailRow("ALBUM", song.album)
+                    DetailRow("DURATION", song.durationFormatted)
+                    DetailRow("SIZE", formatFileSize(song.size))
+                    DetailRow("PATH", song.path, isPath = true)
+                    DetailRow("DATE ADDED", formatDate(song.dateAdded))
+                }
+
+                Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
+
+                // Close Button
+                NeoButton(
+                    onClick = onDismiss,
+                    modifier = Modifier.fillMaxWidth().height(48.dp),
+                    backgroundColor = NeoPrimary,
+                    shape = RoundedCornerShape(12.dp),
+                    shadowSize = 4.dp
+                ) {
+                    Text(
+                        text = "CLOSE",
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp
+                        ),
+                        color = Color.White
+                    )
+                }
             }
         }
-    )
+    }
 }
 
 @Composable
-private fun DetailRow(label: String, value: String) {
-    Column {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
+private fun DetailRow(label: String, value: String, isPath: Boolean = false) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        // Label with decorative line
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    fontWeight = FontWeight.ExtraBold,
+                    letterSpacing = 1.sp
+                ),
+                color = Color.Black
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Box(
+                modifier = Modifier
+                    .height(2.dp)
+                    .weight(1f)
+                    .background(Color.Black)
+            )
+        }
+        
+        Spacer(modifier = Modifier.height(4.dp))
+        
+        // Value
         Text(
             text = value.ifEmpty { "Unknown" },
-            style = MaterialTheme.typography.bodyMedium
+            style = if (isPath) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = Color.DarkGray,
+            modifier = Modifier.padding(start = 8.dp)
         )
     }
 }
