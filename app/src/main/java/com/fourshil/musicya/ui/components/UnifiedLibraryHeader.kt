@@ -33,13 +33,15 @@ fun UnifiedLibraryHeader(
             .fillMaxWidth()
             .background(NeoBackground)
             .statusBarsPadding()
-            .padding(horizontal = 24.dp) // Standard neo-brutalist padding
+            // Removed horizontal padding here to allow full-width scroll
     ) {
         Spacer(modifier = Modifier.height(24.dp))
         
         // Header: Title + Menu
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp), // Added padding here
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -66,7 +68,10 @@ fun UnifiedLibraryHeader(
         
         // Search Bar
         NeoCard(
-            modifier = Modifier.fillMaxWidth().height(56.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .padding(horizontal = 24.dp), // Added padding here
             onClick = onSearchClick,
             backgroundColor = Color.White,
             shadowSize = 4.dp,
