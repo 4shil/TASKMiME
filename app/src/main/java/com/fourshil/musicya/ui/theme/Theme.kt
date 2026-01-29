@@ -20,10 +20,10 @@ import androidx.core.view.WindowCompat
 // ═══════════════════════════════════════════════════════════════════════════════
 private val LightColorScheme = lightColorScheme(
     // Primary
-    primary = AccentPrimary,
+    primary = ClaudeAccent,
     onPrimary = PureWhite,
-    primaryContainer = AccentPrimary.copy(alpha = 0.12f),
-    onPrimaryContainer = AccentPrimary,
+    primaryContainer = ClaudeAccent.copy(alpha = 0.12f),
+    onPrimaryContainer = ClaudeAccent,
     
     // Secondary
     secondary = AccentSecondary,

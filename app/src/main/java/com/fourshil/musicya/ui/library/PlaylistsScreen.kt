@@ -61,6 +61,43 @@ fun PlaylistsScreen(
         )
     ) {
 
+        // Create Playlist Item
+        item {
+            Box(modifier = Modifier.padding(horizontal = NeoDimens.ScreenPadding, vertical = 6.dp)) {
+                NeoCard(
+                    onClick = { showCreateDialog = true },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp), // Same as items
+                    shadowSize = 4.dp,
+                    backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                    borderWidth = 2.dp
+                ) {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Box(
+                             modifier = Modifier
+                                .size(56.dp)
+                                .border(2.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.small)
+                                .background(MaterialTheme.colorScheme.surface),
+                             contentAlignment = Alignment.Center
+                        ) {
+                            Icon(Icons.Default.Add, null, tint = MaterialTheme.colorScheme.onSurface)
+                        }
+                        
+                        Spacer(modifier = Modifier.width(16.dp))
+                        
+                        Text(
+                            text = "CREATE NEW PLAYLIST",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
+                }
+            }
+        }
+
         if (playlists.isEmpty()) {
             item {
                 Box(modifier = Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
@@ -187,14 +224,19 @@ fun PlaylistArtisticItem(
             Box(
                 modifier = Modifier
                     .size(56.dp)
-                    .border(2.dp, Color.Black)
-                    .background(Color.LightGray),
+                    .border(2.dp, Color.Black, MaterialTheme.shapes.small)
+                    .background(Color.LightGray, MaterialTheme.shapes.small),
                 contentAlignment = Alignment.Center
             ) {
                 if (artUris.isNotEmpty()) {
                     PlaylistArtGrid(uris = artUris, size = 56.dp, isScrolling = isScrolling)
                 } else {
-                    Icon(Icons.Default.Folder, null, tint = Color.Black)
+                    Icon(
+                         Icons.Default.Folder, 
+                         null, 
+                         tint = Color.Black,
+                         modifier = Modifier.size(24.dp)
+                    )
                 }
             }
             

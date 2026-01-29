@@ -105,7 +105,7 @@ private fun DetailRow(label: String, value: String, isPath: Boolean = false) {
         ) {
             Text(
                 text = label,
-                style = MaterialTheme.typography.labelMedium.copy(
+                style = MaterialTheme.typography.titleSmall.copy( // Larger label
                     fontWeight = FontWeight.ExtraBold,
                     letterSpacing = 1.sp
                 ),
@@ -125,9 +125,9 @@ private fun DetailRow(label: String, value: String, isPath: Boolean = false) {
         // Value
         Text(
             text = value.ifEmpty { "Unknown" },
-            style = if (isPath) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = if (isPath) MaterialTheme.typography.bodyMedium else MaterialTheme.typography.titleMedium, // Larger Value
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface, // High contrast
             modifier = Modifier.padding(start = 8.dp)
         )
     }

@@ -1,6 +1,7 @@
 package com.fourshil.musicya.ui.search
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,6 +26,8 @@ import com.fourshil.musicya.data.model.Song
 import com.fourshil.musicya.ui.components.AlbumArtImage
 import com.fourshil.musicya.ui.components.MinimalIconButton
 import com.fourshil.musicya.ui.components.SongListItem
+import com.fourshil.musicya.ui.components.NeoScaffold
+import com.fourshil.musicya.ui.components.NeoCard
 import com.fourshil.musicya.ui.theme.NeoDimens
 
 /**
@@ -44,7 +47,7 @@ fun SearchScreen(
     val artists by viewModel.artists.collectAsState()
     val isSearching by viewModel.isSearching.collectAsState()
 
-    Scaffold(
+    NeoScaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             // Clean header with search bar
@@ -78,10 +81,11 @@ fun SearchScreen(
                 Spacer(modifier = Modifier.height(NeoDimens.SpacingL))
 
                 // Search Bar
-                Surface(
+                NeoCard(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(NeoDimens.CornerFull),
-                    color = MaterialTheme.colorScheme.surfaceVariant
+                    backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+                    shadowSize = 4.dp
                 ) {
                     Row(
                         modifier = Modifier.padding(
@@ -298,13 +302,13 @@ private fun SearchResultItem(
     isArtist: Boolean = false,
     onClick: () -> Unit
 ) {
-    Surface(
+    NeoCard(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = NeoDimens.ScreenPadding, vertical = NeoDimens.SpacingXS),
-        color = MaterialTheme.colorScheme.surface,
-        shape = RoundedCornerShape(NeoDimens.CornerMedium)
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(NeoDimens.CornerMedium),
+        backgroundColor = MaterialTheme.colorScheme.surface,
+        shadowSize = 2.dp
     ) {
         Row(
             modifier = Modifier.padding(NeoDimens.SpacingM),
@@ -315,7 +319,8 @@ private fun SearchResultItem(
                 modifier = Modifier
                     .size(NeoDimens.AlbumArtSmall)
                     .clip(RoundedCornerShape(if (isArtist) NeoDimens.CornerFull else NeoDimens.CornerSmall))
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(if (isArtist) NeoDimens.CornerFull else NeoDimens.CornerSmall)),
                 contentAlignment = Alignment.Center
             ) {
                 if (artUri != null) {

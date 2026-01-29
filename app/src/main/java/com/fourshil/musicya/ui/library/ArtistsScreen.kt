@@ -150,12 +150,7 @@ private fun ArtistListItem(
                 if (artUris.isNotEmpty()) {
                     PlaylistArtGrid(uris = artUris.take(4), size = 56.dp, isScrolling = isScrolling)
                 } else {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = null,
-                        modifier = Modifier.size(28.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                     com.fourshil.musicya.ui.components.ArtistImage(size = 56.dp)
                 }
             }
 

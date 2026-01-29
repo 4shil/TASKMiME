@@ -3,6 +3,7 @@ package com.fourshil.musicya.ui.nowplaying
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -113,19 +114,25 @@ fun NowPlayingScreen(
                         Icon(Icons.Default.MoreHoriz, null, tint = MaterialTheme.colorScheme.onSurface)
                     }
 
-                    DropdownMenu(
-                        expanded = showMenu,
-                        onDismissRequest = { showMenu = false },
-                        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+                    MaterialTheme(
+                        shapes = MaterialTheme.shapes.copy(extraSmall = RoundedCornerShape(12.dp))
                     ) {
-                        DropdownMenuItem(
-                            text = { Text("Details", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface) },
-                            onClick = {
-                                showMenu = false
-                                showDetails = true
-                            },
-                             leadingIcon = { Icon(Icons.Default.Info, null, tint = MaterialTheme.colorScheme.onSurface) }
-                        )
+                        DropdownMenu(
+                            expanded = showMenu,
+                            onDismissRequest = { showMenu = false },
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.surface)
+                                .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Details", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface) },
+                                onClick = {
+                                    showMenu = false
+                                    showDetails = true
+                                },
+                                leadingIcon = { Icon(Icons.Default.Info, null, tint = MaterialTheme.colorScheme.onSurface) }
+                            )
+                        }
                     }
                 }
             }
@@ -297,7 +304,8 @@ fun NowPlayingScreen(
                     modifier = Modifier.size(56.dp),
                     shape = RoundedCornerShape(16.dp),
                     backgroundColor = MaterialTheme.colorScheme.surface,
-                    shadowSize = 2.dp
+                    shadowSize = 2.dp,
+                    borderWidth = 2.dp
                 ) {
                     Icon(
                         Icons.Default.Shuffle, 
@@ -312,10 +320,15 @@ fun NowPlayingScreen(
                     onClick = { viewModel.skipToPrevious() },
                     modifier = Modifier.size(64.dp),
                     shape = RoundedCornerShape(16.dp),
-                    backgroundColor = MaterialTheme.colorScheme.secondaryContainer, // Was NeoYellow
-                    shadowSize = 4.dp // neobrutal normal
+                    backgroundColor = MaterialTheme.colorScheme.surface, // Clean
+                    shadowSize = 4.dp
                 ) {
-                    Icon(Icons.Default.SkipPrevious, null, modifier = Modifier.size(36.dp), tint = MaterialTheme.colorScheme.onSecondaryContainer)
+                    Icon(
+                        Icons.Default.SkipPrevious, 
+                        null, 
+                        modifier = Modifier.size(36.dp), 
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
                 }
                 
                 // Play
@@ -339,10 +352,15 @@ fun NowPlayingScreen(
                     onClick = { viewModel.skipToNext() },
                     modifier = Modifier.size(64.dp),
                     shape = RoundedCornerShape(16.dp),
-                    backgroundColor = MaterialTheme.colorScheme.tertiaryContainer, // Was NeoPink
+                    backgroundColor = MaterialTheme.colorScheme.surface, // Clean
                     shadowSize = 4.dp
                 ) {
-                    Icon(Icons.Default.SkipNext, null, modifier = Modifier.size(36.dp), tint = MaterialTheme.colorScheme.onTertiaryContainer)
+                    Icon(
+                        Icons.Default.SkipNext, 
+                        null, 
+                        modifier = Modifier.size(36.dp), 
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
                 }
                 
                 // Repeat

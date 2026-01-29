@@ -213,26 +213,33 @@ private fun PresetSelector(
                 }
             }
             
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier.background(MaterialTheme.colorScheme.surface)
+            MaterialTheme(
+                shapes = MaterialTheme.shapes.copy(extraSmall = RoundedCornerShape(12.dp))
             ) {
-                presets.forEachIndexed { index, preset ->
-                    DropdownMenuItem(
-                        text = { 
-                            Text(
-                                text = preset,
-                                fontWeight = if (index == currentPreset) FontWeight.Bold else FontWeight.Normal,
-                                color = if (index == currentPreset) MaterialTheme.colorScheme.primary
-                                       else MaterialTheme.colorScheme.onSurface
-                            )
-                        },
-                        onClick = {
-                            onPresetSelected(index)
-                            expanded = false
-                        }
-                    )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.surface)
+                        .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
+                        .heightIn(max = 300.dp) // Limit height
+                ) {
+                    presets.forEachIndexed { index, preset ->
+                        DropdownMenuItem(
+                            text = { 
+                                Text(
+                                    text = preset,
+                                    fontWeight = if (index == currentPreset) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (index == currentPreset) MaterialTheme.colorScheme.primary
+                                           else MaterialTheme.colorScheme.onSurface
+                                )
+                            },
+                            onClick = {
+                                onPresetSelected(index)
+                                expanded = false
+                            }
+                        )
+                    }
                 }
             }
         }

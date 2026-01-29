@@ -122,30 +122,19 @@ private fun AlbumCard(
         Column {
             // Album Art
             Box(
-                modifier = Modifier
+                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
                     .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .border(
-                        width = 0.dp, // No border for image inside card if unnecessary, or bottom border
-                        color = MaterialTheme.colorScheme.outline
-                    ),
-                contentAlignment = Alignment.Center
             ) {
-                // Defer loading while scrolling
-                val model = if (isScrolling) null else ImageRequest.Builder(LocalContext.current)
-                    .data(album.artUri)
-                    .crossfade(true)
-                    .build()
-                
-                if (model != null) {
-                    AsyncImage(
-                        model = model,
-                        contentDescription = album.name,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+                 com.fourshil.musicya.ui.components.AlbumArtImage(
+                     uri = album.artUri,
+                     contentDescription = album.name,
+                     size = 200.dp, // Large enough for grid
+                     fallbackIcon = Icons.Default.Album,
+                     isScrolling = isScrolling,
+                     modifier = Modifier.fillMaxSize()
+                 )
             }
             
             // Separator border
