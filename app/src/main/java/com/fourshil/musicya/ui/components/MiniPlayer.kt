@@ -70,8 +70,8 @@ fun MiniPlayer(
     var swipeDirection by remember { mutableIntStateOf(0) }
 
     // Neo-Brutalist Colors
-    val backgroundColor = Color.White
-    val borderCol = Color.Black
+    val backgroundColor = MaterialTheme.colorScheme.surface
+    val borderCol = MaterialTheme.colorScheme.outline
     
     NeoCard(
         modifier = modifier
@@ -111,13 +111,13 @@ fun MiniPlayer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(4.dp)
-                    .background(Color.Black)
+                    .background(MaterialTheme.colorScheme.onSurface)
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
                         .fillMaxWidth(fraction = progress.coerceIn(0f, 1f))
-                        .background(NeoGreen)
+                        .background(MaterialTheme.colorScheme.primary)
                 )
             }
 
@@ -151,7 +151,7 @@ fun MiniPlayer(
                             // Album Art - Neo Card wrapped
                             NeoCard(
                                 modifier = Modifier.size(48.dp),
-                                backgroundColor = Color.LightGray,
+                                backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
                                 borderWidth = 2.dp,
                                 shadowSize = 0.dp,
                                 shape = RoundedCornerShape(0.dp)
@@ -172,7 +172,7 @@ fun MiniPlayer(
                                     fontWeight = FontWeight.Black,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
-                                    color = Color.Black
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
                                     text = currentSong.artist,
@@ -180,7 +180,7 @@ fun MiniPlayer(
                                     fontWeight = FontWeight.Bold,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
-                                    color = Color.Black.copy(alpha = 0.7f)
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         }
@@ -193,7 +193,7 @@ fun MiniPlayer(
                 NeoButton(
                     onClick = onPlayPauseClick,
                     modifier = Modifier.size(48.dp),
-                    backgroundColor = NeoPrimary,
+                    backgroundColor = MaterialTheme.colorScheme.primary,
                     borderWidth = 2.dp,
                     shadowSize = 2.dp,
                     shape = RoundedCornerShape(8.dp)
@@ -201,7 +201,7 @@ fun MiniPlayer(
                    Icon(
                         imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                         contentDescription = if (isPlaying) "Pause" else "Play",
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(24.dp)
                     )
                 }
@@ -213,13 +213,13 @@ fun MiniPlayer(
                     onClick = onNextClick,
                     modifier = Modifier
                         .size(40.dp)
-                        .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
-                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
                 ) {
                     Icon(
                         imageVector = Icons.Default.SkipNext,
                         contentDescription = "Next",
-                        tint = Color.Black
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }

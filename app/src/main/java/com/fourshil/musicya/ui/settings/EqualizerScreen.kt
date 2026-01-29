@@ -298,7 +298,7 @@ private fun EqBandsSection(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(350.dp),
+                    .height(450.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -324,7 +324,7 @@ private fun EqBandsSection(
                                 enabled = enabled,
                                 modifier = Modifier
                                     .graphicsLayer { rotationZ = 270f }
-                                    .width(300.dp),
+                                    .width(400.dp),
                                 colors = SliderDefaults.colors(
                                     thumbColor = MaterialTheme.colorScheme.primary,
                                     activeTrackColor = MaterialTheme.colorScheme.primary,

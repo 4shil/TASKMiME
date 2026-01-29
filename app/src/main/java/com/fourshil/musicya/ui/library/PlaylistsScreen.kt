@@ -69,7 +69,7 @@ fun PlaylistsScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp), // Same as items
                     shadowSize = 4.dp,
-                    backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                    backgroundColor = MaterialTheme.colorScheme.surface,
                     borderWidth = 2.dp
                 ) {
                     Row(
@@ -80,10 +80,10 @@ fun PlaylistsScreen(
                              modifier = Modifier
                                 .size(56.dp)
                                 .border(2.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.small)
-                                .background(MaterialTheme.colorScheme.surface),
+                                .background(MaterialTheme.colorScheme.surfaceVariant),
                              contentAlignment = Alignment.Center
                         ) {
-                            Icon(Icons.Default.Add, null, tint = MaterialTheme.colorScheme.onSurface)
+                            Icon(Icons.Default.Add, null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
                         }
                         
                         Spacer(modifier = Modifier.width(16.dp))
@@ -91,7 +91,7 @@ fun PlaylistsScreen(
                         Text(
                             text = "CREATE NEW PLAYLIST",
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }

@@ -24,6 +24,9 @@ import com.fourshil.musicya.ui.theme.NeoDimens
 import com.fourshil.musicya.ui.theme.NeoBackground
 import com.fourshil.musicya.ui.theme.NeoGreen
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.foundation.background
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
@@ -207,19 +210,21 @@ fun SongsScreen(
                 }
                 
                 else -> {
-                    // Song list
+                    // Song list with fade edge
                     val listState = androidx.compose.foundation.lazy.rememberLazyListState()
                     val isScrolling by remember { derivedStateOf { listState.isScrollInProgress } }
+                    val fadeHeight = 48.dp // Height of the fade effect
                     
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
-                        state = listState,
-                        contentPadding = PaddingValues(
-                            top = 0.dp,
-                            bottom = NeoDimens.ListBottomPadding
-                        ),
-                        verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingXS)
-                    ) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            state = listState,
+                            contentPadding = PaddingValues(
+                                top = fadeHeight, // Add padding to account for fade
+                                bottom = NeoDimens.ListBottomPadding
+                            ),
+                            verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingXS)
+                        ) {
                         items(
                             count = pagedSongs.itemCount,
                             key = pagedSongs.itemKey { it.id },
@@ -257,6 +262,23 @@ fun SongsScreen(
                                 )
                             }
                         }
+                        }
+                        
+                        // Top fade gradient overlay
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(fadeHeight)
+                                .align(Alignment.TopCenter)
+                                .background(
+                                    Brush.verticalGradient(
+                                        colors = listOf(
+                                            MaterialTheme.colorScheme.background,
+                                            MaterialTheme.colorScheme.background.copy(alpha = 0f)
+                                        )
+                                    )
+                                )
+                        )
                     }
                 }
             }

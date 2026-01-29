@@ -175,7 +175,9 @@ fun NowPlayingScreen(
                                 model = coil.request.ImageRequest.Builder(LocalContext.current)
                                     .data(currentSong!!.albumArtUri)
                                     .size(coil.size.Size.ORIGINAL) // Force original size
-                                    .precision(coil.size.Precision.EXACT) // Require exact dimensions, don't use smaller cache
+                                    .precision(coil.size.Precision.EXACT) // Require exact dimensions
+                                    .memoryCachePolicy(coil.request.CachePolicy.WRITE_ONLY) // Don't read from memory, force decode
+                                    .diskCachePolicy(coil.request.CachePolicy.ENABLED)
                                     .crossfade(true)
                                     .build(),
                              contentDescription = "Album Art",
