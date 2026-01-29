@@ -76,7 +76,7 @@ fun EqualizerScreen(
                         text = "Equalizer",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = Color.Black
                     )
                 }
                 
@@ -117,7 +117,7 @@ fun EqualizerScreen(
                         Text(
                             "Initializing audio engine...",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = Color.Gray
                         )
                     }
                 }
@@ -202,8 +202,8 @@ private fun PresetSelector(
                         text = presetName,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Medium,
-                        color = if (enabled) MaterialTheme.colorScheme.onSurface 
-                               else MaterialTheme.colorScheme.onSurfaceVariant
+                        color = if (enabled) Color.Black 
+                               else Color.Gray
                     )
                     Text(
                         text = "▼",
@@ -224,7 +224,7 @@ private fun PresetSelector(
                                 text = preset,
                                 fontWeight = if (index == currentPreset) FontWeight.Bold else FontWeight.Normal,
                                 color = if (index == currentPreset) MaterialTheme.colorScheme.primary
-                                       else MaterialTheme.colorScheme.onSurface
+                                       else Color.Black
                             )
                         },
                         onClick = {
@@ -271,7 +271,7 @@ private fun EqBandsSection(
                 Text(
                     text = "+15dB",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = Color.Gray
                 )
                 Text(
                     text = "0dB",
@@ -282,7 +282,7 @@ private fun EqBandsSection(
                 Text(
                     text = "-15dB",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = Color.Gray
                 )
             }
             
@@ -290,7 +290,7 @@ private fun EqBandsSection(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp),
+                    .height(350.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -316,7 +316,7 @@ private fun EqBandsSection(
                                 enabled = enabled,
                                 modifier = Modifier
                                     .graphicsLayer { rotationZ = 270f }
-                                    .width(160.dp),
+                                    .width(300.dp),
                                 colors = SliderDefaults.colors(
                                     thumbColor = MaterialTheme.colorScheme.primary,
                                     activeTrackColor = MaterialTheme.colorScheme.primary,
@@ -333,7 +333,7 @@ private fun EqBandsSection(
                             text = band.formatFrequency(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            color = Color.Gray,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -421,15 +421,15 @@ private fun FxSlider(
                 text = label,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium,
-                color = if (enabled) MaterialTheme.colorScheme.onSurface 
-                       else MaterialTheme.colorScheme.onSurfaceVariant
+                color = if (enabled) Color.Black 
+                       else Color.Gray
             )
             Text(
                 text = formatValue(value),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = if (value > 0) MaterialTheme.colorScheme.primary 
-                       else MaterialTheme.colorScheme.onSurfaceVariant
+                       else Color.Gray
             )
         }
         

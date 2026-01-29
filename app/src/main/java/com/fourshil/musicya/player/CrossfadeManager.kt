@@ -33,7 +33,8 @@ class CrossfadeManager @Inject constructor() {
     
     companion object {
         private const val TAG = "CrossfadeManager"
-        private const val MONITOR_INTERVAL_MS = 50L
+        private const val MONITOR_INTERVAL_MS = 200L // Slower check is fine, we just need to catch the window
+        private const val FADE_IN_INTERVAL_MS = 16L // ~60fps for smooth volume change
     }
     
     private var player: Player? = null
@@ -67,6 +68,7 @@ class CrossfadeManager @Inject constructor() {
             startMonitoring()
         } else {
             stopAll()
+            // Reset volume if disabled
             player?.volume = 1f
         }
     }
@@ -76,8 +78,10 @@ class CrossfadeManager @Inject constructor() {
         if (monitorJob?.isActive == true) return
         
         monitorJob = scope?.launch {
-            while (isActive && isEnabled) {
-                checkFadeOut()
+            while (isActive) {
+                if (isEnabled) {
+                    checkFadeOut()
+                }
                 delay(MONITOR_INTERVAL_MS)
             }
         }
@@ -98,20 +102,30 @@ class CrossfadeManager @Inject constructor() {
         if (!p.isPlaying) return
         
         val duration = p.duration
+        // Guard against unknown duration (e.g. streams or not prepared)
+        if (duration == androidx.media3.common.C.TIME_UNSET || duration <= 0) return
+
         val position = p.currentPosition
         val crossfadeMs = _durationSeconds.value * 1000L
         
-        if (duration <= 0 || crossfadeMs <= 0) return
+        if (crossfadeMs <= 0) return
         
         // Only fade out if there is a next track
         if (!p.hasNextMediaItem()) {
-            p.volume = 1f
+            if (p.volume != 1f) p.volume = 1f
             return
         }
         
         val timeRemaining = duration - position
         
+        // If we are getting close to the end...
         if (timeRemaining > 0 && timeRemaining <= crossfadeMs) {
+            // Cancel any fade-in if we are now fading out (rare conflict, but possible)
+            if (fadeInJob?.isActive == true) {
+                 fadeInJob?.cancel()
+                 fadeInJob = null
+            }
+
             // Calculate linear progress (0.0 to 1.0)
             // 0.0 at start of fade window, 1.0 at very end of track
             val fadeProgress = 1f - (timeRemaining.toFloat() / crossfadeMs)
@@ -119,9 +133,12 @@ class CrossfadeManager @Inject constructor() {
             // Fade Volume: 1.0 -> 0.0
             val volume = (1f - fadeProgress).coerceIn(0f, 1f)
             p.volume = volume
-        } else if (timeRemaining > crossfadeMs) {
-            // Ensure full volume if not in fade window (and not in a fade-in)
-            if (fadeInJob?.isActive != true) {
+        } 
+        // If we are NOT in the fade out window...
+        else if (timeRemaining > crossfadeMs) {
+            // Restore volume ONLY if we are NOT currently fading in
+            // This prevents the monitor from snapping volume to 1f while fade-in is running
+            if (fadeInJob?.isActive != true && p.volume != 1f) {
                 p.volume = 1f
             }
         }
@@ -152,8 +169,6 @@ class CrossfadeManager @Inject constructor() {
                 return@launch
             }
             
-            // Fade-in should be fast/snappy or match fade-out?
-            // Matching fade-out duration usually feels best for "Crossfade" simulation
             val fadeInDuration = crossfadeMs
             val startTime = System.currentTimeMillis()
             
@@ -170,7 +185,7 @@ class CrossfadeManager @Inject constructor() {
                     break
                 }
                 
-                delay(20) // High refresh for smoothness
+                delay(FADE_IN_INTERVAL_MS) 
             }
             
             p.volume = 1f
@@ -179,6 +194,7 @@ class CrossfadeManager @Inject constructor() {
     
     fun release() {
         stopAll()
+        // Ensure volume is restored on release
         player?.volume = 1f
         player = null
         scope = null

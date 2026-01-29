@@ -85,7 +85,6 @@ fun NeoCard(
         // Card Surface
         Box(
             modifier = Modifier
-                .fillMaxSize()
                 .clip(shape)
                 .background(backgroundColor)
                 .border(borderWidth, borderColor, shape)
