@@ -131,7 +131,7 @@ private fun ArtistListItem(
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
         shadowSize = 4.dp,
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colorScheme.surface,
         borderWidth = 2.dp
     ) {
         Row(
@@ -143,8 +143,8 @@ private fun ArtistListItem(
                 modifier = Modifier
                     .size(56.dp)
                     .clip(CircleShape)
-                    .border(2.dp, Color.Black, CircleShape)
-                    .background(Color.LightGray),
+                    .border(2.dp, MaterialTheme.colorScheme.outline, CircleShape)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center
             ) {
                 if (artUris.isNotEmpty()) {
@@ -154,7 +154,7 @@ private fun ArtistListItem(
                         imageVector = Icons.Default.Person,
                         contentDescription = null,
                         modifier = Modifier.size(28.dp),
-                        tint = Color.Black
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -167,14 +167,14 @@ private fun ArtistListItem(
                     text = artist.name,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Black,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = "${artist.songCount} SONGS • ${artist.albumCount} ALBUMS",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 0.5.sp
                 )
@@ -183,7 +183,7 @@ private fun ArtistListItem(
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = null,
-                tint = Color.Black,
+                tint = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.size(24.dp)
             )
         }

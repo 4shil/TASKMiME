@@ -54,7 +54,7 @@ fun PlaylistDetailScreen(
                 modifier = Modifier.size(52.dp),
                 borderWidth = 2.dp,
                 shadowSize = 4.dp
-            ) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = Color.Black) }
+            ) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = MaterialTheme.colorScheme.onSurface) }
              Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
              Text("RETURN", style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Black), color = MaterialTheme.colorScheme.onBackground)
         }
@@ -102,7 +102,7 @@ fun PlaylistDetailScreen(
                              Text(
                                 text = subtitle.uppercase(),
                                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                                color = MangaRed
+                                color = MaterialTheme.colorScheme.primary
                             )
                             
                             Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
@@ -111,23 +111,23 @@ fun PlaylistDetailScreen(
                              Row(horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingL)) {
                                  NeoButton(
                                     onClick = { viewModel.playAll() },
-                                    backgroundColor = Color.Black,
+                                    backgroundColor = MaterialTheme.colorScheme.primary,
                                     borderWidth = 2.dp,
                                     shadowSize = 4.dp
                                  ) {
                                      Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-                                         Icon(Icons.Default.PlayArrow, null, tint = Color.White)
+                                         Icon(Icons.Default.PlayArrow, null, tint = MaterialTheme.colorScheme.onPrimary)
                                          Spacer(modifier = Modifier.width(8.dp))
-                                         Text("PLAY ALL", color = Color.White, fontWeight = FontWeight.Bold)
+                                         Text("PLAY ALL", color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Bold)
                                      }
                                  }
                                   NeoButton(
                                     onClick = { viewModel.shufflePlay() },
                                     modifier = Modifier.size(52.dp),
                                     borderWidth = 2.dp,
-                                    shadowSize = 4.dp
+                                     shadowSize = 4.dp
                                  ) {
-                                     Icon(Icons.Default.Shuffle, null, tint = Color.Black)
+                                     Icon(Icons.Default.Shuffle, null, tint = MaterialTheme.colorScheme.onSurface)
                                  }
                              }
                         }

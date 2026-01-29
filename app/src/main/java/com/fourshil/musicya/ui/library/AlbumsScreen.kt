@@ -116,7 +116,7 @@ private fun AlbumCard(
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
         shadowSize = 4.dp,
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colorScheme.surface,
         borderWidth = 2.dp
     ) {
         Column {
@@ -125,10 +125,10 @@ private fun AlbumCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .background(Color.LightGray)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
                     .border(
                         width = 0.dp, // No border for image inside card if unnecessary, or bottom border
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.outline
                     ),
                 contentAlignment = Alignment.Center
             ) {
@@ -149,7 +149,7 @@ private fun AlbumCard(
             }
             
             // Separator border
-            Box(modifier = Modifier.fillMaxWidth().height(2.dp).background(Color.Black))
+            Box(modifier = Modifier.fillMaxWidth().height(2.dp).background(MaterialTheme.colorScheme.outline))
 
             // Album Info
             Column(
@@ -159,14 +159,14 @@ private fun AlbumCard(
                     text = album.name,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Black,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = album.artist,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -174,7 +174,7 @@ private fun AlbumCard(
                 Text(
                     text = "${album.songCount} SONGS",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 0.5.sp,
                     modifier = Modifier.padding(top = 4.dp)

@@ -61,9 +61,9 @@ fun SongListItem(
     
     // Determine background color based on state
     val backgroundColor = when {
-        isSelected -> NeoGreen
-        isCurrentlyPlaying -> NeoBlue.copy(alpha = 0.2f)
-        else -> Color.White
+        isSelected -> MaterialTheme.colorScheme.secondary
+        isCurrentlyPlaying -> MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+        else -> MaterialTheme.colorScheme.surface
     }
 
     NeoCard(
@@ -92,21 +92,21 @@ fun SongListItem(
                     modifier = Modifier
                         .size(56.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .border(2.dp, Color.Black, RoundedCornerShape(8.dp))
-                        .background(Color.Gray),
+                        .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
                     contentAlignment = Alignment.Center
                 ) {
                     if (selectionActive && isSelected) {
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(NeoGreen),
+                                .background(MaterialTheme.colorScheme.secondary),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Check,
                                 contentDescription = "Selected",
-                                tint = Color.Black
+                                tint = MaterialTheme.colorScheme.onSecondary
                             )
                         }
                     } else {
@@ -128,7 +128,7 @@ fun SongListItem(
                         text = song.title,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Black, // Extra Bold
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -136,7 +136,7 @@ fun SongListItem(
                         text = song.artist,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black.copy(alpha = 0.7f),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -159,7 +159,7 @@ fun SongListItem(
                     text = song.durationFormatted,
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
@@ -172,7 +172,7 @@ fun SongListItem(
                         Icon(
                             imageVector = Icons.Default.MoreVert,
                             contentDescription = "More options",
-                            tint = Color.Black
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -191,7 +191,7 @@ fun SimpleQueueItem(
     onClick: () -> Unit,
     onRemove: (() -> Unit)? = null
 ) {
-    val backgroundColor = if (isCurrentlyPlaying) NeoBlue else Color.White
+    val backgroundColor = if (isCurrentlyPlaying) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface
     
     Row(
         modifier = Modifier
@@ -199,7 +199,7 @@ fun SimpleQueueItem(
             .padding(vertical = 4.dp, horizontal = 16.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(backgroundColor)
-            .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
+            .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
             .clickable(onClick = onClick)
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -209,8 +209,8 @@ fun SimpleQueueItem(
             modifier = Modifier
                 .size(40.dp)
                 .clip(RoundedCornerShape(6.dp))
-                .border(1.dp, Color.Black, RoundedCornerShape(6.dp))
-                .background(Color.LightGray),
+                .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(6.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant),
             contentAlignment = Alignment.Center
         ) {
             AlbumArtImage(
@@ -230,7 +230,7 @@ fun SimpleQueueItem(
                     text = "NOW PLAYING",
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Black,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.primary,
                     letterSpacing = 1.sp
                 )
             }
@@ -238,14 +238,14 @@ fun SimpleQueueItem(
                 text = song.title,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
                 text = song.artist,
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.DarkGray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Medium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -261,7 +261,7 @@ fun SimpleQueueItem(
                 Icon(
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = "Remove",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
         }

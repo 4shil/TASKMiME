@@ -59,9 +59,9 @@ private fun TopNavChip(
 ) {
     // Neo-Brutalist: Selected = NeoBlue + Black Border + Bold
     // Unselected = White + Black Border
-    val backgroundColor = if (isSelected) NeoBlue else Color.White
-    val contentColor = Color.Black
-    val borderColor = Color.Black
+    val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
+    val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+    val borderColor = MaterialTheme.colorScheme.outline
     val borderWidth = 2.dp // Consistent thick border
     val fontWeight = if (isSelected) FontWeight.Black else FontWeight.Bold
 

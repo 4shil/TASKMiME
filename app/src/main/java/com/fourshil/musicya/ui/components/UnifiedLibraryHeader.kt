@@ -31,7 +31,7 @@ fun UnifiedLibraryHeader(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(NeoBackground)
+            .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding()
             // Removed horizontal padding here to allow full-width scroll
     ) {
@@ -51,7 +51,7 @@ fun UnifiedLibraryHeader(
                     fontWeight = FontWeight.Black,
                     letterSpacing = (-1).sp
                 ),
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             NeoButton(
@@ -60,7 +60,7 @@ fun UnifiedLibraryHeader(
                 shape = RoundedCornerShape(12.dp),
                 shadowSize = 4.dp
             ) {
-                Icon(Icons.Default.Menu, null, tint = Color.Black)
+                Icon(Icons.Default.Menu, null, tint = MaterialTheme.colorScheme.onSurface)
             }
         }
         
@@ -73,7 +73,7 @@ fun UnifiedLibraryHeader(
                 .height(56.dp)
                 .padding(horizontal = 24.dp), // Added padding here
             onClick = onSearchClick,
-            backgroundColor = Color.White,
+            // backgroundColor = Color.White,
             shadowSize = 4.dp,
             shape = RoundedCornerShape(16.dp)
         ) {
@@ -86,14 +86,14 @@ fun UnifiedLibraryHeader(
                 Icon(
                     Icons.Default.Search,
                     contentDescription = "Search",
-                    tint = Color.Black,
+                    tint = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = "SEARCH YOUR MUSIC...",
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = Color.Gray,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.sp
                     )

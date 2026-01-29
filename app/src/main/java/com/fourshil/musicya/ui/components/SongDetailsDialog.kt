@@ -32,7 +32,7 @@ fun SongDetailsDialog(
     Dialog(onDismissRequest = onDismiss) {
         NeoCard(
             modifier = Modifier.fillMaxWidth(),
-            backgroundColor = Color.White,
+            // backgroundColor = MaterialTheme.colorScheme.surface, // Default is correct now
             shadowSize = 8.dp,
             shape = RoundedCornerShape(16.dp)
         ) {
@@ -49,7 +49,7 @@ fun SongDetailsDialog(
                         fontWeight = FontWeight.Black,
                         letterSpacing = 2.sp
                     ),
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = NeoDimens.SpacingL)
                 )
 
@@ -76,7 +76,7 @@ fun SongDetailsDialog(
                 NeoButton(
                     onClick = onDismiss,
                     modifier = Modifier.fillMaxWidth().height(48.dp),
-                    backgroundColor = NeoPrimary,
+                    backgroundColor = MaterialTheme.colorScheme.primary,
                     shape = RoundedCornerShape(12.dp),
                     shadowSize = 4.dp
                 ) {
@@ -86,7 +86,7 @@ fun SongDetailsDialog(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp
                         ),
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -109,14 +109,14 @@ private fun DetailRow(label: String, value: String, isPath: Boolean = false) {
                     fontWeight = FontWeight.ExtraBold,
                     letterSpacing = 1.sp
                 ),
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.width(8.dp))
             Box(
                 modifier = Modifier
                     .height(2.dp)
                     .weight(1f)
-                    .background(Color.Black)
+                    .background(MaterialTheme.colorScheme.onSurface)
             )
         }
         
@@ -127,7 +127,7 @@ private fun DetailRow(label: String, value: String, isPath: Boolean = false) {
             text = value.ifEmpty { "Unknown" },
             style = if (isPath) MaterialTheme.typography.bodySmall else MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Medium,
-            color = Color.DarkGray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(start = 8.dp)
         )
     }

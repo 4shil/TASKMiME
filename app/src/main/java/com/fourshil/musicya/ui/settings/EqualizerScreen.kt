@@ -26,7 +26,7 @@ import com.fourshil.musicya.ui.components.MinimalIconButton
 import com.fourshil.musicya.ui.theme.NeoDimens
 import com.fourshil.musicya.ui.components.NeoScaffold
 import com.fourshil.musicya.ui.components.NeoCard
-import com.fourshil.musicya.ui.theme.NeoBackground
+
 
 /**
  * Complete Equalizer Screen with:
@@ -54,7 +54,7 @@ fun EqualizerScreen(
 
  
     NeoScaffold(
-        containerColor = NeoBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             // Header
             Row(
@@ -69,14 +69,15 @@ fun EqualizerScreen(
                     MinimalIconButton(
                         onClick = onBack,
                         icon = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Go back"
+                        contentDescription = "Go back",
+                        contentColor = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.width(NeoDimens.SpacingM))
                     Text(
                         text = "Equalizer",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.Black
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
                 
@@ -117,7 +118,7 @@ fun EqualizerScreen(
                         Text(
                             "Initializing audio engine...",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -187,7 +188,7 @@ private fun PresetSelector(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp), // Height adjustment for shadow
-                backgroundColor = Color.White,
+                // backgroundColor = Color.White, // Default
                 shadowSize = 4.dp,
                 onClick = { if (enabled) expanded = true }
             ) {
@@ -202,8 +203,8 @@ private fun PresetSelector(
                         text = presetName,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.Medium,
-                        color = if (enabled) Color.Black 
-                               else Color.Gray
+                        color = if (enabled) MaterialTheme.colorScheme.onSurface 
+                               else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         text = "▼",
@@ -224,7 +225,7 @@ private fun PresetSelector(
                                 text = preset,
                                 fontWeight = if (index == currentPreset) FontWeight.Bold else FontWeight.Normal,
                                 color = if (index == currentPreset) MaterialTheme.colorScheme.primary
-                                       else Color.Black
+                                       else MaterialTheme.colorScheme.onSurface
                             )
                         },
                         onClick = {
@@ -255,7 +256,7 @@ private fun EqBandsSection(
 ) {
     NeoCard(
         modifier = Modifier.fillMaxWidth(),
-        backgroundColor = Color.White,
+        // backgroundColor = Color.White,
         shadowSize = 4.dp
     ) {
         Column(
@@ -271,7 +272,7 @@ private fun EqBandsSection(
                 Text(
                     text = "+15dB",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = "0dB",
@@ -282,7 +283,7 @@ private fun EqBandsSection(
                 Text(
                     text = "-15dB",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
             
@@ -333,7 +334,7 @@ private fun EqBandsSection(
                             text = band.formatFrequency(),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Medium,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -361,10 +362,8 @@ private fun FxControlsSection(
             fontWeight = FontWeight.SemiBold
         )
         
-
-        
         NeoCard(
-            backgroundColor = Color.White,
+            // backgroundColor = Color.White,
             shadowSize = 4.dp
         ) {
             Column(
@@ -421,15 +420,15 @@ private fun FxSlider(
                 text = label,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium,
-                color = if (enabled) Color.Black 
-                       else Color.Gray
+                color = if (enabled) MaterialTheme.colorScheme.onSurface 
+                       else MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
                 text = formatValue(value),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,
                 color = if (value > 0) MaterialTheme.colorScheme.primary 
-                       else Color.Gray
+                       else MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         

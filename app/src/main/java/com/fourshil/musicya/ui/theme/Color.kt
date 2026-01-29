@@ -50,22 +50,33 @@ val LightOutline = Gray300
 val LightOutlineVariant = Gray200
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Claude Palette (Dark Mode)
+// ─────────────────────────────────────────────────────────────────────────────
+val ClaudeAccent = Color(0xFFD97757)      // Claude Orange/Toast
+val ClaudeAccentLight = Color(0xFFE89A7D) // Lighter Orange
+val ClaudeBackground = Color(0xFF131316)  // Deep Warm Black
+val ClaudeSurface = Color(0xFF1F1F23)     // Interactive Surface
+val ClaudeSurfaceVariant = Color(0xFF2E2E33) 
+val ClaudeTextPrimary = Color(0xFFEDEDED) // Near White warmth
+val ClaudeTextSecondary = Color(0xFFA1A1AA) // Zinc 400ish
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Semantic Colors - Dark Mode
 // ─────────────────────────────────────────────────────────────────────────────
-val DarkBackground = Gray950
-val DarkSurface = Gray900
-val DarkSurfaceVariant = Gray800
-val DarkOnBackground = Gray100
-val DarkOnSurface = Gray100
-val DarkOnSurfaceVariant = Gray400
-val DarkOutline = Gray700
-val DarkOutlineVariant = Gray800
+val DarkBackground = ClaudeBackground
+val DarkSurface = ClaudeSurface
+val DarkSurfaceVariant = ClaudeSurfaceVariant
+val DarkOnBackground = ClaudeTextPrimary
+val DarkOnSurface = ClaudeTextPrimary
+val DarkOnSurfaceVariant = ClaudeTextSecondary
+val DarkOutline = Color(0xFF3F3F46)       // Zinc 700
+val DarkOutlineVariant = Color(0xFF27272A)
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Progress/Player Accent
 // ─────────────────────────────────────────────────────────────────────────────
 val ProgressColor = AccentPrimary
-val ProgressColorDark = AccentPrimaryDark
+val ProgressColorDark = ClaudeAccent
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Legacy Aliases (for backward compatibility during migration)

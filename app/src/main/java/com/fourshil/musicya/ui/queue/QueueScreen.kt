@@ -62,7 +62,7 @@ fun QueueScreen(
     }
 
     NeoScaffold(
-        containerColor = NeoBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             // Clean header
             Row(
@@ -82,7 +82,7 @@ fun QueueScreen(
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Go back",
-                        tint = Color.Black
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
                 
@@ -91,14 +91,14 @@ fun QueueScreen(
                         text = "QUEUE",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Black,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onBackground,
                         letterSpacing = 1.sp
                     )
                     if (queue.isNotEmpty()) {
                         Text(
                             text = "${currentIndex + 1} OF ${queue.size}",
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -110,12 +110,12 @@ fun QueueScreen(
                     modifier = Modifier.size(48.dp),
                     shape = RoundedCornerShape(12.dp),
                     shadowSize = 4.dp,
-                    backgroundColor = NeoPink
+                    backgroundColor = MaterialTheme.colorScheme.error
                 ) {
                     Icon(
                         Icons.Default.ClearAll,
                         contentDescription = "Clear queue",
-                        tint = Color.Black
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -154,7 +154,7 @@ fun QueueScreen(
                         Text(
                             text = "▲ PLAYED (${currentIndex})",
                             style = MaterialTheme.typography.labelMedium,
-                            color = Color.Gray,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(vertical = 8.dp)
                         )
@@ -182,7 +182,7 @@ fun QueueScreen(
                         Text(
                             text = "▼ UP NEXT (${queue.size - currentIndex - 1})",
                             style = MaterialTheme.typography.labelMedium,
-                            color = NeoBlue,
+                            color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Black,
                             modifier = Modifier.padding(vertical = 12.dp)
                         )
@@ -205,12 +205,12 @@ private fun QueueItem(
     onRemove: () -> Unit
 ) {
     val backgroundColor = when {
-        isPlaying -> NeoBlue // Active color
-        isPlayed -> Color(0xFFF0F0F0) // Grayed out
-        else -> Color.White
+        isPlaying -> MaterialTheme.colorScheme.primaryContainer
+        isPlayed -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        else -> MaterialTheme.colorScheme.surface
     }
     
-    val borderColor = Color.Black
+    val borderColor = MaterialTheme.colorScheme.outline
     val borderWidth = if (isPlaying) 2.dp else 1.dp
     
     NeoCard(
@@ -230,8 +230,8 @@ private fun QueueItem(
                 modifier = Modifier
                     .size(48.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
-                    .background(Color.Gray)
+                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 AlbumArtImage(uri = song.albumArtUri, size = 48.dp)
                 
@@ -240,7 +240,7 @@ private fun QueueItem(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(Color.Black.copy(alpha = 0.3f)),
+                            .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.3f)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -261,7 +261,7 @@ private fun QueueItem(
                     Text(
                         "NOW PLAYING",
                         style = MaterialTheme.typography.labelSmall,
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Black,
                         letterSpacing = 1.sp
                     )
@@ -270,14 +270,14 @@ private fun QueueItem(
                     text = song.title,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = if (isPlaying) FontWeight.Black else FontWeight.Bold,
-                    color = if (isPlayed) Color.Gray else Color.Black,
+                    color = if (isPlayed) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
                     text = song.artist,
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (isPlayed) Color.LightGray else Color.DarkGray,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Medium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -289,7 +289,7 @@ private fun QueueItem(
                 Icon(
                     Icons.Default.Close,
                     contentDescription = "Remove from queue",
-                    tint = Color.Black
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
         }

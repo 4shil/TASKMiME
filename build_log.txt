@@ -17,7 +17,6 @@
 > Task :app:processDebugManifest UP-TO-DATE
 > Task :app:processDebugManifestForPackage UP-TO-DATE
 > Task :app:processDebugResources UP-TO-DATE
-> Task :app:kspDebugKotlin UP-TO-DATE
 > Task :app:javaPreCompileDebug UP-TO-DATE
 > Task :app:mergeDebugShaders UP-TO-DATE
 > Task :app:compileDebugShaders NO-SOURCE
@@ -34,24 +33,12 @@
 > Task :app:validateSigningDebug UP-TO-DATE
 > Task :app:writeDebugAppMetadata UP-TO-DATE
 > Task :app:writeDebugSigningConfigVersions UP-TO-DATE
+> Task :app:kspDebugKotlin
+
+> Task :app:compileDebugKotlin
+e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/nowplaying/NowPlayingScreen.kt:155:81 Unresolved reference: isSystemInDarkTheme
 
 > Task :app:compileDebugKotlin FAILED
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoComponents.kt:250:43 Unresolved reference: sp
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoComponents.kt:257:89 Unresolved reference: Close
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/NeoComponents.kt:317:81 Unresolved reference: Check
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/PlaylistDialogs.kt:151:38 Unresolved reference: FontWeight
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/PlaylistDialogs.kt:170:39 Unresolved reference: FontWeight
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/PlaylistDialogs.kt:172:44 Unresolved reference: sp
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/PlaylistDialogs.kt:219:38 Unresolved reference: FontWeight
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/components/PlaylistDialogs.kt:234:49 Unresolved reference: FontWeight
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/playlist/PlaylistDetailScreen.kt:56:72 Unresolved reference: Color
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/playlist/PlaylistDetailScreen.kt:113:55 Unresolved reference: Color
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/playlist/PlaylistDetailScreen.kt:118:85 Unresolved reference: Color
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/playlist/PlaylistDetailScreen.kt:120:67 Unresolved reference: Color
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/playlist/PlaylistDetailScreen.kt:129:79 Unresolved reference: Color
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/EqualizerScreen.kt:189:35 Unresolved reference: Color
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/EqualizerScreen.kt:257:27 Unresolved reference: Color
-e: file:///D:/RePacks/Musicya/app/src/main/java/com/fourshil/musicya/ui/settings/EqualizerScreen.kt:366:31 Unresolved reference: Color
 
 FAILURE: Build failed with an exception.
 
@@ -66,5 +53,5 @@ Execution failed for task ':app:compileDebugKotlin'.
 > Run with --scan to get full insights.
 > Get more help at https://help.gradle.org.
 
-BUILD FAILED in 10s
-30 actionable tasks: 2 executed, 28 up-to-date
+BUILD FAILED in 8s
+30 actionable tasks: 3 executed, 27 up-to-date

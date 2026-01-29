@@ -65,14 +65,14 @@ private val LightColorScheme = lightColorScheme(
 )
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// Clean Minimalistic Dark Theme
+// Clean Minimalistic Dark Theme (Claude Palette)
 // ═══════════════════════════════════════════════════════════════════════════════
 private val DarkColorScheme = darkColorScheme(
     // Primary
-    primary = AccentPrimaryDark,
-    onPrimary = Gray900,
-    primaryContainer = AccentPrimaryDark.copy(alpha = 0.16f),
-    onPrimaryContainer = AccentPrimaryDark,
+    primary = ClaudeAccent,
+    onPrimary = PureWhite, // Orange on White or White on Orange? White on Orange is cleaner.
+    primaryContainer = ClaudeAccent.copy(alpha = 0.2f),
+    onPrimaryContainer = ClaudeAccentLight,
     
     // Secondary
     secondary = AccentSecondary,
@@ -87,10 +87,10 @@ private val DarkColorScheme = darkColorScheme(
     onTertiaryContainer = AccentWarning,
     
     // Background & Surface
-    background = DarkBackground,
-    onBackground = DarkOnBackground,
-    surface = DarkSurface,
-    onSurface = DarkOnSurface,
+    background = DarkBackground,       // ClaudeBackground
+    onBackground = DarkOnBackground,   // ClaudeTextPrimary
+    surface = DarkSurface,             // ClaudeSurface
+    onSurface = DarkOnSurface,         // ClaudeTextPrimary
     surfaceVariant = DarkSurfaceVariant,
     onSurfaceVariant = DarkOnSurfaceVariant,
     
@@ -110,7 +110,7 @@ private val DarkColorScheme = darkColorScheme(
     inversePrimary = AccentPrimary,
     
     // Scrim
-    scrim = PureBlack.copy(alpha = 0.5f)
+    scrim = PureBlack.copy(alpha = 0.7f)
 )
 
 @Composable

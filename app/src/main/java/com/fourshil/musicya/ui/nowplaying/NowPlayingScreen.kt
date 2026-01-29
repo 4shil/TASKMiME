@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,8 +60,8 @@ fun NowPlayingScreen(
     // Assuming Scaffolding above handles basic insets or we use systemBarsPadding
     
     Scaffold(
-        containerColor = bgLight,
-        contentColor = textDark
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground
     ) { padding ->
         Column(
             modifier = Modifier
@@ -87,7 +88,7 @@ fun NowPlayingScreen(
                     shadowSize = 2.dp
                 ) {
                     // Use ExpandMore to match specific design request "Expand" button looks like "down" usually for sheet-like player
-                    Icon(Icons.Default.ExpandMore, null, tint = Color.Black)
+                    Icon(Icons.Default.ExpandMore, null, tint = MaterialTheme.colorScheme.onSurface)
                 }
                 
                 Text(
@@ -97,7 +98,8 @@ fun NowPlayingScreen(
                         letterSpacing = 2.sp
                     ),
                     modifier = Modifier.weight(1f),
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 
                 // Menu Button (More Horiz)
@@ -108,21 +110,21 @@ fun NowPlayingScreen(
                         shape = RoundedCornerShape(16.dp),
                         shadowSize = 2.dp
                     ) {
-                        Icon(Icons.Default.MoreHoriz, null, tint = Color.Black)
+                        Icon(Icons.Default.MoreHoriz, null, tint = MaterialTheme.colorScheme.onSurface)
                     }
 
                     DropdownMenu(
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false },
-                        modifier = Modifier.background(Color.White)
+                        modifier = Modifier.background(MaterialTheme.colorScheme.surface)
                     ) {
                         DropdownMenuItem(
-                            text = { Text("Details", fontWeight = FontWeight.Bold) },
+                            text = { Text("Details", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface) },
                             onClick = {
                                 showMenu = false
                                 showDetails = true
                             },
-                             leadingIcon = { Icon(Icons.Default.Info, null) }
+                             leadingIcon = { Icon(Icons.Default.Info, null, tint = MaterialTheme.colorScheme.onSurface) }
                         )
                     }
                 }
@@ -138,6 +140,7 @@ fun NowPlayingScreen(
                     .aspectRatio(1f)
             ) {
                 // Shadow (lg = 8px)
+                // We keep shadow hard black or scrim color? Hard black for Neo feel, even in dark mode often preferred if bg isn't pure black.
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -149,8 +152,8 @@ fun NowPlayingScreen(
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     shape = RoundedCornerShape(48.dp),
-                    color = NeoBlue, // Accent Blue
-                    border = androidx.compose.foundation.BorderStroke(4.dp, Color.Black)
+                    color = MaterialTheme.colorScheme.primaryContainer, // Use themed container
+                    border = androidx.compose.foundation.BorderStroke(4.dp, if (isSystemInDarkTheme()) MaterialTheme.colorScheme.outline else Color.Black)
                 ) {
                     // Swipe Gestures on Art
                      val density = androidx.compose.ui.platform.LocalDensity.current
@@ -204,13 +207,14 @@ fun NowPlayingScreen(
                             fontWeight = FontWeight.ExtraBold
                         ),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
                         text = currentSong?.artist ?: "Unknown",
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
-                            color = Color.Gray // Slate-500
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -229,7 +233,8 @@ fun NowPlayingScreen(
                     Icon(
                         if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         null,
-                        tint = if (isFavorite) Color(0xFFE11D48) else Color.Black // Rose-500
+                        // Tint needs to be visible against default button bg (Surface)
+                        tint = if (isFavorite) Color(0xFFE11D48) else MaterialTheme.colorScheme.onSurface 
                     )
                 }
             }
@@ -267,11 +272,13 @@ fun NowPlayingScreen(
                 ) {
                     Text(
                         formatTime(position),
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Black)
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Black),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         formatTime(duration),
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Black)
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Black),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -289,14 +296,14 @@ fun NowPlayingScreen(
                     onClick = { viewModel.toggleShuffle() },
                     modifier = Modifier.size(56.dp),
                     shape = RoundedCornerShape(16.dp),
-                    backgroundColor = Color.White,
+                    backgroundColor = MaterialTheme.colorScheme.surface,
                     shadowSize = 2.dp
                 ) {
                     Icon(
                         Icons.Default.Shuffle, 
                         null, 
                         modifier = Modifier.size(24.dp),
-                        tint = if (shuffleEnabled) NeoBlue else Color.Black
+                        tint = if (shuffleEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                     )
                 }
                 
@@ -305,10 +312,10 @@ fun NowPlayingScreen(
                     onClick = { viewModel.skipToPrevious() },
                     modifier = Modifier.size(64.dp),
                     shape = RoundedCornerShape(16.dp),
-                    backgroundColor = NeoYellow,
+                    backgroundColor = MaterialTheme.colorScheme.secondaryContainer, // Was NeoYellow
                     shadowSize = 4.dp // neobrutal normal
                 ) {
-                    Icon(Icons.Default.SkipPrevious, null, modifier = Modifier.size(36.dp)) // text-4xl
+                    Icon(Icons.Default.SkipPrevious, null, modifier = Modifier.size(36.dp), tint = MaterialTheme.colorScheme.onSecondaryContainer)
                 }
                 
                 // Play
@@ -316,13 +323,13 @@ fun NowPlayingScreen(
                     onClick = { viewModel.togglePlayPause() },
                     modifier = Modifier.size(96.dp), // w-24 h-24
                     shape = RoundedCornerShape(32.dp),
-                    backgroundColor = NeoPrimary,
+                    backgroundColor = MaterialTheme.colorScheme.primary, // Was NeoPrimary
                     shadowSize = 8.dp // neobrutal-lg
                 ) {
                     Icon(
                         if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
                         null,
-                        tint = Color.White,
+                        tint = MaterialTheme.colorScheme.onPrimary,
                         modifier = Modifier.size(60.dp) // text-6xl
                     )
                 }
@@ -332,10 +339,10 @@ fun NowPlayingScreen(
                     onClick = { viewModel.skipToNext() },
                     modifier = Modifier.size(64.dp),
                     shape = RoundedCornerShape(16.dp),
-                    backgroundColor = NeoPink,
+                    backgroundColor = MaterialTheme.colorScheme.tertiaryContainer, // Was NeoPink
                     shadowSize = 4.dp
                 ) {
-                    Icon(Icons.Default.SkipNext, null, modifier = Modifier.size(36.dp))
+                    Icon(Icons.Default.SkipNext, null, modifier = Modifier.size(36.dp), tint = MaterialTheme.colorScheme.onTertiaryContainer)
                 }
                 
                 // Repeat
@@ -343,14 +350,14 @@ fun NowPlayingScreen(
                     onClick = { viewModel.toggleRepeat() },
                     modifier = Modifier.size(56.dp),
                     shape = RoundedCornerShape(16.dp),
-                    backgroundColor = Color.White,
+                    backgroundColor = MaterialTheme.colorScheme.surface,
                     shadowSize = 2.dp
                 ) {
                      Icon(
                          if (repeatMode == 1) Icons.Default.RepeatOne else Icons.Default.Repeat,
                          null, 
                          modifier = Modifier.size(24.dp),
-                         tint = if (repeatMode != 0) NeoPrimary else Color.Black
+                         tint = if (repeatMode != 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
                      )
                 }
             }

@@ -80,7 +80,7 @@ fun SongsScreen(
     }
 
     NeoScaffold(
-        containerColor = NeoBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             if (selectionState.isSelectionMode) {
                 val scope = rememberCoroutineScope()
@@ -93,7 +93,7 @@ fun SongsScreen(
                 ) {
                     NeoCard(
                         modifier = Modifier.fillMaxWidth(),
-                        backgroundColor = NeoGreen, // Selection Green
+                        backgroundColor = MaterialTheme.colorScheme.secondary, // Selection Green
                         shadowSize = 4.dp,
                         shape = RoundedCornerShape(16.dp)
                     ) {
@@ -112,14 +112,14 @@ fun SongsScreen(
                                     Icon(
                                         Icons.Default.Close,
                                         contentDescription = "Cancel selection",
-                                        tint = Color.Black
+                                        tint = MaterialTheme.colorScheme.onSecondary
                                     )
                                 }
                                 Text(
                                     "${selectionState.selectedCount} SELECTED",
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Black,
-                                    color = Color.Black
+                                    color = MaterialTheme.colorScheme.onSecondary
                                 )
                             }
                             Row {
@@ -132,14 +132,14 @@ fun SongsScreen(
                                     Icon(
                                         Icons.Default.SelectAll,
                                         contentDescription = "Select all",
-                                        tint = Color.Black
+                                        tint = MaterialTheme.colorScheme.onSecondary
                                     )
                                 }
                                 IconButton(onClick = { showBulkActionsSheet = true }) {
                                     Icon(
                                         Icons.Default.MoreVert,
                                         contentDescription = "More actions",
-                                        tint = Color.Black
+                                        tint = MaterialTheme.colorScheme.onSecondary
                                     )
                                 }
                             }

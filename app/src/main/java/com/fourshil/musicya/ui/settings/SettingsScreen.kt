@@ -13,6 +13,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,9 +29,7 @@ import com.fourshil.musicya.ui.theme.NeoDimens
 import com.fourshil.musicya.ui.components.NeoScaffold
 import com.fourshil.musicya.ui.components.NeoButton
 import com.fourshil.musicya.ui.components.NeoCard
-import com.fourshil.musicya.ui.theme.NeoBackground
-import com.fourshil.musicya.ui.theme.NeoBlue
-import com.fourshil.musicya.ui.theme.NeoGreen
+
 import androidx.compose.ui.unit.sp
 
 /**
@@ -57,7 +56,7 @@ fun SettingsScreen(
     val sleepTimerActive = sleepTimerRemaining > 0
 
     NeoScaffold(
-        containerColor = NeoBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             // Clean header
             Row(
@@ -76,7 +75,7 @@ fun SettingsScreen(
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Go back",
-                        tint = Color.Black
+                        tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
                 Spacer(modifier = Modifier.width(24.dp))
@@ -84,7 +83,7 @@ fun SettingsScreen(
                     text = "SETTINGS",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Black,
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onBackground,
                     letterSpacing = (-1).sp
                 )
             }
@@ -115,8 +114,8 @@ fun SettingsScreen(
                         Text(
                             text = String.format("%.1fx", currentSpeed),
                             style = MaterialTheme.typography.labelLarge,
-                            color = if (currentSpeed != 1.0f) NeoBlue 
-                                    else Color.Gray,
+                            color = if (currentSpeed != 1.0f) MaterialTheme.colorScheme.primary 
+                                    else MaterialTheme.colorScheme.onSurfaceVariant,
                             fontWeight = FontWeight.Bold
                         )
                     }
@@ -132,7 +131,7 @@ fun SettingsScreen(
                             Text(
                                 text = "${crossfadeDuration}s",
                                 style = MaterialTheme.typography.labelLarge,
-                                color = NeoBlue,
+                                color = MaterialTheme.colorScheme.primary, // NeoBlue
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -154,7 +153,7 @@ fun SettingsScreen(
                             Icon(
                                 Icons.Default.CheckCircle,
                                 contentDescription = "Timer active",
-                                tint = NeoGreen,
+                                tint = MaterialTheme.colorScheme.secondary, // NeoGreen
                                 modifier = Modifier.size(20.dp)
                             )
                         }
@@ -194,8 +193,8 @@ fun SettingsScreen(
         SleepTimerDialog(
             sleepTimerActive = sleepTimerActive,
             sleepTimerMinutes = sleepTimerMinutes,
-            contentColor = Color.Black,
-            surfaceColor = Color.White,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            surfaceColor = MaterialTheme.colorScheme.surface,
             onDismiss = { showSleepTimerDialog = false },
             onSetTimer = { playerController.setSleepTimer(it) },
             onCancelTimer = { playerController.cancelSleepTimer() }
@@ -205,8 +204,8 @@ fun SettingsScreen(
     if (showThemeDialog) {
         ThemeSelectionDialog(
             currentTheme = currentTheme,
-            contentColor = Color.Black,
-            surfaceColor = Color.White,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            surfaceColor = MaterialTheme.colorScheme.surface,
             onDismiss = { showThemeDialog = false },
             onThemeSelected = { viewModel.setThemeMode(it) }
         )
@@ -215,8 +214,8 @@ fun SettingsScreen(
     if (showCrossfadeDialog) {
         CrossfadeDialog(
             currentDuration = crossfadeDuration,
-            contentColor = Color.Black,
-            surfaceColor = Color.White,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            surfaceColor = MaterialTheme.colorScheme.surface,
             onDismiss = { showCrossfadeDialog = false },
             onDurationSelected = { duration ->
                 viewModel.setCrossfadeDuration(duration)
@@ -238,14 +237,14 @@ private fun SettingsSection(
         Text(
             text = title,
             style = MaterialTheme.typography.labelLarge,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Black,
             modifier = Modifier.padding(bottom = 8.dp, start = 4.dp),
             letterSpacing = 1.sp
         )
         NeoCard(
             modifier = Modifier.fillMaxWidth(),
-            backgroundColor = Color.White,
+            // backgroundColor = Color.White,
             shadowSize = 4.dp,
             shape = RoundedCornerShape(16.dp),
             borderWidth = 2.dp
@@ -277,19 +276,20 @@ private fun SettingsItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         // Icon container
+        val isDark = androidx.compose.foundation.isSystemInDarkTheme()
         Box(
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .background(Color.White)
-                .border(2.dp, Color.Black, CircleShape),
+                .background(MaterialTheme.colorScheme.surface)
+                .border(2.dp, if (isDark) MaterialTheme.colorScheme.outline else Color.Black, CircleShape),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
-                tint = Color.Black
+                tint = MaterialTheme.colorScheme.onSurface // Use onSurface
             )
         }
         
@@ -300,12 +300,12 @@ private fun SettingsItem(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium,
-                color = Color.Black
+                color = MaterialTheme.colorScheme.onSurface
             )
             Text(
                 text = subtitle,
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         

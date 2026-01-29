@@ -109,8 +109,8 @@ fun CreatePlaylistDialog(
     onCreate: (String) -> Unit
 ) {
     var playlistName by remember { mutableStateOf("") }
-    val contentColor = if (isSystemInDarkTheme()) Slate50 else Slate900
-    val surfaceColor = if (isSystemInDarkTheme()) Slate900 else Color.White
+    val contentColor = MaterialTheme.colorScheme.onSurface
+    val surfaceColor = MaterialTheme.colorScheme.surface
     
     NeoDialogWrapper(
         title = "NEW PLAYLIST",
@@ -188,8 +188,8 @@ fun DeleteConfirmDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
-    val contentColor = if (isSystemInDarkTheme()) Slate50 else Slate900
-    val surfaceColor = if (isSystemInDarkTheme()) Slate900 else Color.White
+    val contentColor = MaterialTheme.colorScheme.onSurface
+    val surfaceColor = MaterialTheme.colorScheme.surface
     
     NeoDialogWrapper(
         title = "DELETE SONGS?",
@@ -228,12 +228,12 @@ fun DeleteConfirmDialog(
                         onConfirm()
                         onDismiss()
                     },
-                    backgroundColor = NeoPink, // Use NeoPink for destructive/attention
+                    backgroundColor = MaterialTheme.colorScheme.error, // Use Error color
                     modifier = Modifier.weight(1f).height(56.dp),
                     borderWidth = 2.dp,
                     shadowSize = 4.dp
                 ) {
-                    Text("DELETE", fontWeight = FontWeight.Black, color = Color.Black)
+                    Text("DELETE", fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.onError)
                 }
             }
         }

@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -26,6 +27,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Check
 
+private val CurrentNeoBorder: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.outline else Color.Black
+
+private val CurrentNeoShadow: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color.Black else Color.Black
+
 /**
  * NeoScaffold
  * A wrapper around Scaffold that enforces the Neo design tokens.
@@ -38,8 +47,8 @@ fun NeoScaffold(
     snackbarHost: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
-    containerColor: Color = NeoBackground,
-    contentColor: Color = Color.Black,
+    containerColor: Color = MaterialTheme.colorScheme.background,
+    contentColor: Color = MaterialTheme.colorScheme.onBackground,
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
@@ -62,8 +71,8 @@ fun NeoScaffold(
 @Composable
 fun NeoCard(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.White,
-    borderColor: Color = Color.Black,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    borderColor: Color = CurrentNeoBorder,
     borderWidth: Dp = 2.dp, // Thinner than buttons typically
     shadowSize: Dp = 4.dp,
     shape: Shape = RoundedCornerShape(16.dp),
@@ -79,7 +88,7 @@ fun NeoCard(
             modifier = Modifier
                 .matchParentSize()
                 .offset(x = shadowSize, y = shadowSize)
-                .background(Color.Black, shape)
+                .background(CurrentNeoShadow, shape)
         )
 
         // Card Surface
@@ -112,7 +121,7 @@ fun NeoCard(
 fun NeoButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.White,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
     shape: Shape = RoundedCornerShape(16.dp),
     borderWidth: Dp = 4.dp,
     shadowSize: Dp = 4.dp, // 'neobrutal' shadow
@@ -135,7 +144,7 @@ fun NeoButton(
             modifier = Modifier
                 .matchParentSize()
                 .offset(x = shadowSize, y = shadowSize)
-                .background(Color.Black, shape)
+                .background(CurrentNeoShadow, shape)
                 .graphicsLayer { alpha = shadowAlpha }
         )
         
@@ -146,7 +155,7 @@ fun NeoButton(
                 .offset(x = translationX, y = translationY)
                 .clip(shape)
                 .background(backgroundColor)
-                .border(borderWidth, Color.Black, shape)
+                .border(borderWidth, CurrentNeoBorder, shape)
                 .clickable(
                     interactionSource = interactionSource,
                     indication = null, // No ripple, we handle movement
@@ -166,11 +175,12 @@ fun NeoProgressBar(
     progress: Float, // 0f to 1f
     modifier: Modifier = Modifier,
     height: Dp = 24.dp,
-    fillColor: Color = NeoPrimary,
-    backgroundColor: Color = Color.White
+    fillColor: Color = MaterialTheme.colorScheme.primary,
+    backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
     // shadow-neobrutal-sm: 2px offset
     val shadowSize = 2.dp
+    val borderColor = CurrentNeoBorder
     
     Box(
         modifier = modifier
@@ -182,7 +192,7 @@ fun NeoProgressBar(
                 .fillMaxWidth()
                 .height(height)
                 .offset(x = shadowSize, y = shadowSize)
-                .background(Color.Black, RoundedCornerShape(50))
+                .background(CurrentNeoShadow, RoundedCornerShape(50))
         )
 
         // Main Container
@@ -192,7 +202,7 @@ fun NeoProgressBar(
                 .height(height)
                 .clip(RoundedCornerShape(50))
                 .background(backgroundColor)
-                .border(4.dp, Color.Black, RoundedCornerShape(50))
+                .border(4.dp, borderColor, RoundedCornerShape(50))
         ) {
             // Fill
             Box(
@@ -204,7 +214,7 @@ fun NeoProgressBar(
                     .drawBehind {
                         val strokeWidth = 4.dp.toPx()
                         drawLine(
-                            color = Color.Black,
+                            color = borderColor,
                             start = androidx.compose.ui.geometry.Offset(size.width, 0f),
                             end = androidx.compose.ui.geometry.Offset(size.width, size.height),
                             strokeWidth = strokeWidth
@@ -223,15 +233,15 @@ fun NeoProgressBar(
 fun NeoDialogWrapper(
     title: String,
     onDismiss: () -> Unit,
-    contentColor: Color = Color.Black,
-    surfaceColor: Color = Color.White,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    surfaceColor: Color = MaterialTheme.colorScheme.surface,
     content: @Composable () -> Unit
 ) {
     androidx.compose.ui.window.Dialog(onDismissRequest = onDismiss) {
         NeoCard(
             modifier = Modifier.fillMaxWidth(),
             backgroundColor = surfaceColor,
-            borderColor = Color.Black,
+            borderColor = CurrentNeoBorder,
             borderWidth = 2.dp,
             shadowSize = 8.dp,
             shape = RoundedCornerShape(16.dp)
@@ -254,12 +264,12 @@ fun NeoDialogWrapper(
                     )
                     IconButton(
                         onClick = onDismiss,
-                        modifier = Modifier.size(32.dp).border(2.dp, Color.Black, androidx.compose.foundation.shape.CircleShape)
+                        modifier = Modifier.size(32.dp).border(2.dp, CurrentNeoBorder, androidx.compose.foundation.shape.CircleShape)
                     ) {
                         Icon(
                             imageVector = androidx.compose.material.icons.Icons.Default.Close,
                             contentDescription = "Close",
-                            tint = Color.Black,
+                            tint = contentColor,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -268,7 +278,7 @@ fun NeoDialogWrapper(
                 HorizontalDivider(
                     modifier = Modifier.padding(vertical = 16.dp),
                     thickness = 2.dp,
-                    color = Color.Black
+                    color = CurrentNeoBorder
                 )
 
                 content()
@@ -286,13 +296,13 @@ fun NeoSelectionItem(
     text: String,
     selected: Boolean,
     modifier: Modifier = Modifier,
-    contentColor: Color = Color.Black,
-    surfaceColor: Color = Color.White,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    surfaceColor: Color = MaterialTheme.colorScheme.surface,
     onClick: () -> Unit
 ) {
-    val backgroundColor = if (selected) NeoPrimary else surfaceColor
-    val textColor = if (selected) Color.White else contentColor
-    val borderColor = Color.Black
+    val backgroundColor = if (selected) MaterialTheme.colorScheme.primary else surfaceColor
+    val textColor = if (selected) MaterialTheme.colorScheme.onPrimary else contentColor
+    val borderColor = CurrentNeoBorder
 
     Box(
         modifier = modifier
