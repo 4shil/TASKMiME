@@ -67,87 +67,93 @@ fun PlaylistDetailScreen(
                 CircularProgressIndicator(color = MaterialTheme.colorScheme.onBackground)
             }
         } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(start = NeoDimens.ScreenPadding, end = NeoDimens.ScreenPadding, bottom = NeoDimens.ListBottomPadding)
-            ) {
-                // Large Header
-                item {
-                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = NeoDimens.SpacingXL),
-                         contentAlignment = Alignment.Center
-                    ) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                             NeoCard(
-                                modifier = Modifier.size(200.dp),
-                                borderWidth = 4.dp,
-                                shadowSize = 8.dp
-                            ) {
-                                LargeAlbumArt(
-                                     uri = if (!artUri.isNullOrEmpty()) Uri.parse(artUri!!) else null,
-                                    contentDescription = "",
-                                    modifier = Modifier.fillMaxSize()
+                // Song list
+                val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+                val isScrolling by remember { derivedStateOf { listState.isScrollInProgress } }
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    state = listState,
+                    contentPadding = PaddingValues(start = NeoDimens.ScreenPadding, end = NeoDimens.ScreenPadding, bottom = NeoDimens.ListBottomPadding)
+                ) {
+                    // Large Header
+                    item {
+                         Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = NeoDimens.SpacingXL),
+                             contentAlignment = Alignment.Center
+                        ) {
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                 NeoCard(
+                                    modifier = Modifier.size(200.dp),
+                                    borderWidth = 4.dp,
+                                    shadowSize = 8.dp
+                                ) {
+                                    LargeAlbumArt(
+                                         uri = if (!artUri.isNullOrEmpty()) Uri.parse(artUri!!) else null,
+                                        contentDescription = "",
+                                        modifier = Modifier.fillMaxSize()
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(NeoDimens.SpacingL))
+                                Text(
+                                    text = title.uppercase(),
+                                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Black),
+                                    maxLines = 2,
+                                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                                    color = MaterialTheme.colorScheme.onBackground
                                 )
-                            }
-                            Spacer(modifier = Modifier.height(NeoDimens.SpacingL))
-                            Text(
-                                text = title.uppercase(),
-                                style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Black),
-                                maxLines = 2,
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                                color = MaterialTheme.colorScheme.onBackground
-                            )
-                             Text(
-                                text = subtitle.uppercase(),
-                                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            
-                            Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
-                            
-                            // Actions
-                             Row(horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingL)) {
-                                 NeoButton(
-                                    onClick = { viewModel.playAll() },
-                                    backgroundColor = MaterialTheme.colorScheme.primary,
-                                    borderWidth = 2.dp,
-                                    shadowSize = 4.dp
-                                 ) {
-                                     Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-                                         Icon(Icons.Default.PlayArrow, null, tint = MaterialTheme.colorScheme.onPrimary)
-                                         Spacer(modifier = Modifier.width(8.dp))
-                                         Text("PLAY ALL", color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Bold)
+                                 Text(
+                                    text = subtitle.uppercase(),
+                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                
+                                Spacer(modifier = Modifier.height(NeoDimens.SpacingXL))
+                                
+                                // Actions
+                                 Row(horizontalArrangement = Arrangement.spacedBy(NeoDimens.SpacingL)) {
+                                     NeoButton(
+                                        onClick = { viewModel.playAll() },
+                                        backgroundColor = MaterialTheme.colorScheme.primary,
+                                        borderWidth = 2.dp,
+                                        shadowSize = 4.dp
+                                     ) {
+                                         Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                                             Icon(Icons.Default.PlayArrow, null, tint = MaterialTheme.colorScheme.onPrimary)
+                                             Spacer(modifier = Modifier.width(8.dp))
+                                             Text("PLAY ALL", color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Bold)
+                                         }
+                                     }
+                                      NeoButton(
+                                        onClick = { viewModel.shufflePlay() },
+                                        modifier = Modifier.size(52.dp),
+                                        borderWidth = 2.dp,
+                                         shadowSize = 4.dp
+                                     ) {
+                                         Icon(Icons.Default.Shuffle, null, tint = MaterialTheme.colorScheme.onSurface)
                                      }
                                  }
-                                  NeoButton(
-                                    onClick = { viewModel.shufflePlay() },
-                                    modifier = Modifier.size(52.dp),
-                                    borderWidth = 2.dp,
-                                     shadowSize = 4.dp
-                                 ) {
-                                     Icon(Icons.Default.Shuffle, null, tint = MaterialTheme.colorScheme.onSurface)
-                                 }
-                             }
+                            }
                         }
                     }
-                }
 
-                // Song list
-                itemsIndexed(songs, key = { index, song -> "${song.id}_$index" }) { index, song ->
-                     SongListItem(
-                        song = song,
-                        isFavorite = false,
-                        isSelected = false,
-                        isSelectionMode = false,
-                        onClick = { viewModel.playSongAt(index) },
-                        onLongClick = {},
-                        onMoreClick = {} // Reduced complexity for detail view
-                     )
-                     Spacer(modifier = Modifier.height(NeoDimens.SpacingL))
+                    // Song list
+                    itemsIndexed(songs, key = { index, song -> "${song.id}_$index" }) { index, song ->
+                         SongListItem(
+                            song = song,
+                            isFavorite = false,
+                            isSelected = false,
+                            isSelectionMode = false,
+                            isScrolling = isScrolling,
+                            onClick = { viewModel.playSongAt(index) },
+                            onLongClick = {},
+                            onMoreClick = {} // Reduced complexity for detail view
+                         )
+                         Spacer(modifier = Modifier.height(NeoDimens.SpacingL))
+                    }
                 }
-            }
         }
     }
 }

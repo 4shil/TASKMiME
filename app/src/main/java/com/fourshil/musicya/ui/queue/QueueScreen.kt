@@ -173,6 +173,7 @@ fun QueueScreen(
                         song = song,
                         isPlaying = isPlaying,
                         isPlayed = isPlayed,
+                        isScrolling = listState.isScrollInProgress,
                         onPlay = { viewModel.playAt(index) },
                         onRemove = { viewModel.removeAt(index) }
                     )
@@ -201,6 +202,7 @@ private fun QueueItem(
     song: Song,
     isPlaying: Boolean,
     isPlayed: Boolean,
+    isScrolling: Boolean = false,
     onPlay: () -> Unit,
     onRemove: () -> Unit
 ) {
@@ -233,7 +235,11 @@ private fun QueueItem(
                     .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
                     .background(MaterialTheme.colorScheme.surfaceVariant)
             ) {
-                AlbumArtImage(uri = song.albumArtUri, size = 48.dp)
+                AlbumArtImage(
+                    uri = song.albumArtUri, 
+                    size = 48.dp,
+                    isScrolling = isScrolling
+                )
                 
                 // Playing indicator overlay
                 if (isPlaying) {

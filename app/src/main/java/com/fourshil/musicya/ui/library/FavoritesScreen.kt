@@ -44,8 +44,12 @@ fun FavoritesScreen(
     var showAddToPlaylistSheet by remember { mutableStateOf(false) }
     var showCreatePlaylistDialog by remember { mutableStateOf(false) }
 
+    val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+    val isScrolling by remember { derivedStateOf { listState.isScrollInProgress } }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
+        state = listState,
         contentPadding = PaddingValues(
             top = 0.dp,
             bottom = NeoDimens.ListBottomPadding
@@ -80,6 +84,7 @@ fun FavoritesScreen(
                         isFavorite = true,
                         isSelected = false,
                         isSelectionMode = false,
+                        isScrolling = isScrolling,
                         onClick = { viewModel.playSongAt(index) },
                         onLongClick = { },
                         onMoreClick = {

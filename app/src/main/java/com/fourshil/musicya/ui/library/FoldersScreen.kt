@@ -37,8 +37,12 @@ fun FoldersScreen(
     val songs by viewModel.songs.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
+    val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+    val isScrolling by remember { derivedStateOf { listState.isScrollInProgress } }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
+        state = listState,
         contentPadding = PaddingValues(
             top = 0.dp,
             bottom = NeoDimens.ListBottomPadding
@@ -97,6 +101,7 @@ fun FoldersScreen(
                     FolderListItem(
                         folder = folder,
                         artUris = folderSongs.map { it.albumArtUri },
+                        isScrolling = isScrolling,
                         onClick = { onFolderClick(folder.path) }
                     )
                 }
@@ -112,6 +117,7 @@ fun FoldersScreen(
 private fun FolderListItem(
     folder: Folder,
     artUris: List<android.net.Uri>,
+    isScrolling: Boolean = false,
     onClick: () -> Unit
 ) {
     Surface(
@@ -136,7 +142,11 @@ private fun FolderListItem(
                 contentAlignment = Alignment.Center
             ) {
                 if (artUris.isNotEmpty()) {
-                    PlaylistArtGrid(uris = artUris.take(4), size = 48.dp)
+                    PlaylistArtGrid(
+                        uris = artUris.take(4), 
+                        size = 48.dp,
+                        isScrolling = isScrolling
+                    )
                 } else {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                          Icon(

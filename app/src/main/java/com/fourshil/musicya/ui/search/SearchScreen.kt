@@ -206,10 +206,14 @@ fun SearchScreen(
             
             else -> {
                 // Results
+                val listState = androidx.compose.foundation.lazy.rememberLazyListState()
+                val isScrolling by remember { derivedStateOf { listState.isScrollInProgress } }
+
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding),
+                    state = listState,
                     contentPadding = PaddingValues(bottom = NeoDimens.ListBottomPadding),
                     verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingXS)
                 ) {
@@ -224,6 +228,7 @@ fun SearchScreen(
                                 isFavorite = false,
                                 isSelected = false,
                                 isSelectionMode = false,
+                                isScrolling = isScrolling,
                                 onClick = {
                                     viewModel.playSong(song)
                                     onSongClick(song)
