@@ -58,7 +58,7 @@ fun UnifiedLibraryHeader(
                 onClick = onMenuClick,
                 modifier = Modifier.size(48.dp),
                 shape = RoundedCornerShape(12.dp),
-                shadowSize = 4.dp
+                shadowSize = 0.dp
             ) {
                 Icon(Icons.Default.Menu, null, tint = MaterialTheme.colorScheme.onSurface)
             }
@@ -74,7 +74,7 @@ fun UnifiedLibraryHeader(
                 .padding(horizontal = 24.dp), // Added padding here
             onClick = onSearchClick,
             // backgroundColor = Color.White,
-            shadowSize = 4.dp,
+            shadowSize = 0.dp,
             shape = RoundedCornerShape(16.dp)
         ) {
             Row(

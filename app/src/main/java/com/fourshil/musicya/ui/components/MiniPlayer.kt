@@ -101,7 +101,7 @@ fun MiniPlayer(
         backgroundColor = backgroundColor,
         borderColor = borderCol,
         borderWidth = 2.dp,
-        shadowSize = 4.dp,
+        shadowSize = 0.dp,
         shape = RoundedCornerShape(12.dp),
         onClick = onClick
     ) {
