@@ -77,7 +77,7 @@ fun MusicyaNavGraph(
         Screen.RecentlyPlayed.route -> "RECENT"
         Screen.MostPlayed.route -> "POPULAR"
         Screen.NeverPlayed.route -> "UNHEARD"
-        else -> "MUSICYA"
+        else -> "LYRA"
     }
 
     Scaffold(

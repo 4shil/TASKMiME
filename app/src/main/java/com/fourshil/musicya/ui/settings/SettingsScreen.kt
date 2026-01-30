@@ -177,7 +177,7 @@ fun SettingsScreen(
             // Info Section
             SettingsSection(title = "ABOUT") {
                 SettingsItem(
-                    title = "About Musicya",
+                    title = "About LYRA",
                     subtitle = "Version 1.0.0",
                     icon = Icons.Default.Info,
                     onClick = {}

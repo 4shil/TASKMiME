@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Musicya</string>
+    <string name="app_name">LYRA</string>
     
     <!-- Navigation -->
     <string name="nav_songs">Songs</string>
@@ -85,11 +85,11 @@
 
     <!-- Permissions -->
     <string name="permission_required">Permission Required</string>
-    <string name="permission_music_rationale">Musicya needs access to your music files to play them.</string>
+    <string name="permission_music_rationale">LYRA needs access to your music files to play them.</string>
     <string name="grant_permission">Grant Permission</string>
     
     <!-- Widget -->
-    <string name="widget_name">Musicya Player</string>
+    <string name="widget_name">LYRA Player</string>
     <string name="tap_to_open">Tap to open</string>
     
     <!-- Accessibility -->
