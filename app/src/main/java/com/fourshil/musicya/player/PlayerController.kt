@@ -80,6 +80,14 @@ class PlayerController @Inject constructor(
     private val _repeatMode = MutableStateFlow(Player.REPEAT_MODE_OFF)
     /** Current repeat mode (OFF, ALL, or ONE) */
     val repeatMode: StateFlow<Int> = _repeatMode.asStateFlow()
+
+    private val _queue = MutableStateFlow<List<Song>>(emptyList())
+    /** Current playback queue */
+    val queue: StateFlow<List<Song>> = _queue.asStateFlow()
+
+    private val _currentQueueIndex = MutableStateFlow(-1)
+    /** Current index in the playback queue */
+    val currentQueueIndex: StateFlow<Int> = _currentQueueIndex.asStateFlow()
     
     // Delegated managers - expose their state flows
     /** Remaining sleep timer time in milliseconds */
@@ -142,6 +150,10 @@ class PlayerController @Inject constructor(
                 override fun onRepeatModeChanged(repeatMode: Int) {
                     _repeatMode.value = repeatMode
                 }
+
+                override fun onTimelineChanged(timeline: androidx.media3.common.Timeline, reason: Int) {
+                    updateQueue(mediaController)
+                }
             })
             
             // Sync initial state
@@ -149,11 +161,15 @@ class PlayerController @Inject constructor(
             _shuffleEnabled.value = mediaController.shuffleModeEnabled
             _repeatMode.value = mediaController.repeatMode
             updateCurrentSong(mediaController.currentMediaItem)
+            updateQueue(mediaController)
             
         }, MoreExecutors.directExecutor())
     }
     
     private fun updateCurrentSong(mediaItem: MediaItem?) {
+        // Also update index
+        _currentQueueIndex.value = controller?.currentMediaItemIndex ?: -1
+
         if (mediaItem == null) {
             _currentSong.value = null
             return
@@ -174,6 +190,31 @@ class PlayerController @Inject constructor(
             dateAdded = 0,
             size = 0
         )
+    }
+
+    private fun updateQueue(controller: MediaController) {
+        val count = controller.mediaItemCount
+        val newQueue = ArrayList<Song>(count)
+        for (i in 0 until count) {
+            val item = controller.getMediaItemAt(i)
+            val meta = item.mediaMetadata
+            newQueue.add(
+                Song(
+                    id = item.mediaId.toLongOrNull() ?: 0,
+                    title = meta.title?.toString() ?: "Unknown",
+                    artist = meta.artist?.toString() ?: "Unknown Artist",
+                    album = meta.albumTitle?.toString() ?: "Unknown Album",
+                    albumId = meta.extras?.getLong("album_id") ?: 0L,
+                    duration = 0, // Duration not available in queue items usually
+                    uri = item.localConfiguration?.uri ?: Uri.EMPTY,
+                    path = meta.extras?.getString("path") ?: "",
+                    dateAdded = 0,
+                    size = 0
+                )
+            )
+        }
+        _queue.value = newQueue
+        _currentQueueIndex.value = controller.currentMediaItemIndex
     }
     
     // ============ Playback Control ============

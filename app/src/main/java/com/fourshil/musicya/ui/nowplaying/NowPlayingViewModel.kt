@@ -50,13 +50,16 @@ class NowPlayingViewModel @Inject constructor(
         // Start position updates when ViewModel is created
         playerController.startPositionUpdates()
         
-        // Load lyrics when song changes
+        // Load lyrics and high-quality art when song changes
         viewModelScope.launch {
             currentSong.collect { song ->
                 if (song != null) {
                     _lyrics.value = lyricsManager.getLyricsForSong(song)
+                    // Load high-quality album art for Now Playing screen
+                    _highQualityArtUri.value = albumArtHelper.getHighQualityArtUri(song.path, song.albumId)
                 } else {
                     _lyrics.value = null
+                    _highQualityArtUri.value = null
                 }
             }
         }

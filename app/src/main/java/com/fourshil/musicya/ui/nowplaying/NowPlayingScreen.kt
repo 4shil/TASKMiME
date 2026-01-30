@@ -47,6 +47,7 @@ fun NowPlayingScreen(
     val shuffleEnabled by viewModel.shuffleEnabled.collectAsState()
     val repeatMode by viewModel.repeatMode.collectAsState()
     val isFavorite by viewModel.isFavorite.collectAsState()
+    val highQualityArtUri by viewModel.highQualityArtUri.collectAsState()
     
     // Lyrics state
     var showLyrics by remember { mutableStateOf(false) }
@@ -171,13 +172,13 @@ fun NowPlayingScreen(
                      // For Neobrutal, rigid movements are fine.
                      
                         if (currentSong != null) {
+                            // Use high-quality art URI from ViewModel, fallback to default
+                            val artUri = highQualityArtUri ?: currentSong!!.albumArtUri
                             AsyncImage(
                                 model = coil.request.ImageRequest.Builder(LocalContext.current)
-                                    .data(currentSong!!.albumArtUri)
+                                    .data(artUri)
                                     .size(coil.size.Size.ORIGINAL) // Force original size
                                     .precision(coil.size.Precision.EXACT) // Require exact dimensions
-                                    .memoryCachePolicy(coil.request.CachePolicy.WRITE_ONLY) // Don't read from memory, force decode
-                                    .diskCachePolicy(coil.request.CachePolicy.ENABLED)
                                     .crossfade(true)
                                     .build(),
                              contentDescription = "Album Art",

@@ -2,6 +2,7 @@ package com.fourshil.musicya.ui.nowplaying;
 
 import com.fourshil.musicya.data.db.MusicDao;
 import com.fourshil.musicya.player.PlayerController;
+import com.fourshil.musicya.util.AlbumArtHelper;
 import com.fourshil.musicya.util.LyricsManager;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
@@ -30,26 +31,31 @@ public final class NowPlayingViewModel_Factory implements Factory<NowPlayingView
 
   private final Provider<LyricsManager> lyricsManagerProvider;
 
+  private final Provider<AlbumArtHelper> albumArtHelperProvider;
+
   public NowPlayingViewModel_Factory(Provider<PlayerController> playerControllerProvider,
-      Provider<MusicDao> musicDaoProvider, Provider<LyricsManager> lyricsManagerProvider) {
+      Provider<MusicDao> musicDaoProvider, Provider<LyricsManager> lyricsManagerProvider,
+      Provider<AlbumArtHelper> albumArtHelperProvider) {
     this.playerControllerProvider = playerControllerProvider;
     this.musicDaoProvider = musicDaoProvider;
     this.lyricsManagerProvider = lyricsManagerProvider;
+    this.albumArtHelperProvider = albumArtHelperProvider;
   }
 
   @Override
   public NowPlayingViewModel get() {
-    return newInstance(playerControllerProvider.get(), musicDaoProvider.get(), lyricsManagerProvider.get());
+    return newInstance(playerControllerProvider.get(), musicDaoProvider.get(), lyricsManagerProvider.get(), albumArtHelperProvider.get());
   }
 
   public static NowPlayingViewModel_Factory create(
       Provider<PlayerController> playerControllerProvider, Provider<MusicDao> musicDaoProvider,
-      Provider<LyricsManager> lyricsManagerProvider) {
-    return new NowPlayingViewModel_Factory(playerControllerProvider, musicDaoProvider, lyricsManagerProvider);
+      Provider<LyricsManager> lyricsManagerProvider,
+      Provider<AlbumArtHelper> albumArtHelperProvider) {
+    return new NowPlayingViewModel_Factory(playerControllerProvider, musicDaoProvider, lyricsManagerProvider, albumArtHelperProvider);
   }
 
   public static NowPlayingViewModel newInstance(PlayerController playerController,
-      MusicDao musicDao, LyricsManager lyricsManager) {
-    return new NowPlayingViewModel(playerController, musicDao, lyricsManager);
+      MusicDao musicDao, LyricsManager lyricsManager, AlbumArtHelper albumArtHelper) {
+    return new NowPlayingViewModel(playerController, musicDao, lyricsManager, albumArtHelper);
   }
 }
