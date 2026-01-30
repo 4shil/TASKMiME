@@ -4,7 +4,7 @@
     <string name="add_to_favorites">Add to Favorites</string>
     <string name="add_to_playlist">Add to Playlist</string>
     <string name="add_to_queue">Add to Queue</string>
-    <string name="app_name">Musicya</string>
+    <string name="app_name">LYRA</string>
     <string name="cd_album_art">Album artwork</string>
     <string name="cd_back">Go back</string>
     <string name="cd_close">Close</string>
@@ -35,7 +35,7 @@
     <string name="no_songs_in_queue">No songs in queue</string>
     <string name="now_playing">Now Playing</string>
     <string name="pause">Pause</string>
-    <string name="permission_music_rationale">Musicya needs access to your music files to play them.</string>
+    <string name="permission_music_rationale">LYRA needs access to your music files to play them.</string>
     <string name="permission_required">Permission Required</string>
     <string name="play">Play</string>
     <string name="play_next">Play Next</string>
@@ -72,7 +72,7 @@
     <string name="unknown">Unknown</string>
     <string name="unknown_album">Unknown Album</string>
     <string name="unknown_artist">Unknown Artist</string>
-    <string name="widget_name">Musicya Player</string>
+    <string name="widget_name">LYRA Player</string>
     <style name="Theme.Musicya" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>

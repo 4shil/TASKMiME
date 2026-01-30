@@ -341,7 +341,7 @@
     <string name="add_to_playlist">Add to Playlist</string>
     <string name="add_to_queue">Add to Queue</string>
     <string name="androidx_startup" translatable="false">androidx.startup</string>
-    <string name="app_name">Musicya</string>
+    <string name="app_name">LYRA</string>
     <string name="authentication_required">Authentication required</string>
     <string name="call_notification_answer_action">Answer</string>
     <string name="call_notification_answer_video_action">Video</string>
@@ -511,7 +511,7 @@
     <string name="off">Off</string>
     <string name="on">On</string>
     <string name="pause">Pause</string>
-    <string name="permission_music_rationale">Musicya needs access to your music files to play them.</string>
+    <string name="permission_music_rationale">LYRA needs access to your music files to play them.</string>
     <string name="permission_required">Permission Required</string>
     <string name="play">Play</string>
     <string name="play_next">Play Next</string>
@@ -557,7 +557,7 @@
     <string name="unknown">Unknown</string>
     <string name="unknown_album">Unknown Album</string>
     <string name="unknown_artist">Unknown Artist</string>
-    <string name="widget_name">Musicya Player</string>
+    <string name="widget_name">LYRA Player</string>
     <style name="DialogWindowTheme">
         <item name="android:windowClipToOutline">false</item>
     </style>
@@ -841,23 +841,14 @@
         <attr format="reference" name="fontProviderCerts"/>
         
         <attr name="fontProviderFetchStrategy">
-            <!-- The blocking font fetch works as follows.
-              First, check the local cache, then if the requested font is not cached, request the
-              font from the provider and wait until it is finished.  You can change the length of
-              the timeout by modifying fontProviderFetchTimeout.  If the timeout happens, the
-              default typeface will be used instead. -->
+            
             <enum name="blocking" value="0"/>
-            <!-- The async font fetch works as follows.
-              First, check the local cache, then if the requeted font is not cached, trigger a
-              request the font and continue with layout inflation. Once the font fetch succeeds, the
-              target text view will be refreshed with the downloaded font data. The
-              fontProviderFetchTimeout will be ignored if async loading is specified. -->
+            
             <enum name="async" value="1"/>
         </attr>
         
         <attr format="integer" name="fontProviderFetchTimeout">
-            <!-- A special value for the timeout. In this case, the blocking font fetching will not
-              timeout and wait until a reply is received from the font provider. -->
+            
             <enum name="forever" value="-1"/>
         </attr>
         

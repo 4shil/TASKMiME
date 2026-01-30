@@ -152,19 +152,9 @@ private fun AlbumArtPlaceholder(
 
 @Composable
 private fun LargeAlbumArtPlaceholder() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surfaceVariant),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = Icons.Default.Album,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(96.dp)
-        )
-    }
+    DynamicAlbumArtPlaceholder(
+        modifier = Modifier.fillMaxSize()
+    )
 }
 
 /**
