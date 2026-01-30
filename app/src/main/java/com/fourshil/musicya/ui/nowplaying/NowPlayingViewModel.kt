@@ -1,9 +1,11 @@
 package com.fourshil.musicya.ui.nowplaying
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fourshil.musicya.data.db.MusicDao
 import com.fourshil.musicya.player.PlayerController
+import com.fourshil.musicya.util.AlbumArtHelper
 import com.fourshil.musicya.util.Lyrics
 import com.fourshil.musicya.util.LyricsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,10 +17,15 @@ import javax.inject.Inject
 class NowPlayingViewModel @Inject constructor(
     private val playerController: PlayerController,
     private val musicDao: MusicDao,
-    private val lyricsManager: LyricsManager
+    private val lyricsManager: LyricsManager,
+    private val albumArtHelper: AlbumArtHelper
 ) : ViewModel() {
 
     val currentSong = playerController.currentSong
+    
+    // High-quality album art URI for Now Playing screen
+    private val _highQualityArtUri = MutableStateFlow<Uri?>(null)
+    val highQualityArtUri = _highQualityArtUri.asStateFlow()
     val isPlaying = playerController.isPlaying
     val shuffleEnabled = playerController.shuffleEnabled
     val repeatMode = playerController.repeatMode

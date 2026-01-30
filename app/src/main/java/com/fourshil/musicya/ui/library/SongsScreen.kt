@@ -213,14 +213,14 @@ fun SongsScreen(
                     // Song list with fade edge
                     val listState = androidx.compose.foundation.lazy.rememberLazyListState()
                     val isScrolling by remember { derivedStateOf { listState.isScrollInProgress } }
-                    val fadeHeight = 48.dp // Height of the fade effect
+                    val fadeHeight = 24.dp // Height of the fade effect
                     
                     Box(modifier = Modifier.fillMaxSize()) {
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
                             state = listState,
                             contentPadding = PaddingValues(
-                                top = fadeHeight, // Add padding to account for fade
+                                top = 0.dp, // Content starts directly under navbar
                                 bottom = NeoDimens.ListBottomPadding
                             ),
                             verticalArrangement = Arrangement.spacedBy(NeoDimens.SpacingXS)

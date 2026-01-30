@@ -120,10 +120,68 @@ class AlbumArtHelper @Inject constructor(
     }
     
     /**
+     * Get high-quality album art URI for Now Playing screen.
+     * Extracts embedded artwork at original resolution without downscaling.
+     */
+    suspend fun getHighQualityArtUri(songPath: String, albumId: Long): Uri = withContext(Dispatchers.IO) {
+        // Try to extract full-resolution embedded artwork
+        val extractedUri = extractHighQualityEmbeddedArt(songPath)
+        if (extractedUri != null) {
+            return@withContext extractedUri
+        }
+        
+        // Fallback to MediaStore albumart
+        Uri.parse("content://media/external/audio/albumart/$albumId")
+    }
+    
+    /**
+     * Extract embedded artwork at full quality (no downscaling).
+     * Used for Now Playing screen where quality matters.
+     */
+    private fun extractHighQualityEmbeddedArt(songPath: String): Uri? {
+        return try {
+            val file = File(songPath)
+            if (!file.exists()) return null
+            
+            // Use separate cache for high-quality art
+            val hqCacheDir = File(context.cacheDir, "album_art_hq").apply { mkdirs() }
+            val cacheFile = File(hqCacheDir, "${file.name.hashCode()}_hq.jpg")
+            if (cacheFile.exists()) {
+                return Uri.fromFile(cacheFile)
+            }
+            
+            // Read audio file tags
+            val audioFile = AudioFileIO.read(file)
+            val tag = audioFile.tag ?: return null
+            val artwork: Artwork = tag.firstArtwork ?: return null
+            
+            // Get artwork bytes
+            val artBytes = artwork.binaryData ?: return null
+            if (artBytes.isEmpty()) return null
+            
+            // Decode bitmap at full resolution (no sample size)
+            val bitmap = BitmapFactory.decodeByteArray(artBytes, 0, artBytes.size)
+                ?: return null
+            
+            // Save to cache at high quality (95%)
+            FileOutputStream(cacheFile).use { out ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 95, out)
+            }
+            bitmap.recycle()
+            
+            Uri.fromFile(cacheFile)
+        } catch (e: Exception) {
+            null
+        }
+    }
+    
+    /**
      * Clear the album art cache
      */
     fun clearCache() {
         artCache.evictAll()
         cacheDir.listFiles()?.forEach { it.delete() }
+        // Also clear high-quality cache
+        File(context.cacheDir, "album_art_hq").listFiles()?.forEach { it.delete() }
     }
 }

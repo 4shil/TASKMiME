@@ -101,13 +101,13 @@ fun UnifiedLibraryHeader(
             }
         }
         
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         TopNavigationChips(
             items = NavigationUtils.LibraryTabs,
             currentRoute = currentRoute,
             onItemClick = onNavigate,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 8.dp)
         )
     }
 }
