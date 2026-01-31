@@ -7,6 +7,8 @@ import android.net.Uri
 import android.util.LruCache
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import org.jaudiotagger.audio.AudioFileIO
 import org.jaudiotagger.tag.images.Artwork
@@ -18,6 +20,7 @@ import javax.inject.Singleton
 /**
  * Helper class to extract and cache album art from audio files.
  * Uses JAudioTagger to read embedded artwork, with fallback to MediaStore albumart.
+ * Limits concurrent extractions to prevent thread exhaustion.
  */
 @Singleton
 class AlbumArtHelper @Inject constructor(
@@ -25,6 +28,9 @@ class AlbumArtHelper @Inject constructor(
 ) {
     // Memory cache for album art URIs (songPath -> cachedArtUri)
     private val artCache = LruCache<String, Uri>(100)
+    
+    // Limit concurrent extractions to prevent thread pool exhaustion
+    private val extractionSemaphore = Semaphore(3)
     
     // Cache directory for extracted artwork
     private val cacheDir: File by lazy {
@@ -39,8 +45,10 @@ class AlbumArtHelper @Inject constructor(
         // Check memory cache first
         artCache.get(songPath)?.let { return@withContext it }
         
-        // Try to extract embedded artwork
-        val extractedUri = extractEmbeddedArt(songPath)
+        // Try to extract embedded artwork (with concurrency limit)
+        val extractedUri = extractionSemaphore.withPermit {
+            extractEmbeddedArt(songPath)
+        }
         if (extractedUri != null) {
             artCache.put(songPath, extractedUri)
             return@withContext extractedUri
@@ -124,8 +132,10 @@ class AlbumArtHelper @Inject constructor(
      * Extracts embedded artwork at original resolution without downscaling.
      */
     suspend fun getHighQualityArtUri(songPath: String, albumId: Long): Uri = withContext(Dispatchers.IO) {
-        // Try to extract full-resolution embedded artwork
-        val extractedUri = extractHighQualityEmbeddedArt(songPath)
+        // Try to extract full-resolution embedded artwork (with concurrency limit)
+        val extractedUri = extractionSemaphore.withPermit {
+            extractHighQualityEmbeddedArt(songPath)
+        }
         if (extractedUri != null) {
             return@withContext extractedUri
         }

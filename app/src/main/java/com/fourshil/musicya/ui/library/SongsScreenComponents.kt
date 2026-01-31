@@ -31,16 +31,16 @@ import androidx.compose.ui.graphics.Color
 fun PermissionRequiredView(onRequest: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("LOCKED", style = MaterialTheme.typography.displayMedium)
+            Text("LOCKED", style = MaterialTheme.typography.displayMedium, color = MaterialTheme.colorScheme.onBackground)
              Spacer(modifier = Modifier.height(16.dp))
             NeoButton(
                 onClick = onRequest,
-                backgroundColor = Color.Black,
+                backgroundColor = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.height(48.dp),
                 borderWidth = 2.dp,
                 shadowSize = 4.dp
             ) {
-                Text("ACCESS DATA", color = Color.White, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp))
+                Text("ACCESS DATA", color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 16.dp))
             }
         }
     }
@@ -61,8 +61,8 @@ fun SelectionTopBar(
     ) {
         NeoCard(
             modifier = Modifier.fillMaxWidth(),
-            backgroundColor = Slate900,
-            borderColor = Color.Black,
+            backgroundColor = MaterialTheme.colorScheme.secondary,
+            borderColor = MaterialTheme.colorScheme.outline,
             shadowSize = 4.dp
         ) {
             Row(

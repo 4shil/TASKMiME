@@ -27,13 +27,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Check
 
+/**
+ * Soft Neo-Brutalism Design System with Claude Palette
+ * 
+ * Key Principles:
+ * - Softer shadows (with transparency) instead of hard black shadows
+ * - Thinner, consistent borders (1.5dp default, 2dp emphasis)
+ * - Warm color palette based on Claude Orange (#D97757)
+ * - Friendly, approachable aesthetic while maintaining bold typography
+ */
+
+// Soft shadow color with transparency for gentle depth
 private val CurrentNeoBorder: Color
     @Composable
-    get() = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.outline else Color.Black
+    get() = if (isSystemInDarkTheme()) SoftBorderDark else SoftBorderLight
 
 private val CurrentNeoShadow: Color
     @Composable
-    get() = if (isSystemInDarkTheme()) Color.Black else Color.Black
+    get() = if (isSystemInDarkTheme()) SoftShadowDark else SoftShadowLight
 
 /**
  * NeoScaffold
@@ -65,17 +76,17 @@ fun NeoScaffold(
 }
 
 /**
- * NeoCard
- * A container with a white background, black border, and hard shadow.
+ * NeoCard - Soft Neo-Brutalist Card
+ * Features softer shadows with transparency, thinner borders, friendly corners
  */
 @Composable
 fun NeoCard(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     borderColor: Color = CurrentNeoBorder,
-    borderWidth: Dp = 2.dp, // Thinner than buttons typically
-    shadowSize: Dp = 4.dp,
-    shape: Shape = RoundedCornerShape(16.dp),
+    borderWidth: Dp = NeoDimens.BorderDefault,
+    shadowSize: Dp = NeoDimens.ShadowDefault,
+    shape: Shape = RoundedCornerShape(NeoDimens.CornerMedium),
     onClick: (() -> Unit)? = null,
     content: @Composable BoxScope.() -> Unit
 ) {
@@ -83,7 +94,7 @@ fun NeoCard(
         modifier = modifier
             .padding(bottom = shadowSize, end = shadowSize)
     ) {
-        // Shadow
+        // Soft Shadow with transparency
         Box(
             modifier = Modifier
                 .matchParentSize()
@@ -99,7 +110,11 @@ fun NeoCard(
                 .border(borderWidth, borderColor, shape)
                 .then(
                     if (onClick != null) {
-                        Modifier.clickable(onClick = onClick)
+                        Modifier.clickable(
+                            onClick = onClick,
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        )
                     } else {
                         Modifier
                     }
@@ -111,20 +126,21 @@ fun NeoCard(
 
 
 /**
- * Neobrutalism Button
+ * Soft Neo-Brutalist Button
  * Characteristics: 
- * - Thick black border (4dp)
- * - Hard shadow (offset)
+ * - Thinner border (2dp instead of 4dp)
+ * - Soft shadow with transparency
  * - Click animation (press down)
+ * - Claude Orange primary color
  */
 @Composable
 fun NeoButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
-    shape: Shape = RoundedCornerShape(16.dp),
-    borderWidth: Dp = 4.dp,
-    shadowSize: Dp = 4.dp, // 'neobrutal' shadow
+    shape: Shape = RoundedCornerShape(NeoDimens.CornerMedium),
+    borderWidth: Dp = NeoDimens.BorderBold,
+    shadowSize: Dp = NeoDimens.ShadowDefault,
     content: @Composable BoxScope.() -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -137,9 +153,9 @@ fun NeoButton(
 
     Box(
         modifier = modifier
-            .padding(bottom = shadowSize, end = shadowSize) // Reserve space for shadow
+            .padding(bottom = shadowSize, end = shadowSize)
     ) {
-        // Shadow Layer (Manual implementation for hard edge)
+        // Soft Shadow Layer
         Box(
             modifier = Modifier
                 .matchParentSize()
@@ -158,7 +174,7 @@ fun NeoButton(
                 .border(borderWidth, CurrentNeoBorder, shape)
                 .clickable(
                     interactionSource = interactionSource,
-                    indication = null, // No ripple, we handle movement
+                    indication = null,
                     onClick = onClick
                 ),
             contentAlignment = Alignment.Center,
@@ -168,31 +184,31 @@ fun NeoButton(
 }
 
 /**
- * Neobrutalism Progress Bar
+ * Soft Neo-Brutalist Progress Bar
+ * Thinner border, softer shadow, Claude Orange fill
  */
 @Composable
 fun NeoProgressBar(
-    progress: Float, // 0f to 1f
+    progress: Float,
     modifier: Modifier = Modifier,
-    height: Dp = 24.dp,
+    height: Dp = 20.dp,
     fillColor: Color = MaterialTheme.colorScheme.primary,
     backgroundColor: Color = MaterialTheme.colorScheme.surfaceVariant
 ) {
-    // shadow-neobrutal-sm: 2px offset
-    val shadowSize = 2.dp
+    val shadowSize = NeoDimens.ShadowSubtle
     val borderColor = CurrentNeoBorder
     
     Box(
         modifier = modifier
-            .padding(bottom = shadowSize, end = shadowSize) // Space for shadow
+            .padding(bottom = shadowSize, end = shadowSize)
     ) {
-        // Shadow
+        // Soft Shadow
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(height)
                 .offset(x = shadowSize, y = shadowSize)
-                .background(CurrentNeoShadow, RoundedCornerShape(50))
+                .background(CurrentNeoShadow, RoundedCornerShape(NeoDimens.CornerFull))
         )
 
         // Main Container
@@ -200,9 +216,9 @@ fun NeoProgressBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(height)
-                .clip(RoundedCornerShape(50))
+                .clip(RoundedCornerShape(NeoDimens.CornerFull))
                 .background(backgroundColor)
-                .border(4.dp, borderColor, RoundedCornerShape(50))
+                .border(NeoDimens.BorderDefault, borderColor, RoundedCornerShape(NeoDimens.CornerFull))
         ) {
             // Fill
             Box(
@@ -210,9 +226,8 @@ fun NeoProgressBar(
                     .fillMaxHeight()
                     .fillMaxWidth(progress)
                     .background(fillColor)
-                    // The CSS has border-r-4 black on the fill div
                     .drawBehind {
-                        val strokeWidth = 4.dp.toPx()
+                        val strokeWidth = NeoDimens.BorderDefault.toPx()
                         drawLine(
                             color = borderColor,
                             start = androidx.compose.ui.geometry.Offset(size.width, 0f),
@@ -226,8 +241,8 @@ fun NeoProgressBar(
 }
 
 /**
- * Neo-Brutalist Dialog Wrapper
- * Hard shadow, thick border, bold header.
+ * Soft Neo-Brutalist Dialog Wrapper
+ * Softer shadow, thinner border, friendly corners
  */
 @Composable
 fun NeoDialogWrapper(
@@ -242,12 +257,12 @@ fun NeoDialogWrapper(
             modifier = Modifier.fillMaxWidth(),
             backgroundColor = surfaceColor,
             borderColor = CurrentNeoBorder,
-            borderWidth = 2.dp,
-            shadowSize = 8.dp,
-            shape = RoundedCornerShape(16.dp)
+            borderWidth = NeoDimens.BorderDefault,
+            shadowSize = NeoDimens.ShadowProminent,
+            shape = RoundedCornerShape(NeoDimens.CornerLarge)
         ) {
             Column(
-                modifier = Modifier.padding(24.dp)
+                modifier = Modifier.padding(NeoDimens.SpacingXL)
             ) {
                 // Header
                 Row(
@@ -256,28 +271,30 @@ fun NeoDialogWrapper(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = title.uppercase(),
+                        text = title,
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Black,
+                        fontWeight = FontWeight.Bold,
                         color = contentColor,
-                        letterSpacing = 1.sp
+                        letterSpacing = 0.5.sp
                     )
                     IconButton(
                         onClick = onDismiss,
-                        modifier = Modifier.size(32.dp).border(2.dp, CurrentNeoBorder, androidx.compose.foundation.shape.CircleShape)
+                        modifier = Modifier
+                            .size(NeoDimens.TouchTargetMin)
+                            .border(NeoDimens.BorderDefault, CurrentNeoBorder, androidx.compose.foundation.shape.CircleShape)
                     ) {
                         Icon(
                             imageVector = androidx.compose.material.icons.Icons.Default.Close,
-                            contentDescription = "Close",
+                            contentDescription = "Close dialog",
                             tint = contentColor,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(NeoDimens.IconMedium)
                         )
                     }
                 }
 
                 HorizontalDivider(
-                    modifier = Modifier.padding(vertical = 16.dp),
-                    thickness = 2.dp,
+                    modifier = Modifier.padding(vertical = NeoDimens.SpacingL),
+                    thickness = NeoDimens.BorderSubtle,
                     color = CurrentNeoBorder
                 )
 
@@ -288,8 +305,8 @@ fun NeoDialogWrapper(
 }
 
 /**
- * Neo-Brutalist Selection Item
- * Hard border, bold text, high contrast selection.
+ * Soft Neo-Brutalist Selection Item
+ * Friendly border, proper touch targets, accessible
  */
 @Composable
 fun NeoSelectionItem(
@@ -307,12 +324,13 @@ fun NeoSelectionItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
-            .clip(RoundedCornerShape(8.dp))
+            .padding(vertical = NeoDimens.SpacingXS)
+            .clip(RoundedCornerShape(NeoDimens.CornerSmall))
             .background(backgroundColor)
-            .border(2.dp, borderColor, RoundedCornerShape(8.dp))
+            .border(NeoDimens.BorderDefault, borderColor, RoundedCornerShape(NeoDimens.CornerSmall))
             .clickable(onClick = onClick)
-            .padding(16.dp)
+            .padding(NeoDimens.SpacingL)
+            .heightIn(min = NeoDimens.TouchTargetMin)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -321,8 +339,8 @@ fun NeoSelectionItem(
         ) {
             Text(
                 text = text,
-                style = MaterialTheme.typography.titleMedium, // Bold body
-                fontWeight = if (selected) FontWeight.Black else FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
                 color = textColor
             )
             if (selected) {
@@ -330,7 +348,7 @@ fun NeoSelectionItem(
                     imageVector = androidx.compose.material.icons.Icons.Default.Check,
                     contentDescription = "Selected",
                     tint = textColor,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(NeoDimens.IconMedium)
                 )
             }
         }

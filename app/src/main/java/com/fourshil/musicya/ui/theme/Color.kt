@@ -3,65 +3,70 @@ package com.fourshil.musicya.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// Clean Minimalistic Color Palette
-// Modern, neutral colors with subtle accent for a polished experience
+// Soft Neo-Brutalism Color Palette with Claude Theme
+// Warm, approachable colors with bold accents
 // ═══════════════════════════════════════════════════════════════════════════════
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Base Colors
+// Claude Accent Colors - The Heart of the Theme
 // ─────────────────────────────────────────────────────────────────────────────
-val PureBlack = Color(0xFF000000)
-val PureWhite = Color(0xFFFFFFFF)
+val ClaudeOrange = Color(0xFFD97757)          // Primary accent - Claude's signature
+val ClaudeOrangeLight = Color(0xFFE89A7D)     // Lighter variant for containers
+val ClaudeOrangeDark = Color(0xFFC4593A)      // Darker variant for pressed states
+val ClaudeOrangeSubtle = Color(0xFFFFF4F0)    // Very subtle background tint (light)
+val ClaudeOrangeSubtleDark = Color(0xFF2A1F1C) // Very subtle background tint (dark)
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Primary Accent - Modern Blue
+// Semantic Accent Colors
 // ─────────────────────────────────────────────────────────────────────────────
-val AccentPrimary = Color(0xFF2563EB)        // Primary blue for light mode
-val AccentPrimaryDark = Color(0xFF60A5FA)    // Lighter blue for dark mode
-val AccentSecondary = Color(0xFF10B981)      // Green for success states
-val AccentError = Color(0xFFEF4444)          // Red for errors
-val AccentWarning = Color(0xFFF59E0B)        // Amber for warnings
+val SemanticSuccess = Color(0xFF10B981)       // Green - favorites, success
+val SemanticSuccessLight = Color(0xFF34D399)  // Light green
+val SemanticError = Color(0xFFEF4444)         // Red - errors, delete
+val SemanticErrorLight = Color(0xFFFCA5A5)    // Light red
+val SemanticWarning = Color(0xFFF59E0B)       // Amber - warnings
+val SemanticInfo = Color(0xFF3B82F6)          // Blue - info states
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Neutral Gray Scale - Clean and Modern
+// Neutral Scale - Warm Grays for Light Mode
 // ─────────────────────────────────────────────────────────────────────────────
-val Gray50 = Color(0xFFFAFAFA)    // Lightest - backgrounds
-val Gray100 = Color(0xFFF5F5F5)   // Light backgrounds
-val Gray200 = Color(0xFFE5E5E5)   // Dividers, borders (light)
-val Gray300 = Color(0xFFD4D4D4)   // Disabled states (light)
-val Gray400 = Color(0xFFA3A3A3)   // Placeholder text
-val Gray500 = Color(0xFF737373)   // Secondary text (light)
-val Gray600 = Color(0xFF525252)   // Secondary text (dark)
-val Gray700 = Color(0xFF404040)   // Primary text (dark)
-val Gray800 = Color(0xFF262626)   // Dark surfaces
-val Gray900 = Color(0xFF171717)   // Darkest - dark mode bg
-val Gray950 = Color(0xFF0A0A0A)   // True dark
+val Warm50 = Color(0xFFFAFAF9)    // Warmest white - backgrounds
+val Warm100 = Color(0xFFF5F5F4)   // Light backgrounds
+val Warm200 = Color(0xFFE7E5E4)   // Dividers, borders (light)
+val Warm300 = Color(0xFFD6D3D1)   // Disabled states, subtle borders
+val Warm400 = Color(0xFFA8A29E)   // Placeholder text
+val Warm500 = Color(0xFF78716C)   // Secondary text (light)
+val Warm600 = Color(0xFF57534E)   // Secondary text emphasis
+val Warm700 = Color(0xFF44403C)   // Primary text (dark surfaces)
+val Warm800 = Color(0xFF292524)   // Dark surfaces
+val Warm900 = Color(0xFF1C1917)   // Darkest - near black
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Semantic Colors - Light Mode
+// Claude Dark Mode Palette - Warm, Cozy Dark Theme
 // ─────────────────────────────────────────────────────────────────────────────
-val LightBackground = Gray50
-val LightSurface = PureWhite
-val LightSurfaceVariant = Gray100
-val LightOnBackground = Gray900
-val LightOnSurface = Gray900
-val LightOnSurfaceVariant = Gray600
-val LightOutline = Gray300
-val LightOutlineVariant = Gray200
+val ClaudeBackground = Color(0xFF1A1A1D)      // Deep warm black
+val ClaudeSurface = Color(0xFF232326)         // Card/elevated surfaces
+val ClaudeSurfaceHigh = Color(0xFF2C2C30)     // Higher elevation
+val ClaudeSurfaceVariant = Color(0xFF37373D)  // Interactive elements bg
+val ClaudeTextPrimary = Color(0xFFF4F4F5)     // Primary text
+val ClaudeTextSecondary = Color(0xFFA1A1AA)   // Secondary text
+val ClaudeTextMuted = Color(0xFF71717A)       // Muted/disabled text
+val ClaudeBorder = Color(0xFF3F3F46)          // Soft borders
+val ClaudeBorderSubtle = Color(0xFF27272A)    // Very subtle borders
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Claude Palette (Dark Mode)
+// Light Mode Semantic Mappings
 // ─────────────────────────────────────────────────────────────────────────────
-val ClaudeAccent = Color(0xFFD97757)      // Claude Orange/Toast
-val ClaudeAccentLight = Color(0xFFE89A7D) // Lighter Orange
-val ClaudeBackground = Color(0xFF131316)  // Deep Warm Black
-val ClaudeSurface = Color(0xFF1F1F23)     // Interactive Surface
-val ClaudeSurfaceVariant = Color(0xFF2E2E33) 
-val ClaudeTextPrimary = Color(0xFFEDEDED) // Near White warmth
-val ClaudeTextSecondary = Color(0xFFA1A1AA) // Zinc 400ish
+val LightBackground = Warm50
+val LightSurface = Color(0xFFFFFFFF)
+val LightSurfaceVariant = Warm100
+val LightOnBackground = Warm900
+val LightOnSurface = Warm900
+val LightOnSurfaceVariant = Warm600
+val LightOutline = Warm300
+val LightOutlineVariant = Warm200
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Semantic Colors - Dark Mode
+// Dark Mode Semantic Mappings
 // ─────────────────────────────────────────────────────────────────────────────
 val DarkBackground = ClaudeBackground
 val DarkSurface = ClaudeSurface
@@ -69,74 +74,108 @@ val DarkSurfaceVariant = ClaudeSurfaceVariant
 val DarkOnBackground = ClaudeTextPrimary
 val DarkOnSurface = ClaudeTextPrimary
 val DarkOnSurfaceVariant = ClaudeTextSecondary
-val DarkOutline = Color(0xFF3F3F46)       // Zinc 700
-val DarkOutlineVariant = Color(0xFF27272A)
+val DarkOutline = ClaudeBorder
+val DarkOutlineVariant = ClaudeBorderSubtle
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Progress/Player Accent
+// Soft Neo-Brutalism - Shadows & Accents
+// Softer than traditional neo-brutalism, but still bold
 // ─────────────────────────────────────────────────────────────────────────────
-val ProgressColor = AccentPrimary
-val ProgressColorDark = ClaudeAccent
+val SoftShadowLight = Warm800.copy(alpha = 0.12f)   // Soft shadow for light mode
+val SoftShadowDark = Color.Black.copy(alpha = 0.5f) // Soft shadow for dark mode
+
+// Soft borders for neo-brutalism
+val SoftBorderLight = Warm400                         // Soft border for light mode
+val SoftBorderDark = ClaudeBorder                     // Soft border for dark mode
+
+// Neo-brutalist accent colors (pastel variants)
+val NeoPastelPink = Color(0xFFFFD4E5)         // Soft pink - favorites
+val NeoPastelYellow = Color(0xFFFFF3CD)       // Soft yellow
+val NeoPastelGreen = Color(0xFFD1FAE5)        // Soft green
+val NeoPastelBlue = Color(0xFFDBEAFE)         // Soft blue
+val NeoPastelOrange = Color(0xFFFFEDD5)       // Soft orange (Claude tint)
+
+// Error color
+val NeoError = SemanticError
+
+// Missing surface variant
+val ClaudeSurfaceElevated = ClaudeSurfaceHigh
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Legacy Aliases (for backward compatibility during migration)
+// Legacy Aliases - For Backward Compatibility
 // ─────────────────────────────────────────────────────────────────────────────
-val NeoCoral = AccentPrimary
-val NeoCoralLight = AccentPrimaryDark
-val NeoCoralDark = AccentError
-val NeoAmber = AccentWarning
-val NeoTeal = AccentSecondary
-val MangaRed = AccentPrimary
-val MustardYellow = AccentWarning
-val AccentRed = AccentError
+val ClaudeAccent = ClaudeOrange
+val ClaudeAccentLight = ClaudeOrangeLight
+val AccentPrimary = ClaudeOrange
+val AccentPrimaryDark = ClaudeOrangeLight
+val AccentSecondary = SemanticSuccess
+val AccentError = SemanticError
+val AccentWarning = SemanticWarning
 
-// Slate → Gray migration aliases
-val Slate50 = Gray50
-val Slate100 = Gray100
-val Slate200 = Gray200
-val Slate300 = Gray300
-val Slate400 = Gray400
-val Slate500 = Gray500
-val Slate600 = Gray600
-val Slate700 = Gray700
-val Slate800 = Gray800
-val Slate900 = Gray900
+// Gray aliases
+val Gray50 = Warm50
+val Gray100 = Warm100
+val Gray200 = Warm200
+val Gray300 = Warm300
+val Gray400 = Warm400
+val Gray500 = Warm500
+val Gray600 = Warm600
+val Gray700 = Warm700
+val Gray800 = Warm800
+val Gray900 = Warm900
+val Gray950 = Color(0xFF0C0A09)
+val PureBlack = Color(0xFF000000)
+val PureWhite = Color(0xFFFFFFFF)
+
+// Neo colors → Semantic mappings
+val NeoCoral = ClaudeOrange
+val NeoCoralLight = ClaudeOrangeLight
+val NeoPink = NeoPastelPink
+val NeoGreen = NeoPastelGreen
+val NeoBlue = NeoPastelBlue
+val NeoYellow = NeoPastelYellow
+val NeoViolet = Color(0xFFDDD6FE)             // Soft violet
+val NeoLavender = Color(0xFFE9D5FF)           // Soft lavender
+val NeoBorder = ClaudeBorder
+val NeoBackground = LightBackground
+val NeoPrimary = ClaudeOrange
+val NeoTeal = SemanticSuccess
+val NeoAmber = SemanticWarning
+val MangaRed = SemanticError
+
+// Compatibility shims
+val ProgressColor = ClaudeOrange
+val ProgressColorDark = ClaudeOrange
+val OffWhite = Warm50
+val OffBlack = Warm900
+val NeoShadowLight = SoftShadowLight
+val NeoShadowDark = SoftShadowDark
+val NeoBorderLight = Warm300
+val NeoBorderDark = ClaudeBorder
+val PrimaryText = Warm900
+val DarkPrimaryText = ClaudeTextPrimary
+val Slate50 = Warm50
+val Slate100 = Warm100
+val Slate200 = Warm200
+val Slate300 = Warm300
+val Slate400 = Warm400
+val Slate500 = Warm500
+val Slate600 = Warm600
+val Slate700 = Warm700
+val Slate800 = Warm800
+val Slate900 = Warm900
 val Slate950 = Gray950
-
-val OffWhite = Gray50
-val OffBlack = Gray900
-val NeoShadowLight = Gray700
-val NeoShadowDark = Gray950
-val NeoBorderLight = Gray300
-val NeoBorderDark = Gray700
-val PrimaryText = Gray900
-val DarkPrimaryText = Gray50
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Neobrutalism Palette
-// ─────────────────────────────────────────────────────────────────────────────
-val NeoPrimary = Color(0xFF3B82F6)        // #3B82F6
-val NeoBackground = Color(0xFFFDFCF7)     // #FDFCF7
-val NeoPink = Color(0xFFFFB7D5)           // #FFB7D5
-val NeoYellow = Color(0xFFFFE999)         // #FFE999
-val NeoGreen = Color(0xFFB2F0D1)          // #B2F0D1
-val NeoBlue = Color(0xFFA5C9FF)           // #A5C9FF (Accent Blue)
-val NeoBorder = Color(0xFF000000)         // Pure Black Border
-
-// Zinc aliases
-val Zinc50 = Gray50
-val Zinc100 = Gray100
-val Zinc200 = Gray200
-val Zinc300 = Gray300
-val Zinc700 = Gray700
-val Zinc800 = Gray800
-val Zinc900 = Gray900
+val Zinc50 = Warm50
+val Zinc100 = Warm100
+val Zinc200 = Warm200
+val Zinc300 = Warm300
+val Zinc700 = Warm700
+val Zinc800 = Warm800
+val Zinc900 = Warm900
 val Zinc950 = Gray950
-
-// Additional legacy aliases
-val NeoAmberDark = AccentWarning
-val NeoAmberLight = Color(0xFFFDE68A)
-val NeoSage = AccentSecondary
-val NeoLavender = Color(0xFFC4B5FD)
-val NeoSky = Color(0xFF7DD3FC)
+val NeoCoralDark = SemanticError
+val NeoAmberDark = SemanticWarning
+val NeoAmberLight = NeoPastelYellow
+val NeoSage = SemanticSuccess
+val NeoSky = Color(0xFFBAE6FD)
 val NeoTealDark = Color(0xFF14B8A6)

@@ -81,10 +81,12 @@ fun MiniPlayer(
                     onDragEnd = {
                         when {
                             dragOffsetX < -swipeThreshold -> {
+                                // Swipe LEFT = Next song
                                 swipeDirection = -1
                                 onNextClick()
                             }
                             dragOffsetX > swipeThreshold -> {
+                                // Swipe RIGHT = Previous song
                                 swipeDirection = 1
                                 onPreviousClick()
                             }
@@ -131,7 +133,7 @@ fun MiniPlayer(
                 // Song info area
                 Box(modifier = Modifier.weight(1f)) {
                     AnimatedContent(
-                        targetState = song,
+                        targetState = song.id, // Use song ID as key to avoid unnecessary recomposition
                         transitionSpec = {
                             val direction = swipeDirection
                             swipeDirection = 0
@@ -146,7 +148,7 @@ fun MiniPlayer(
                             } using SizeTransform(clip = false)
                         },
                         label = "songTransition"
-                    ) { currentSong ->
+                    ) { _ ->
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             // Album Art - Neo Card wrapped
                             NeoCard(
@@ -157,7 +159,7 @@ fun MiniPlayer(
                                 shape = RoundedCornerShape(0.dp)
                             ) {
                                 AlbumArtImage(
-                                    uri = currentSong.albumArtUri,
+                                    uri = song.albumArtUri,
                                     size = 48.dp
                                 )
                             }
@@ -167,17 +169,17 @@ fun MiniPlayer(
                             // Track Info
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = currentSong.title.uppercase(),
+                                    text = song.title,
                                     style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Black,
+                                    fontWeight = FontWeight.Bold,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = currentSong.artist,
+                                    text = song.artist,
                                     style = MaterialTheme.typography.labelMedium,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.Medium,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -208,17 +210,17 @@ fun MiniPlayer(
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                // Next Button
+                // Next Button - Proper touch target
                 IconButton(
                     onClick = onNextClick,
                     modifier = Modifier
-                        .size(40.dp)
-                        .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
+                        .size(48.dp)
+                        .border(NeoDimens.BorderDefault, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
                         .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
                 ) {
                     Icon(
                         imageVector = Icons.Default.SkipNext,
-                        contentDescription = "Next",
+                        contentDescription = "Skip to next track",
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 }

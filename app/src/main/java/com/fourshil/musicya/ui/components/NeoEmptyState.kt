@@ -55,11 +55,11 @@ fun NeoEmptyState(
 
         // Message
         Text(
-            text = message.uppercase(),
+            text = message,
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Black,
+            fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            letterSpacing = 1.sp,
+            letterSpacing = 0.sp,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center
         )
 
@@ -71,9 +71,9 @@ fun NeoEmptyState(
                 backgroundColor = MaterialTheme.colorScheme.primary
             ) {
                 Text(
-                    text = actionLabel.uppercase(),
+                    text = actionLabel,
                     style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )
             }

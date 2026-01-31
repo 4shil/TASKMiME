@@ -14,12 +14,12 @@ data class Song(
     val dateAdded: Long,
     val size: Long
 ) {
-    val durationFormatted: String
-        get() {
-            val minutes = (duration / 1000) / 60
-            val seconds = (duration / 1000) % 60
-            return "%d:%02d".format(minutes, seconds)
-        }
+    // Cached formatted duration - computed once per instance
+    val durationFormatted: String by lazy {
+        val minutes = (duration / 1000) / 60
+        val seconds = (duration / 1000) % 60
+        "%d:%02d".format(minutes, seconds)
+    }
     
     val albumArtUri: Uri = Uri.parse("content://media/external/audio/albumart/$albumId")
 }

@@ -89,8 +89,8 @@ fun PlaylistsScreen(
                         Spacer(modifier = Modifier.width(16.dp))
                         
                         Text(
-                            text = "CREATE NEW PLAYLIST",
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
+                            text = "Create New Playlist",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                             color = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -145,7 +145,7 @@ fun PlaylistsScreen(
     showDeleteDialog?.let { playlist ->
         AlertDialog(
             onDismissRequest = { showDeleteDialog = null },
-            title = { Text("DELETE ASSET?", fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.onSurface) },
+            title = { Text("Delete Playlist?", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface) },
             text = { Text("This will permanently remove '${playlist.name}' from the archive.", color = MaterialTheme.colorScheme.onSurface) },
             confirmButton = {
                 TextButton(
@@ -168,7 +168,7 @@ fun PlaylistsScreen(
         var newName by remember { mutableStateOf(playlist.name) }
         AlertDialog(
             onDismissRequest = { showRenameDialog = null },
-            title = { Text("RENAME ASSET", fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.onSurface) },
+            title = { Text("Rename Playlist", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurface) },
             text = {
                 OutlinedTextField(
                     value = newName,
@@ -214,7 +214,7 @@ fun PlaylistArtisticItem(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         shadowSize = 4.dp,
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colorScheme.surface,
         borderWidth = 2.dp
     ) {
          Row(
@@ -224,8 +224,8 @@ fun PlaylistArtisticItem(
             Box(
                 modifier = Modifier
                     .size(56.dp)
-                    .border(2.dp, Color.Black, MaterialTheme.shapes.small)
-                    .background(Color.LightGray, MaterialTheme.shapes.small),
+                    .border(2.dp, MaterialTheme.colorScheme.outline, MaterialTheme.shapes.small)
+                    .background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.small),
                 contentAlignment = Alignment.Center
             ) {
                 if (artUris.isNotEmpty()) {
@@ -234,7 +234,7 @@ fun PlaylistArtisticItem(
                     Icon(
                          Icons.Default.Folder, 
                          null, 
-                         tint = Color.Black,
+                         tint = MaterialTheme.colorScheme.onSurface,
                          modifier = Modifier.size(24.dp)
                     )
                 }
@@ -245,16 +245,16 @@ fun PlaylistArtisticItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = playlist.name,
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Black),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                     maxLines = 1,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = "$songCount SONGS",
+                    text = "$songCount songs",
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.5.sp
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.Medium,
+                    letterSpacing = 0.sp
                 )
             }
             

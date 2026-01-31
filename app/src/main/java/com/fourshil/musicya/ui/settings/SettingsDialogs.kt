@@ -27,9 +27,6 @@ import com.fourshil.musicya.ui.theme.NeoDimens
 import com.fourshil.musicya.ui.theme.Slate900
 
 
-
-
-
 @Composable
 fun SleepTimerDialog(
     sleepTimerActive: Boolean,
@@ -67,15 +64,15 @@ fun SleepTimerDialog(
                 },
                 modifier = Modifier.fillMaxWidth().height(56.dp),
                 backgroundColor = contentColor,
-                borderWidth = 4.dp,
-                shadowSize = 4.dp
+                borderWidth = NeoDimens.BorderBold,
+                shadowSize = NeoDimens.ShadowDefault
             ) {
                  Text(
-                     text = if (sleepTimerActive) "CANCEL TIMER" else "CLOSE",
+                     text = if (sleepTimerActive) "Cancel Timer" else "Close",
                      style = MaterialTheme.typography.labelLarge,
-                     fontWeight = FontWeight.Black,
+                     fontWeight = FontWeight.Medium,
                      color = surfaceColor,
-                     letterSpacing = 1.sp
+                     letterSpacing = 0.sp
                  )
             }
          }

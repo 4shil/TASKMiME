@@ -3,6 +3,7 @@ package com.fourshil.musicya.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -10,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,27 +59,30 @@ private fun TopNavChip(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    // Neo-Brutalist: Selected = NeoBlue + Black Border + Bold
-    // Unselected = White + Black Border
+    // Soft Neo-Brutalism: Selected = Claude Orange, Unselected = Surface
     val backgroundColor = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
     val contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
     val borderColor = MaterialTheme.colorScheme.outline
-    val borderWidth = 2.dp // Consistent thick border
-    val fontWeight = if (isSelected) FontWeight.Black else FontWeight.Bold
+    val borderWidth = 1.5.dp
+    val fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium
 
     Box(
         modifier = Modifier
-            .clickable(onClick = onClick)
+            .clickable(
+                onClick = onClick,
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            )
             .border(borderWidth, borderColor, RoundedCornerShape(50))
             .background(backgroundColor, RoundedCornerShape(50))
             .padding(horizontal = 20.dp, vertical = 10.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = label.uppercase(),
+            text = label,
             style = MaterialTheme.typography.labelLarge.copy(
                 fontWeight = fontWeight,
-                letterSpacing = 1.sp
+                letterSpacing = 0.sp
             ),
             color = contentColor
         )

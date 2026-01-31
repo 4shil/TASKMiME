@@ -39,8 +39,8 @@ import com.fourshil.musicya.ui.theme.NeoPink
 import androidx.compose.ui.unit.sp
 
 /**
- * Neo-Brutalist Song List Item
- * High contrast, bold typography, clear state indicators.
+ * Soft Neo-Brutalist Song List Item
+ * Proper touch targets, accessible labels, softer typography
  */
 @OptIn(ExperimentalComposeUiApi::class, androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
@@ -62,7 +62,7 @@ fun SongListItem(
     // Determine background color based on state
     val backgroundColor = when {
         isSelected -> MaterialTheme.colorScheme.secondary
-        isCurrentlyPlaying -> MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+        isCurrentlyPlaying -> MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
         else -> MaterialTheme.colorScheme.surface
     }
 
@@ -71,8 +71,9 @@ fun SongListItem(
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 16.dp),
         backgroundColor = backgroundColor,
-        shadowSize = 4.dp,
-        onClick = null // We handle click manually for combinedClickable
+        shadowSize = NeoDimens.ShadowSubtle,
+        borderWidth = NeoDimens.BorderDefault,
+        onClick = null
     ) {
         Box(
             modifier = Modifier
@@ -90,9 +91,9 @@ fun SongListItem(
                 // Album Art Container
                 Box(
                     modifier = Modifier
-                        .size(56.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .border(2.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(8.dp))
+                        .size(NeoDimens.AlbumArtSmall)
+                        .clip(RoundedCornerShape(NeoDimens.CornerSmall))
+                        .border(NeoDimens.BorderDefault, MaterialTheme.colorScheme.outline, RoundedCornerShape(NeoDimens.CornerSmall))
                         .background(MaterialTheme.colorScheme.surfaceVariant),
                     contentAlignment = Alignment.Center
                 ) {
@@ -105,14 +106,14 @@ fun SongListItem(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Check,
-                                contentDescription = "Selected",
+                                contentDescription = "Song selected",
                                 tint = MaterialTheme.colorScheme.onSecondary
                             )
                         }
                     } else {
                         AlbumArtImage(
                             uri = song.albumArtUri,
-                            size = 56.dp,
+                            size = NeoDimens.AlbumArtSmall,
                             isScrolling = isScrolling
                         )
                     }
@@ -127,7 +128,7 @@ fun SongListItem(
                     Text(
                         text = song.title,
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Black, // Extra Bold
+                        fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -135,7 +136,7 @@ fun SongListItem(
                     Text(
                         text = song.artist,
                         style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Normal,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -146,10 +147,10 @@ fun SongListItem(
                 if (isFavorite && !selectionActive) {
                     Icon(
                         imageVector = Icons.Default.Favorite,
-                        contentDescription = "Favorite",
+                        contentDescription = "Favorite song",
                         tint = NeoPink,
                         modifier = Modifier
-                            .size(20.dp)
+                            .size(NeoDimens.IconSmall)
                             .padding(end = 4.dp)
                     )
                 }
@@ -158,20 +159,20 @@ fun SongListItem(
                 Text(
                     text = song.durationFormatted,
                     style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
-                // More button
+                // More button - Proper touch target
                 if (!selectionActive) {
                     IconButton(
                         onClick = onMoreClick,
-                        modifier = Modifier.size(32.dp)
+                        modifier = Modifier.size(NeoDimens.TouchTargetMin)
                     ) {
                         Icon(
                             imageVector = Icons.Default.MoreVert,
-                            contentDescription = "More options",
+                            contentDescription = "More options for ${song.title}",
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -227,17 +228,17 @@ fun SimpleQueueItem(
         ) {
             if (isCurrentlyPlaying) {
                 Text(
-                    text = "NOW PLAYING",
+                    text = "Now Playing",
                     style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Black,
+                    fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.primary,
-                    letterSpacing = 1.sp
+                    letterSpacing = 0.sp
                 )
             }
             Text(
                 text = song.title,
                 style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -246,7 +247,7 @@ fun SimpleQueueItem(
                 text = song.artist,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.Normal,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -256,11 +257,11 @@ fun SimpleQueueItem(
         if (onRemove != null) {
             IconButton(
                 onClick = onRemove,
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(NeoDimens.TouchTargetMin)
             ) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
-                    contentDescription = "Remove",
+                    contentDescription = "Remove from queue",
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }

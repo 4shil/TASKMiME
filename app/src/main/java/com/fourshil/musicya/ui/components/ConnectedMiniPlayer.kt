@@ -24,6 +24,7 @@ fun ConnectedMiniPlayer(
             progress = if (duration > 0) position.toFloat() / duration else 0f,
             onPlayPauseClick = { viewModel.togglePlayPause() },
             onNextClick = { viewModel.skipToNext() },
+            onPreviousClick = { viewModel.skipToPrevious() },
             onClick = onClick,
             modifier = modifier
         )

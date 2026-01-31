@@ -33,7 +33,6 @@ fun UnifiedLibraryHeader(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
             .statusBarsPadding()
-            // Removed horizontal padding here to allow full-width scroll
     ) {
         Spacer(modifier = Modifier.height(24.dp))
         
@@ -41,15 +40,15 @@ fun UnifiedLibraryHeader(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp), // Added padding here
+                .padding(horizontal = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = title.uppercase(),
+                text = title,
                 style = MaterialTheme.typography.displaySmall.copy(
-                    fontWeight = FontWeight.Black,
-                    letterSpacing = (-1).sp
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = (-0.5).sp
                 ),
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -60,7 +59,7 @@ fun UnifiedLibraryHeader(
                 shape = RoundedCornerShape(12.dp),
                 shadowSize = 0.dp
             ) {
-                Icon(Icons.Default.Menu, null, tint = MaterialTheme.colorScheme.onSurface)
+                Icon(Icons.Default.Menu, contentDescription = "Open menu", tint = MaterialTheme.colorScheme.onSurface)
             }
         }
         
@@ -71,9 +70,8 @@ fun UnifiedLibraryHeader(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
-                .padding(horizontal = 24.dp), // Added padding here
+                .padding(horizontal = 24.dp),
             onClick = onSearchClick,
-            // backgroundColor = Color.White,
             shadowSize = 0.dp,
             shape = RoundedCornerShape(16.dp)
         ) {
@@ -91,11 +89,11 @@ fun UnifiedLibraryHeader(
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
-                    text = "SEARCH YOUR MUSIC...",
+                    text = "Search your music...",
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp
+                        fontWeight = FontWeight.Medium,
+                        letterSpacing = 0.sp
                     )
                 )
             }

@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -147,13 +148,12 @@ fun NowPlayingScreen(
                     .fillMaxWidth()
                     .aspectRatio(1f)
             ) {
-                // Shadow (lg = 8px)
-                // We keep shadow hard black or scrim color? Hard black for Neo feel, even in dark mode often preferred if bg isn't pure black.
+                // Shadow (lg = 8px) - themed for dark mode
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .offset(8.dp, 8.dp)
-                        .background(Color.Black, RoundedCornerShape(48.dp))
+                        .background(if (isSystemInDarkTheme()) SoftShadowDark else SoftShadowLight, RoundedCornerShape(48.dp))
                 )
                 
                 // Main Card
@@ -171,9 +171,9 @@ fun NowPlayingScreen(
                      // We can keep the simpler logic or re-integrate the rigid spring swipe if desired.
                      // For Neobrutal, rigid movements are fine.
                      
-                        if (currentSong != null) {
+                        currentSong?.let { song ->
                             // Use high-quality art URI from ViewModel, fallback to default
-                            val artUri = highQualityArtUri ?: currentSong!!.albumArtUri
+                            val artUri = highQualityArtUri ?: song.albumArtUri
                             AsyncImage(
                                 model = coil.request.ImageRequest.Builder(LocalContext.current)
                                     .data(artUri)
@@ -282,12 +282,12 @@ fun NowPlayingScreen(
                 ) {
                     Text(
                         formatTime(position),
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Black),
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
                         formatTime(duration),
-                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Black),
+                        style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -398,10 +398,10 @@ fun NowPlayingScreen(
                      icon = Icons.Default.Share, 
                      label = "SHARE", 
                      onClick = {
-                        if (currentSong != null) {
+                        currentSong?.let { song ->
                             val sendIntent: android.content.Intent = android.content.Intent().apply {
                                 action = android.content.Intent.ACTION_SEND
-                                putExtra(android.content.Intent.EXTRA_TEXT, "Check out \"${currentSong!!.title}\" by ${currentSong!!.artist}")
+                                putExtra(android.content.Intent.EXTRA_TEXT, "Check out \"${song.title}\" by ${song.artist}")
                                 type = "text/plain"
                             }
                             val shareIntent = android.content.Intent.createChooser(sendIntent, null)
@@ -419,7 +419,7 @@ fun NowPlayingScreen(
                     .width(128.dp)
                     .height(6.dp)
                     .clip(RoundedCornerShape(50))
-                    .background(Color.Black.copy(alpha = 0.2f))
+                    .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
             )
             
             Spacer(modifier = Modifier.height(8.dp))
@@ -436,11 +436,13 @@ fun NowPlayingScreen(
     }
     
     // Song Details (Placeholder)
-    if (showDetails && currentSong != null) {
-        com.fourshil.musicya.ui.components.SongDetailsDialog(
-            song = currentSong!!,
-            onDismiss = { showDetails = false }
-        )
+    if (showDetails) {
+        currentSong?.let { song ->
+            com.fourshil.musicya.ui.components.SongDetailsDialog(
+                song = song,
+                onDismiss = { showDetails = false }
+            )
+        }
     }
 }
 
@@ -458,14 +460,14 @@ fun ActionItem(icon: ImageVector, label: String, onClick: () -> Unit) {
             shape = RoundedCornerShape(12.dp),
             shadowSize = 2.dp
         ) {
-            Icon(icon, null, modifier = Modifier.size(24.dp))
+            Icon(icon, contentDescription = label, modifier = Modifier.size(24.dp))
         }
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall.copy(
-                fontWeight = FontWeight.Black,
-                letterSpacing = 1.sp
+                fontWeight = FontWeight.Medium,
+                letterSpacing = 0.sp
             )
         )
     }

@@ -88,18 +88,18 @@ fun QueueScreen(
                 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "QUEUE",
+                        text = "Queue",
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Black,
+                        fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onBackground,
-                        letterSpacing = 1.sp
+                        letterSpacing = 0.sp
                     )
                     if (queue.isNotEmpty()) {
                         Text(
-                            text = "${currentIndex + 1} OF ${queue.size}",
+                            text = "${currentIndex + 1} of ${queue.size}",
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Medium
                         )
                     }
                 }
@@ -181,10 +181,10 @@ fun QueueScreen(
                     // Add "Up Next" label after current song
                     if (isPlaying && index < queue.size - 1) {
                         Text(
-                            text = "▼ UP NEXT (${queue.size - currentIndex - 1})",
+                            text = "▼ Up Next (${queue.size - currentIndex - 1})",
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Black,
+                            fontWeight = FontWeight.Medium,
                             modifier = Modifier.padding(vertical = 12.dp)
                         )
                     }
@@ -252,7 +252,7 @@ private fun QueueItem(
                         Icon(
                             Icons.Default.PlayArrow,
                             contentDescription = null,
-                            tint = Color.White,
+                            tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier.size(24.dp)
                         )
                     }
@@ -265,17 +265,17 @@ private fun QueueItem(
             Column(modifier = Modifier.weight(1f)) {
                 if (isPlaying) {
                     Text(
-                        "NOW PLAYING",
+                        "Now Playing",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Black,
-                        letterSpacing = 1.sp
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 0.sp
                     )
                 }
                 Text(
                     text = song.title,
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = if (isPlaying) FontWeight.Black else FontWeight.Bold,
+                    fontWeight = if (isPlaying) FontWeight.SemiBold else FontWeight.Medium,
                     color = if (isPlayed) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

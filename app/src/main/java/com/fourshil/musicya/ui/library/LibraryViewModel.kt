@@ -12,6 +12,7 @@ import com.fourshil.musicya.data.model.Song
 import com.fourshil.musicya.data.repository.MusicRepository
 import com.fourshil.musicya.player.PlayerController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -72,13 +73,23 @@ class LibraryViewModel @Inject constructor(
     fun loadLibrary() {
         viewModelScope.launch {
             _isLoading.value = true
-            // Load all songs for player queue (this might take time but Paging shows UI first)
-            val allSongs = repository.getAllSongs()
+            
+            // Load all data in parallel for better performance
+            val songsDeferred = async { repository.getAllSongs() }
+            val albumsDeferred = async { repository.getAllAlbums() }
+            val artistsDeferred = async { repository.getAllArtists() }
+            
+            // Await songs first as folders depend on it
+            val allSongs = songsDeferred.await()
             _songs.value = allSongs
             
-            _albums.value = repository.getAllAlbums()
-            _artists.value = repository.getAllArtists()
+            // Await other data in parallel
+            _albums.value = albumsDeferred.await()
+            _artists.value = artistsDeferred.await()
+            
+            // Folders are derived from songs (cached in repository)
             _folders.value = repository.getFolders()
+            
             _isLoading.value = false
         }
     }

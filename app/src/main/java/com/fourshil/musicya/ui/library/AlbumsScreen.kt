@@ -147,7 +147,7 @@ private fun AlbumCard(
                 Text(
                     text = album.name,
                     style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Black,
+                    fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -161,11 +161,11 @@ private fun AlbumCard(
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "${album.songCount} SONGS",
+                    text = "${album.songCount} songs",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.5.sp,
+                    fontWeight = FontWeight.Medium,
+                    letterSpacing = 0.sp,
                     modifier = Modifier.padding(top = 4.dp)
                 )
             }

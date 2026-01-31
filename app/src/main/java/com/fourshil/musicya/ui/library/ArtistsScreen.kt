@@ -161,17 +161,17 @@ private fun ArtistListItem(
                 Text(
                     text = artist.name,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Black,
+                    fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "${artist.songCount} SONGS • ${artist.albumCount} ALBUMS",
+                    text = "${artist.songCount} songs • ${artist.albumCount} albums",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.5.sp
+                    fontWeight = FontWeight.Medium,
+                    letterSpacing = 0.sp
                 )
             }
 

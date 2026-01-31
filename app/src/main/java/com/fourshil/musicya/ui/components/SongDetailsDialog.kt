@@ -33,8 +33,8 @@ fun SongDetailsDialog(
         NeoCard(
             modifier = Modifier.fillMaxWidth(),
             // backgroundColor = MaterialTheme.colorScheme.surface, // Default is correct now
-            shadowSize = 8.dp,
-            shape = RoundedCornerShape(16.dp)
+            shadowSize = NeoDimens.ShadowProminent,
+            shape = RoundedCornerShape(NeoDimens.CornerLarge)
         ) {
             Column(
                 modifier = Modifier
@@ -44,10 +44,10 @@ fun SongDetailsDialog(
             ) {
                 // Header
                 Text(
-                    text = "DETAILS",
+                    text = "Song Details",
                     style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.Black,
-                        letterSpacing = 2.sp
+                        fontWeight = FontWeight.SemiBold,
+                        letterSpacing = 0.sp
                     ),
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = NeoDimens.SpacingL)

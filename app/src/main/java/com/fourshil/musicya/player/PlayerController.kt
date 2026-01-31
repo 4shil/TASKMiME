@@ -89,6 +89,13 @@ class PlayerController @Inject constructor(
     /** Current index in the playback queue */
     val currentQueueIndex: StateFlow<Int> = _currentQueueIndex.asStateFlow()
     
+    // Track queue count to avoid unnecessary rebuilds
+    private var lastQueueCount = -1  // Use -1 to force initial update
+    private var lastFirstItemId: String? = null  // Track first item to detect queue changes
+    
+    // Track position update interval - use slower updates for MiniPlayer, faster for NowPlaying
+    private var positionUpdateInterval = 500L
+    
     // Delegated managers - expose their state flows
     /** Remaining sleep timer time in milliseconds */
     val sleepTimerRemaining: StateFlow<Long> = sleepTimerManager.remainingMs
@@ -194,27 +201,37 @@ class PlayerController @Inject constructor(
 
     private fun updateQueue(controller: MediaController) {
         val count = controller.mediaItemCount
-        val newQueue = ArrayList<Song>(count)
-        for (i in 0 until count) {
-            val item = controller.getMediaItemAt(i)
-            val meta = item.mediaMetadata
-            newQueue.add(
-                Song(
-                    id = item.mediaId.toLongOrNull() ?: 0,
-                    title = meta.title?.toString() ?: "Unknown",
-                    artist = meta.artist?.toString() ?: "Unknown Artist",
-                    album = meta.albumTitle?.toString() ?: "Unknown Album",
-                    albumId = meta.extras?.getLong("album_id") ?: 0L,
-                    duration = 0, // Duration not available in queue items usually
-                    uri = item.localConfiguration?.uri ?: Uri.EMPTY,
-                    path = meta.extras?.getString("path") ?: "",
-                    dateAdded = 0,
-                    size = 0
+        val currentIndex = controller.currentMediaItemIndex
+        
+        // Get first item ID to detect content changes (not just count changes)
+        val firstItemId = if (count > 0) controller.getMediaItemAt(0).mediaId else null
+        
+        // Rebuild queue if count changed OR first item changed (different playlist)
+        if (count != lastQueueCount || firstItemId != lastFirstItemId) {
+            lastQueueCount = count
+            lastFirstItemId = firstItemId
+            val newQueue = ArrayList<Song>(count)
+            for (i in 0 until count) {
+                val item = controller.getMediaItemAt(i)
+                val meta = item.mediaMetadata
+                newQueue.add(
+                    Song(
+                        id = item.mediaId.toLongOrNull() ?: 0,
+                        title = meta.title?.toString() ?: "Unknown",
+                        artist = meta.artist?.toString() ?: "Unknown Artist",
+                        album = meta.albumTitle?.toString() ?: "Unknown Album",
+                        albumId = meta.extras?.getLong("album_id") ?: 0L,
+                        duration = 0, // Duration not available in queue items usually
+                        uri = item.localConfiguration?.uri ?: Uri.EMPTY,
+                        path = meta.extras?.getString("path") ?: "",
+                        dateAdded = 0,
+                        size = 0
+                    )
                 )
-            )
+            }
+            _queue.value = newQueue
         }
-        _queue.value = newQueue
-        _currentQueueIndex.value = controller.currentMediaItemIndex
+        _currentQueueIndex.value = currentIndex
     }
     
     // ============ Playback Control ============
@@ -224,12 +241,33 @@ class PlayerController @Inject constructor(
      * @param song The song to play
      */
     fun playSong(song: Song) {
-        val mediaItem = buildMediaItem(song)
-        controller?.apply {
-            setMediaItem(mediaItem)
-            prepare()
-            play()
+        // Reset queue tracking to force update
+        lastQueueCount = -1
+        lastFirstItemId = null
+        
+        val ctrl = controller
+        if (ctrl == null) {
+            // Controller not ready, queue the operation
+            scope.launch {
+                // Wait for controller to be ready (max 3 seconds)
+                var attempts = 0
+                while (controller == null && attempts < 30) {
+                    kotlinx.coroutines.delay(100)
+                    attempts++
+                }
+                controller?.let { c ->
+                    val mediaItem = buildMediaItem(song)
+                    c.setMediaItem(mediaItem)
+                    c.prepare()
+                    c.play()
+                }
+            }
+            return
         }
+        val mediaItem = buildMediaItem(song)
+        ctrl.setMediaItem(mediaItem)
+        ctrl.prepare()
+        ctrl.play()
     }
     
     /**
@@ -238,12 +276,35 @@ class PlayerController @Inject constructor(
      * @param startIndex Index of the song to start with (default: 0)
      */
     fun playSongs(songs: List<Song>, startIndex: Int = 0) {
-        val mediaItems = songs.map { buildMediaItem(it) }
-        controller?.apply {
-            setMediaItems(mediaItems, startIndex, 0)
-            prepare()
-            play()
+        if (songs.isEmpty()) return
+        
+        // Reset queue tracking to force update
+        lastQueueCount = -1
+        lastFirstItemId = null
+        
+        val ctrl = controller
+        if (ctrl == null) {
+            // Controller not ready, queue the operation
+            scope.launch {
+                // Wait for controller to be ready (max 3 seconds)
+                var attempts = 0
+                while (controller == null && attempts < 30) {
+                    kotlinx.coroutines.delay(100)
+                    attempts++
+                }
+                controller?.let { c ->
+                    val mediaItems = songs.map { buildMediaItem(it) }
+                    c.setMediaItems(mediaItems, startIndex, 0)
+                    c.prepare()
+                    c.play()
+                }
+            }
+            return
         }
+        val mediaItems = songs.map { buildMediaItem(it) }
+        ctrl.setMediaItems(mediaItems, startIndex, 0)
+        ctrl.prepare()
+        ctrl.play()
     }
     
     private fun buildMediaItem(song: Song): MediaItem {
@@ -282,16 +343,23 @@ class PlayerController @Inject constructor(
     /** Get current playback position immediately (for one-time reads) */
     fun getCurrentPosition(): Long = controller?.currentPosition ?: 0L
     
-    /** Start polling position updates for progress bar */
-    fun startPositionUpdates() {
-        if (positionUpdateJob?.isActive == true) return
+    /** 
+     * Start polling position updates for progress bar.
+     * @param fastUpdates If true, use faster update interval (for NowPlaying screen)
+     */
+    fun startPositionUpdates(fastUpdates: Boolean = false) {
+        positionUpdateInterval = if (fastUpdates) 200L else 500L
+        if (positionUpdateJob?.isActive == true) {
+            // If already running, just update interval on next iteration
+            return
+        }
         positionUpdateJob = scope.launch {
             while (isActive) {
                 controller?.let {
                     _currentPosition.value = it.currentPosition
                     _duration.value = it.duration.coerceAtLeast(0L)
                 }
-                delay(250) // 4 updates per second for smooth progress
+                delay(positionUpdateInterval)
             }
         }
     }

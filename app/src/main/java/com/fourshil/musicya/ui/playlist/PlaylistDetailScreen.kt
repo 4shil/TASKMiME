@@ -52,11 +52,11 @@ fun PlaylistDetailScreen(
              NeoButton(
                 onClick = onBack,
                 modifier = Modifier.size(52.dp),
-                borderWidth = 2.dp,
-                shadowSize = 4.dp
-            ) { Icon(Icons.AutoMirrored.Filled.ArrowBack, null, tint = MaterialTheme.colorScheme.onSurface) }
+                borderWidth = NeoDimens.BorderBold,
+                shadowSize = NeoDimens.ShadowDefault
+            ) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Go back", tint = MaterialTheme.colorScheme.onSurface) }
              Spacer(modifier = Modifier.width(NeoDimens.SpacingL))
-             Text("RETURN", style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Black), color = MaterialTheme.colorScheme.onBackground)
+             Text("Back", style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Medium), color = MaterialTheme.colorScheme.onBackground)
         }
 
         if (isLoading) {
@@ -87,8 +87,8 @@ fun PlaylistDetailScreen(
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                  NeoCard(
                                     modifier = Modifier.size(200.dp),
-                                    borderWidth = 4.dp,
-                                    shadowSize = 8.dp
+                                    borderWidth = NeoDimens.BorderBold,
+                                    shadowSize = NeoDimens.ShadowProminent
                                 ) {
                                     LargeAlbumArt(
                                          uri = if (!artUri.isNullOrEmpty()) Uri.parse(artUri!!) else null,
@@ -98,15 +98,15 @@ fun PlaylistDetailScreen(
                                 }
                                 Spacer(modifier = Modifier.height(NeoDimens.SpacingL))
                                 Text(
-                                    text = title.uppercase(),
-                                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Black),
+                                    text = title,
+                                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold),
                                     maxLines = 2,
                                     textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                                     color = MaterialTheme.colorScheme.onBackground
                                 )
                                  Text(
-                                    text = subtitle.uppercase(),
-                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
+                                    text = subtitle,
+                                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium),
                                     color = MaterialTheme.colorScheme.primary
                                 )
                                 
@@ -117,22 +117,22 @@ fun PlaylistDetailScreen(
                                      NeoButton(
                                         onClick = { viewModel.playAll() },
                                         backgroundColor = MaterialTheme.colorScheme.primary,
-                                        borderWidth = 2.dp,
-                                        shadowSize = 4.dp
+                                        borderWidth = NeoDimens.BorderBold,
+                                        shadowSize = NeoDimens.ShadowDefault
                                      ) {
                                          Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
-                                             Icon(Icons.Default.PlayArrow, null, tint = MaterialTheme.colorScheme.onPrimary)
+                                             Icon(Icons.Default.PlayArrow, contentDescription = "Play all songs", tint = MaterialTheme.colorScheme.onPrimary)
                                              Spacer(modifier = Modifier.width(8.dp))
-                                             Text("PLAY ALL", color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Bold)
+                                             Text("Play All", color = MaterialTheme.colorScheme.onPrimary, fontWeight = FontWeight.Medium)
                                          }
                                      }
                                       NeoButton(
                                         onClick = { viewModel.shufflePlay() },
                                         modifier = Modifier.size(52.dp),
-                                        borderWidth = 2.dp,
-                                         shadowSize = 4.dp
+                                        borderWidth = NeoDimens.BorderBold,
+                                         shadowSize = NeoDimens.ShadowDefault
                                      ) {
-                                         Icon(Icons.Default.Shuffle, null, tint = MaterialTheme.colorScheme.onSurface)
+                                         Icon(Icons.Default.Shuffle, contentDescription = "Shuffle play", tint = MaterialTheme.colorScheme.onSurface)
                                      }
                                  }
                             }

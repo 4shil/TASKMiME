@@ -81,7 +81,7 @@ fun MusicyaNavGraph(
     }
 
     Scaffold(
-        containerColor = NeoBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
                if (libraryRoutes.contains(currentRoute) || currentRoute == Screen.Folders.route) {
                    UnifiedLibraryHeader(
@@ -115,26 +115,26 @@ fun MusicyaNavGraph(
                     modifier = Modifier.fillMaxSize(),
                     enterTransition = {
                         slideInHorizontally(
-                            initialOffsetX = { it },
-                            animationSpec = tween(300)
+                            initialOffsetX = { it / 4 },
+                            animationSpec = tween(200)
                         )
                     },
                     exitTransition = {
                         slideOutHorizontally(
-                            targetOffsetX = { -it },
-                            animationSpec = tween(300)
+                            targetOffsetX = { -it / 4 },
+                            animationSpec = tween(200)
                         )
                     },
                     popEnterTransition = {
                         slideInHorizontally(
-                            initialOffsetX = { -it },
-                            animationSpec = tween(300)
+                            initialOffsetX = { -it / 4 },
+                            animationSpec = tween(200)
                         )
                     },
                     popExitTransition = {
                         slideOutHorizontally(
-                            targetOffsetX = { it },
-                            animationSpec = tween(300)
+                            targetOffsetX = { it / 4 },
+                            animationSpec = tween(200)
                         )
                     }
                 ) {

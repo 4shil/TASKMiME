@@ -1,7 +1,9 @@
 package com.fourshil.musicya.data.repository
 
+import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.Context
+import android.os.Bundle
 import android.provider.MediaStore
 import com.fourshil.musicya.data.model.Album
 import com.fourshil.musicya.data.model.Artist
@@ -10,7 +12,6 @@ import com.fourshil.musicya.data.model.Song
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
 import android.util.Log
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -45,12 +46,14 @@ class MusicRepository @Inject constructor(
 ) : IMusicRepository {
     
     private var cachedSongs: List<Song>? = null
+    private var cachedFolders: List<Folder>? = null
     
     /**
      * Clear the song cache to force refresh on next load.
      */
     override fun clearCache() {
         cachedSongs = null
+        cachedFolders = null
     }
 
     override suspend fun getAllSongs(): List<Song> = withContext(Dispatchers.IO) {
@@ -208,17 +211,29 @@ class MusicRepository @Inject constructor(
     }
     
     override suspend fun getFolders(): List<Folder> = withContext(Dispatchers.IO) {
+        // Use cached folders if available
+        cachedFolders?.let { return@withContext it }
+        
         val songs = getAllSongs()
-        songs.groupBy { File(it.path).parent ?: "" }
+        // Use string manipulation instead of File objects for efficiency
+        val folders = songs.groupBy { song ->
+            val path = song.path
+            val lastSeparator = path.lastIndexOf('/')
+            if (lastSeparator > 0) path.substring(0, lastSeparator) else ""
+        }
             .filter { it.key.isNotEmpty() }
             .map { (path, songsInFolder) ->
+                val folderName = path.substringAfterLast('/')
                 Folder(
                     path = path,
-                    name = File(path).name,
+                    name = folderName,
                     songCount = songsInFolder.size
                 )
             }
             .sortedBy { it.name }
+        
+        cachedFolders = folders
+        folders
     }
     
     override suspend fun getSongsByAlbum(albumId: Long): List<Song> = withContext(Dispatchers.IO) {
@@ -230,7 +245,12 @@ class MusicRepository @Inject constructor(
     }
     
     override suspend fun getSongsByFolder(folderPath: String): List<Song> = withContext(Dispatchers.IO) {
-        getAllSongs().filter { File(it.path).parent == folderPath }
+        getAllSongs().filter { song ->
+            val path = song.path
+            val lastSeparator = path.lastIndexOf('/')
+            val songFolder = if (lastSeparator > 0) path.substring(0, lastSeparator) else ""
+            songFolder == folderPath
+        }
     }
     
     override suspend fun getSongsByIds(songIds: List<Long>): List<Song> = withContext(Dispatchers.IO) {
@@ -239,8 +259,8 @@ class MusicRepository @Inject constructor(
     }
 
     /**
-     * Paged query for songs.
-     * Note: On Android < 10, this technically queries more and scans, but separates object creation.
+     * Paged query for songs using efficient LIMIT/OFFSET on Android Q+.
+     * Falls back to cursor position on older versions.
      */
     suspend fun getSongsPaged(offset: Int, limit: Int): List<Song> = withContext(Dispatchers.IO) {
         val songs = mutableListOf<Song>()
@@ -262,60 +282,59 @@ class MusicRepository @Inject constructor(
 
         Log.d(TAG, "getSongsPaged: offset=$offset, limit=$limit")
         try {
-            // Android Q (29) and above supports Bundle args for LIMIT/OFFSET
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                // Using standard query but we will manually skip in cursor for compatibility consistency 
-                // or use stricter ContentResolver.query(uri, null, bundle, null) if wanted.
-                // For safety and compatibility with existing code structure, we use the cursor skip method.
-                // It is reliable across versions.
+            val cursor = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                // Use efficient Bundle-based query with LIMIT/OFFSET on Android Q+
+                val queryArgs = Bundle().apply {
+                    putString(ContentResolver.QUERY_ARG_SQL_SELECTION, selection)
+                    putString(ContentResolver.QUERY_ARG_SQL_SORT_ORDER, sortOrder)
+                    putInt(ContentResolver.QUERY_ARG_LIMIT, limit)
+                    putInt(ContentResolver.QUERY_ARG_OFFSET, offset)
+                }
+                context.contentResolver.query(
+                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    queryArgs,
+                    null
+                )
+            } else {
+                // Legacy: Use LIMIT in sort order string (works on most devices)
+                val legacySortOrder = "$sortOrder LIMIT $limit OFFSET $offset"
                 context.contentResolver.query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                     projection,
                     selection,
                     null,
-                    sortOrder
+                    legacySortOrder
                 )
-            } else {
-                 context.contentResolver.query(
-                    MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                    projection,
-                    selection,
-                    null,
-                    sortOrder
-                )
-            }?.use { cursor ->
-                val idCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
-                val titleCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
-                val artistCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
-                val albumCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
-                val albumIdCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
-                val durationCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
-                val dataCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
-                val dateAddedCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED)
-                val sizeCol = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
+            }
+            
+            cursor?.use {
+                val idCol = it.getColumnIndexOrThrow(MediaStore.Audio.Media._ID)
+                val titleCol = it.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)
+                val artistCol = it.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)
+                val albumCol = it.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)
+                val albumIdCol = it.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)
+                val durationCol = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+                val dataCol = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
+                val dateAddedCol = it.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED)
+                val sizeCol = it.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE)
                 
-                // Move to offset
-                if (cursor.moveToPosition(offset)) {
-                    // Read up to limit or end
-                    var count = 0
-                    do {
-                        val id = cursor.getLong(idCol)
-                        songs.add(
-                            Song(
-                                id = id,
-                                title = cursor.getString(titleCol) ?: "Unknown",
-                                artist = cursor.getString(artistCol) ?: "Unknown Artist",
-                                album = cursor.getString(albumCol) ?: "Unknown Album",
-                                albumId = cursor.getLong(albumIdCol),
-                                duration = cursor.getLong(durationCol),
-                                uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id),
-                                path = cursor.getString(dataCol) ?: "",
-                                dateAdded = cursor.getLong(dateAddedCol),
-                                size = cursor.getLong(sizeCol)
-                            )
+                while (it.moveToNext()) {
+                    val id = it.getLong(idCol)
+                    songs.add(
+                        Song(
+                            id = id,
+                            title = it.getString(titleCol) ?: "Unknown",
+                            artist = it.getString(artistCol) ?: "Unknown Artist",
+                            album = it.getString(albumCol) ?: "Unknown Album",
+                            albumId = it.getLong(albumIdCol),
+                            duration = it.getLong(durationCol),
+                            uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id),
+                            path = it.getString(dataCol) ?: "",
+                            dateAdded = it.getLong(dateAddedCol),
+                            size = it.getLong(sizeCol)
                         )
-                        count++
-                    } while (cursor.moveToNext() && count < limit)
+                    )
                 }
             }
             Log.d(TAG, "getSongsPaged: Returning ${songs.size} songs")

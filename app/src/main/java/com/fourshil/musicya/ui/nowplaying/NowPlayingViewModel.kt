@@ -9,6 +9,7 @@ import com.fourshil.musicya.util.AlbumArtHelper
 import com.fourshil.musicya.util.Lyrics
 import com.fourshil.musicya.util.LyricsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,8 +35,13 @@ class NowPlayingViewModel @Inject constructor(
     val position = playerController.currentPosition
     val duration = playerController.duration
 
-    val isFavorite = currentSong.flatMapLatest { song ->
-        if (song != null) musicDao.isFavorite(song.id) else flowOf(false)
+    // Cache favorite IDs in memory for efficient lookup
+    private val favoriteIdsCache = musicDao.getFavoriteIds()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    
+    // Derive isFavorite from cached set instead of per-song query
+    val isFavorite = combine(currentSong, favoriteIdsCache) { song, favorites ->
+        song != null && song.id in favorites
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
     
     // Lyrics support
@@ -47,16 +53,19 @@ class NowPlayingViewModel @Inject constructor(
 
     init {
         playerController.connect()
-        // Start position updates when ViewModel is created
-        playerController.startPositionUpdates()
+        // Start fast position updates for NowPlaying screen
+        playerController.startPositionUpdates(fastUpdates = true)
         
-        // Load lyrics and high-quality art when song changes
+        // Load lyrics and high-quality art when song changes - in parallel
         viewModelScope.launch {
             currentSong.collect { song ->
                 if (song != null) {
-                    _lyrics.value = lyricsManager.getLyricsForSong(song)
-                    // Load high-quality album art for Now Playing screen
-                    _highQualityArtUri.value = albumArtHelper.getHighQualityArtUri(song.path, song.albumId)
+                    // Load both in parallel for faster response
+                    val lyricsDeferred = async { lyricsManager.getLyricsForSong(song) }
+                    val artDeferred = async { albumArtHelper.getHighQualityArtUri(song.path, song.albumId) }
+                    
+                    _lyrics.value = lyricsDeferred.await()
+                    _highQualityArtUri.value = artDeferred.await()
                 } else {
                     _lyrics.value = null
                     _highQualityArtUri.value = null
@@ -100,5 +109,3 @@ class NowPlayingViewModel @Inject constructor(
         playerController.stopPositionUpdates()
     }
 }
-
-

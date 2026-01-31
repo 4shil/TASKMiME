@@ -80,11 +80,11 @@ fun SettingsScreen(
                 }
                 Spacer(modifier = Modifier.width(24.dp))
                 Text(
-                    text = "SETTINGS",
+                    text = "Settings",
                     style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Black,
+                    fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onBackground,
-                    letterSpacing = (-1).sp
+                    letterSpacing = 0.sp
                 )
             }
         }
@@ -238,16 +238,15 @@ private fun SettingsSection(
             text = title,
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.onBackground,
-            fontWeight = FontWeight.Black,
+            fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(bottom = 8.dp, start = 4.dp),
-            letterSpacing = 1.sp
+            letterSpacing = 0.sp
         )
         NeoCard(
             modifier = Modifier.fillMaxWidth(),
-            // backgroundColor = Color.White,
-            shadowSize = 4.dp,
-            shape = RoundedCornerShape(16.dp),
-            borderWidth = 2.dp
+            shadowSize = NeoDimens.ShadowDefault,
+            shape = RoundedCornerShape(NeoDimens.CornerLarge),
+            borderWidth = NeoDimens.BorderDefault
         ) {
             Column {
                 content()

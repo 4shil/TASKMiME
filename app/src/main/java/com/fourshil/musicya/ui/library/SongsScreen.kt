@@ -25,7 +25,6 @@ import com.fourshil.musicya.ui.theme.NeoBackground
 import com.fourshil.musicya.ui.theme.NeoGreen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.foundation.background
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -64,6 +63,10 @@ fun SongsScreen(
     var showCreatePlaylistDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showBulkActionsSheet by remember { mutableStateOf(false) }
+    
+    // Cache visible songs snapshot to avoid rebuilding on every click
+    var cachedSongsSnapshot by remember { mutableStateOf<List<Song>>(emptyList()) }
+    var lastSnapshotCount by remember { mutableIntStateOf(0) }
 
     val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         listOf(Manifest.permission.READ_MEDIA_AUDIO)
@@ -119,9 +122,9 @@ fun SongsScreen(
                                     )
                                 }
                                 Text(
-                                    "${selectionState.selectedCount} SELECTED",
+                                    "${selectionState.selectedCount} selected",
                                     style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.Black,
+                                    fontWeight = FontWeight.SemiBold,
                                     color = MaterialTheme.colorScheme.onSecondary
                                 )
                             }
@@ -244,9 +247,13 @@ fun SongsScreen(
                                         if (selectionState.isSelectionMode) {
                                             selectionState.toggleSelection(song.id)
                                         } else {
-                                            // Collect all currently loaded songs for the queue
-                                            val allVisibleSongs = (0 until pagedSongs.itemCount).mapNotNull { pagedSongs[it] }
-                                            viewModel.playSongWithQueue(song, allVisibleSongs)
+                                            // Use cached snapshot or rebuild only if count changed
+                                            val currentCount = pagedSongs.itemCount
+                                            if (currentCount != lastSnapshotCount || cachedSongsSnapshot.isEmpty()) {
+                                                cachedSongsSnapshot = (0 until currentCount).mapNotNull { pagedSongs[it] }
+                                                lastSnapshotCount = currentCount
+                                            }
+                                            viewModel.playSongWithQueue(song, cachedSongsSnapshot)
                                             onSongClick(index)
                                         }
                                     },

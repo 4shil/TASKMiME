@@ -47,42 +47,65 @@ class MusicService : MediaSessionService() {
     override fun onCreate() {
         super.onCreate()
         
-        // Build ExoPlayer with audio focus handling and gapless playback
-        player = ExoPlayer.Builder(this)
-            .setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
-                    .setUsage(C.USAGE_MEDIA)
-                    .build(),
-                true // Handle audio focus
-            )
-            .setHandleAudioBecomingNoisy(true) // Pause when headphones unplugged
-            .build()
-            .apply {
-                // Enable gapless playback
-                pauseAtEndOfMediaItems = false
-            }
+        try {
+            // Build ExoPlayer with audio focus handling and gapless playback
+            player = ExoPlayer.Builder(this)
+                .setAudioAttributes(
+                    AudioAttributes.Builder()
+                        .setContentType(C.AUDIO_CONTENT_TYPE_MUSIC)
+                        .setUsage(C.USAGE_MEDIA)
+                        .build(),
+                    true // Handle audio focus
+                )
+                .setHandleAudioBecomingNoisy(true) // Pause when headphones unplugged
+                .build()
+                .apply {
+                    // Enable gapless playback
+                    pauseAtEndOfMediaItems = false
+                    // Ensure volume starts at 100%
+                    volume = 1f
+                }
+        } catch (e: Exception) {
+            android.util.Log.e("MusicService", "Failed to create ExoPlayer", e)
+            return
+        }
             
         // Attach Audio Engine and Crossfade Manager
         player?.let { exoPlayer ->
             serviceScope.launch {
-                audioEngine.attach(exoPlayer.audioSessionId)
+                try {
+                    audioEngine.attach(exoPlayer.audioSessionId)
+                } catch (e: Exception) {
+                    android.util.Log.e("MusicService", "Failed to attach audio engine", e)
+                }
             }
             
             // Initialize crossfade manager
-            crossfadeManager.initialize(exoPlayer, serviceScope)
+            try {
+                crossfadeManager.initialize(exoPlayer, serviceScope)
+            } catch (e: Exception) {
+                android.util.Log.e("MusicService", "Failed to initialize crossfade manager", e)
+            }
             
             // Load crossfade duration from preferences
             serviceScope.launch {
-                val savedDuration = settingsPreferences.crossfadeDuration.first()
-                crossfadeManager.setDuration(savedDuration)
-                android.util.Log.d("MusicService", "Loaded crossfade duration: ${savedDuration}s")
+                try {
+                    val savedDuration = settingsPreferences.crossfadeDuration.first()
+                    crossfadeManager.setDuration(savedDuration)
+                    android.util.Log.d("MusicService", "Loaded crossfade duration: ${savedDuration}s")
+                } catch (e: Exception) {
+                    android.util.Log.e("MusicService", "Failed to load crossfade duration", e)
+                }
             }
             
             // Observe crossfade changes from settings
             serviceScope.launch {
-                settingsPreferences.crossfadeDuration.collect { duration ->
-                    crossfadeManager.setDuration(duration)
+                try {
+                    settingsPreferences.crossfadeDuration.collect { duration ->
+                        crossfadeManager.setDuration(duration)
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.e("MusicService", "Failed to observe crossfade changes", e)
                 }
             }
             
@@ -90,7 +113,11 @@ class MusicService : MediaSessionService() {
             exoPlayer.addListener(object : Player.Listener {
                 override fun onAudioSessionIdChanged(audioSessionId: Int) {
                     serviceScope.launch {
-                        audioEngine.attach(audioSessionId)
+                        try {
+                            audioEngine.attach(audioSessionId)
+                        } catch (e: Exception) {
+                            android.util.Log.e("MusicService", "Failed to attach audio engine on session change", e)
+                        }
                     }
                 }
                 
@@ -98,13 +125,21 @@ class MusicService : MediaSessionService() {
                 override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                     if (mediaItem != null) {
                         // Trigger crossfade fade-in on new track
-                        crossfadeManager.onTrackStarted()
+                        try {
+                            crossfadeManager.onTrackStarted()
+                        } catch (e: Exception) {
+                            android.util.Log.e("MusicService", "Failed to trigger crossfade on track start", e)
+                        }
                         
                         if (reason != Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED) {
                             val songId = mediaItem.mediaId.toLongOrNull()
                             if (songId != null) {
                                 serviceScope.launch(Dispatchers.IO) {
-                                    musicDao.recordPlay(songId)
+                                    try {
+                                        musicDao.recordPlay(songId)
+                                    } catch (e: Exception) {
+                                        android.util.Log.e("MusicService", "Failed to record play", e)
+                                    }
                                 }
                             }
                         }
@@ -120,10 +155,16 @@ class MusicService : MediaSessionService() {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         
-        // Build MediaSession
-        mediaSession = MediaSession.Builder(this, player!!)
-            .setSessionActivity(pendingIntent)
-            .build()
+        // Build MediaSession (only if player was created successfully)
+        val currentPlayer = player
+        if (currentPlayer != null) {
+            mediaSession = MediaSession.Builder(this, currentPlayer)
+                .setSessionActivity(pendingIntent)
+                .build()
+        } else {
+            android.util.Log.e("MusicService", "Player is null, cannot create MediaSession")
+            return
+        }
             
         // Essential: Set notification provider for Foreground Service
         setMediaNotificationProvider(androidx.media3.session.DefaultMediaNotificationProvider(this))

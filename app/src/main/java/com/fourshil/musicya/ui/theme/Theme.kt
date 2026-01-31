@@ -16,101 +16,103 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// Clean Minimalistic Light Theme
+// Soft Neo-Brutalism Light Theme with Claude Palette
+// Warm, approachable colors with Claude Orange (#D97757) as primary accent
 // ═══════════════════════════════════════════════════════════════════════════════
 private val LightColorScheme = lightColorScheme(
-    // Primary
-    primary = ClaudeAccent,
+    // Primary - Claude Orange
+    primary = ClaudeOrange,
     onPrimary = PureWhite,
-    primaryContainer = ClaudeAccent.copy(alpha = 0.12f),
-    onPrimaryContainer = ClaudeAccent,
+    primaryContainer = ClaudeOrangeLight.copy(alpha = 0.20f),
+    onPrimaryContainer = ClaudeOrangeDark,
     
-    // Secondary
-    secondary = AccentSecondary,
-    onSecondary = PureWhite,
-    secondaryContainer = AccentSecondary.copy(alpha = 0.12f),
-    onSecondaryContainer = AccentSecondary,
+    // Secondary - Soft Green
+    secondary = NeoPastelGreen,
+    onSecondary = Warm900,
+    secondaryContainer = NeoPastelGreen.copy(alpha = 0.20f),
+    onSecondaryContainer = Warm800,
     
-    // Tertiary
-    tertiary = AccentWarning,
-    onTertiary = PureWhite,
-    tertiaryContainer = AccentWarning.copy(alpha = 0.12f),
-    onTertiaryContainer = AccentWarning,
+    // Tertiary - Soft Blue
+    tertiary = NeoPastelBlue,
+    onTertiary = Warm900,
+    tertiaryContainer = NeoPastelBlue.copy(alpha = 0.20f),
+    onTertiaryContainer = Warm800,
     
-    // Background & Surface
-    background = LightBackground,
-    onBackground = LightOnBackground,
-    surface = LightSurface,
-    onSurface = LightOnSurface,
-    surfaceVariant = LightSurfaceVariant,
-    onSurfaceVariant = LightOnSurfaceVariant,
+    // Background & Surface - Warm grays
+    background = Warm50,
+    onBackground = Warm900,
+    surface = PureWhite,
+    onSurface = Warm900,
+    surfaceVariant = Warm100,
+    onSurfaceVariant = Warm700,
     
-    // Outline
-    outline = LightOutline,
-    outlineVariant = LightOutlineVariant,
+    // Outline - Soft borders
+    outline = Warm400,
+    outlineVariant = Warm200,
     
     // Error
-    error = AccentError,
+    error = NeoError,
     onError = PureWhite,
-    errorContainer = AccentError.copy(alpha = 0.12f),
-    onErrorContainer = AccentError,
+    errorContainer = NeoError.copy(alpha = 0.15f),
+    onErrorContainer = NeoError,
     
     // Inverse
-    inverseSurface = Gray800,
-    inverseOnSurface = Gray100,
-    inversePrimary = AccentPrimaryDark,
+    inverseSurface = Warm800,
+    inverseOnSurface = Warm100,
+    inversePrimary = ClaudeOrangeLight,
     
     // Scrim
-    scrim = PureBlack.copy(alpha = 0.32f)
+    scrim = Warm900.copy(alpha = 0.32f)
 )
 
 // ═══════════════════════════════════════════════════════════════════════════════
-// Clean Minimalistic Dark Theme (Claude Palette)
+// Soft Neo-Brutalism Dark Theme with Claude Palette
+// Deep charcoal backgrounds with Claude Orange accent for warmth
 // ═══════════════════════════════════════════════════════════════════════════════
 private val DarkColorScheme = darkColorScheme(
-    // Primary
-    primary = ClaudeAccent,
-    onPrimary = PureWhite, // Orange on White or White on Orange? White on Orange is cleaner.
-    primaryContainer = ClaudeAccent.copy(alpha = 0.2f),
-    onPrimaryContainer = ClaudeAccentLight,
+    // Primary - Claude Orange
+    primary = ClaudeOrange,
+    onPrimary = PureWhite,
+    primaryContainer = ClaudeOrange.copy(alpha = 0.25f),
+    onPrimaryContainer = ClaudeOrangeLight,
     
-    // Secondary
-    secondary = AccentSecondary,
-    onSecondary = Gray900,
-    secondaryContainer = AccentSecondary.copy(alpha = 0.16f),
-    onSecondaryContainer = AccentSecondary,
+    // Secondary - Soft Green
+    secondary = NeoPastelGreen,
+    onSecondary = Warm900,
+    secondaryContainer = NeoPastelGreen.copy(alpha = 0.20f),
+    onSecondaryContainer = NeoPastelGreen,
     
-    // Tertiary
-    tertiary = AccentWarning,
-    onTertiary = Gray900,
-    tertiaryContainer = AccentWarning.copy(alpha = 0.16f),
-    onTertiaryContainer = AccentWarning,
+    // Tertiary - Soft Blue
+    tertiary = NeoPastelBlue,
+    onTertiary = Warm900,
+    tertiaryContainer = NeoPastelBlue.copy(alpha = 0.20f),
+    onTertiaryContainer = NeoPastelBlue,
     
-    // Background & Surface
-    background = DarkBackground,       // ClaudeBackground
-    onBackground = DarkOnBackground,   // ClaudeTextPrimary
-    surface = DarkSurface,             // ClaudeSurface
-    onSurface = DarkOnSurface,         // ClaudeTextPrimary
-    surfaceVariant = DarkSurfaceVariant,
-    onSurfaceVariant = DarkOnSurfaceVariant,
+    // Background & Surface - Claude Dark palette
+    background = ClaudeBackground,
+    onBackground = ClaudeTextPrimary,
+    surface = ClaudeSurface,
+    onSurface = ClaudeTextPrimary,
+    surfaceVariant = ClaudeSurfaceElevated,
+    onSurfaceVariant = ClaudeTextSecondary,
     
-    // Outline
-    outline = DarkOutline,
-    outlineVariant = DarkOutlineVariant,
+    // Outline - Soft dark borders
+    outline = ClaudeBorder,
+    outlineVariant = ClaudeBorderSubtle,
     
     // Error
-    error = AccentError,
-    onError = Gray900,
-    errorContainer = AccentError.copy(alpha = 0.16f),
-    onErrorContainer = AccentError,
+    error = NeoError,
+    onError = PureWhite,
+    errorContainer = NeoError.copy(alpha = 0.20f),
+    onErrorContainer = NeoError,
     
     // Inverse
-    inverseSurface = Gray100,
-    inverseOnSurface = Gray800,
-    inversePrimary = AccentPrimary,
+    inverseSurface = Warm100,
+    inverseOnSurface = Warm800,
+    inversePrimary = ClaudeOrangeDark,
     
     // Scrim
-    scrim = PureBlack.copy(alpha = 0.7f)
+    scrim = PureBlack.copy(alpha = 0.70f)
 )
 
 @Composable

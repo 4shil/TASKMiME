@@ -8,9 +8,11 @@ import com.fourshil.musicya.data.model.Song
 import com.fourshil.musicya.data.repository.MusicRepository
 import com.fourshil.musicya.player.PlayerController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,21 +36,24 @@ class SearchViewModel @Inject constructor(
     private val _isSearching = MutableStateFlow(false)
     val isSearching = _isSearching.asStateFlow()
 
-    private var allSongs: List<Song> = emptyList()
-    private var allAlbums: List<Album> = emptyList()
-    private var allArtists: List<Artist> = emptyList()
+    // Lazy-loaded data - only fetched when user starts typing
+    private var allSongs: List<Song>? = null
+    private var allAlbums: List<Album>? = null
+    private var allArtists: List<Artist>? = null
+    private var dataLoaded = false
 
     init {
         playerController.connect()
-        loadData()
         observeQuery()
     }
 
-    private fun loadData() {
-        viewModelScope.launch {
+    private suspend fun ensureDataLoaded() {
+        if (dataLoaded) return
+        withContext(Dispatchers.IO) {
             allSongs = repository.getAllSongs()
             allAlbums = repository.getAllAlbums()
             allArtists = repository.getAllArtists()
+            dataLoaded = true
         }
     }
 
@@ -64,18 +69,21 @@ class SearchViewModel @Inject constructor(
                         _artists.value = emptyList()
                     } else {
                         _isSearching.value = true
+                        // Lazy load data only when user starts searching
+                        ensureDataLoaded()
+                        
                         val queryLower = q.lowercase()
-                        _songs.value = allSongs.filter {
+                        _songs.value = allSongs?.filter {
                             it.title.lowercase().contains(queryLower) ||
                             it.artist.lowercase().contains(queryLower)
-                        }.take(20)
-                        _albums.value = allAlbums.filter {
+                        }?.take(20) ?: emptyList()
+                        _albums.value = allAlbums?.filter {
                             it.name.lowercase().contains(queryLower) ||
                             it.artist.lowercase().contains(queryLower)
-                        }.take(10)
-                        _artists.value = allArtists.filter {
+                        }?.take(10) ?: emptyList()
+                        _artists.value = allArtists?.filter {
                             it.name.lowercase().contains(queryLower)
-                        }.take(10)
+                        }?.take(10) ?: emptyList()
                         _isSearching.value = false
                     }
                 }
